@@ -26,16 +26,16 @@ const typeDef = gql`
 
 const resolvers = {
   Query: {
-    getPersonById: (personId) => ({
-      personId: 'newid',
-      name: 'Justin Martinez',
-      email: 'justinmartinez14@gmail.com',
-      role: 'secretary'
-    })
+    getPersonById: async (source, args, { dataSources }, state) => {
+      const { person } = dataSources
+      const { personId } = args
+      const result = await person.getById(personId)
+      return result
+    }
   },
   Mutation: {
     addPerson: async (source, args, { dataSources }, state ) => {
-      const { persons } = dataSources      
+      const { person } = dataSources      
       const { data } = args
       let result = {
         personId: 'newid',
