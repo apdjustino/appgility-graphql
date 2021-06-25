@@ -14,6 +14,7 @@ const typeDef = gql`
 
   type Person {
     id: String,
+    type: String,
     personId: String
     name: String
     email: String

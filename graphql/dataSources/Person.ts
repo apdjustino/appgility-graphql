@@ -1,5 +1,5 @@
 import Database from './db/cosmos'
-import { PersonInput } from '../types'
+import { PersonInput, Person as PersonType } from '../types'
 
 export default class Person {
 
@@ -11,10 +11,11 @@ export default class Person {
     return person
   }
 
-  async addNewPerson(personInput: PersonInput): Promise<Person> {
+  async addNewPerson(personInput: PersonInput): Promise<PersonType> {
     const containerId = 'person'
-    const person: Person = { ...personInput } as Person
-    const newPerson = await this.db.addItem<Person>(containerId, person)
+    const person: PersonType = { ...personInput } as PersonType
+    person.type = 'person'
+    const newPerson = await this.db.addItem<PersonType>(containerId, person)
     return newPerson
   }
 

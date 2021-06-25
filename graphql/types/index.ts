@@ -27,6 +27,7 @@ export type MutationAddPersonArgs = {
 export type Person = {
   __typename?: 'Person';
   id?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
   personId?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
@@ -156,6 +157,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type PersonResolvers<ContextType = any, ParentType extends ResolversParentTypes['Person'] = ResolversParentTypes['Person']> = ResolversObject<{
   id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   personId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
