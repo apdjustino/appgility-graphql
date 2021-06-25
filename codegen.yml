@@ -3,6 +3,8 @@ schema: "http://localhost:7071/graphql"
 documents: null
 generates:
   ./graphql/types/index.ts:
+    config:
+      useIndexSignature: true
     plugins:
       - "typescript"
       - "typescript-resolvers"

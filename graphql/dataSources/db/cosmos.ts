@@ -1,4 +1,5 @@
 import { Container, CosmosClient} from '@azure/cosmos'
+import { Person } from '../../types'
 
 class Database {
 
@@ -16,12 +17,18 @@ class Database {
     return database.container(containerId)
   }
 
-  async getItemById(containerId: string, itemId: string, partitionKey: string) {
+  async getItemById<T>(containerId: string, itemId: string, partitionKey: string): Promise<T> {
     const container = this._getContainer(containerId)    
     const item = container.item(itemId, partitionKey)    
     const { resource } = await item.read()
     
-    return resource
+    return resource as T
+  }
+
+  async addItem<T>(containerId: string, item: T): Promise<T> {
+    const container = this._getContainer(containerId)
+    const createResponse = await container.items.create(item)
+    return createResponse.resource
   }
 }
 

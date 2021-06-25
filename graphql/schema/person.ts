@@ -1,14 +1,19 @@
+import { MutationAddPersonArgs, PersonInput, QueryGetPersonByIdArgs } from "../types"
+import { DataSources } from "../types/dataSources"
 
 const { gql } = require('apollo-server-azure-functions')
 
 const typeDef = gql`
   input PersonInput {
+    id: String,
+    personId: String,
     name: String
     email: String
     role: String
   }
 
   type Person {
+    id: String,
     personId: String
     name: String
     email: String
@@ -26,7 +31,7 @@ const typeDef = gql`
 
 const resolvers = {
   Query: {
-    getPersonById: async (source, args, { dataSources }, state) => {
+    getPersonById: async (_, args: QueryGetPersonByIdArgs, { dataSources }: { dataSources: DataSources}, __) => {
       const { person } = dataSources
       const { personId } = args
       const result = await person.getById(personId)
@@ -34,15 +39,9 @@ const resolvers = {
     }
   },
   Mutation: {
-    addPerson: async (source, args, { dataSources }, state ) => {
+    addPerson: async (_, args: MutationAddPersonArgs, { dataSources }: { dataSources: DataSources}, __ ) => {
       const { person } = dataSources      
-      const { data } = args
-      let result = {
-        personId: 'newid',
-        name: 'Justin Martinez',
-        email: 'justinmartinez14@gmail.com',
-        role: 'secretary'
-      }    
+      const result = await person.addNewPerson(args.data)
       return result
     }
   }
