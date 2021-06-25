@@ -20,7 +20,7 @@ class Database {
     const container = this._getContainer(containerId)    
     const item = container.item(itemId, partitionKey)    
     const { resource } = await item.read()
-    console.log(resource)
+    
     return resource
   }
 }
