@@ -1,5 +1,6 @@
-import { Container, CosmosClient} from '@azure/cosmos'
+import { Container, CosmosClient } from '@azure/cosmos'
 import { Person } from '../../types'
+import { QuerySpec } from '../../types/dataSources'
 
 class Database {
 
@@ -30,6 +31,14 @@ class Database {
     const createResponse = await container.items.create(item)
     return createResponse.resource
   }
+
+  async queryItems<T>(containerId: string, query: QuerySpec): Promise<T> {
+    const container = this._getContainer(containerId)
+    const { resources } = await container.items.query(query).fetchAll()
+    const uResources = resources as unknown
+    return uResources as T
+  }
+  
 }
 
 export default Database
