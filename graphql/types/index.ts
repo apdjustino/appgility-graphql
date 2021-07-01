@@ -16,6 +16,7 @@ export type Scalars = {
 export type CreateNewTrialInput = {
   name: Scalars['String'];
   startDate: Scalars['String'];
+  endDate: Scalars['String'];
   locationCity: Scalars['String'];
   locationState: Scalars['String'];
   locationVenue?: Maybe<Scalars['String']>;
@@ -26,7 +27,6 @@ export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']>;
   addPerson?: Maybe<Person>;
-  addPersonTrial?: Maybe<PersonTrial>;
   addTrial?: Maybe<Trial>;
 };
 
@@ -36,15 +36,9 @@ export type MutationAddPersonArgs = {
 };
 
 
-export type MutationAddPersonTrialArgs = {
-  data?: Maybe<CreateNewTrialInput>;
-  personId?: Maybe<Scalars['String']>;
-  trialId?: Maybe<Scalars['String']>;
-};
-
-
 export type MutationAddTrialArgs = {
   data?: Maybe<CreateNewTrialInput>;
+  personId?: Maybe<Scalars['String']>;
 };
 
 export type Person = {
@@ -224,7 +218,6 @@ export type ResolversParentTypes = ResolversObject<{
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   addPerson?: Resolver<Maybe<ResolversTypes['Person']>, ParentType, ContextType, RequireFields<MutationAddPersonArgs, never>>;
-  addPersonTrial?: Resolver<Maybe<ResolversTypes['PersonTrial']>, ParentType, ContextType, RequireFields<MutationAddPersonTrialArgs, never>>;
   addTrial?: Resolver<Maybe<ResolversTypes['Trial']>, ParentType, ContextType, RequireFields<MutationAddTrialArgs, never>>;
 }>;
 

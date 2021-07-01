@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require('apollo-server-azure-functions');
+const { ApolloServer } = require('apollo-server-azure-functions');
 import { schema } from './schema/schema'
 import Person from './dataSources/Person'
 import { DataSources } from './types/dataSources';
@@ -10,7 +10,11 @@ const server = new ApolloServer({
     dataSources: (): DataSources => ({
       person: new Person(),
       trial: new Trial()
-    })
+    }),
+    context: async ({ request }) => {
+      const token = request.headers["authorization"] || ''            
+      return { token: token.split(' ')[1] }
+    }
 });
 const graphqlHandler = server.createHandler({
   cors: {
