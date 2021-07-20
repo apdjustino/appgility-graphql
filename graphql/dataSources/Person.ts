@@ -24,6 +24,7 @@ export default class Person {
     personTrial.type = 'trial'
     personTrial.personId = personId
     personTrial.trialId = trialId
+    personTrial.status = 'registration'
     const newPersonTrial = await this.db.addItem<PersonTrial>(this.containerId, personTrial)
     return newPersonTrial
   }

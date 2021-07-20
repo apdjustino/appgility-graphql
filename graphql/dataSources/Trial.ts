@@ -11,6 +11,7 @@ export default class Trial {
     const id = uuidv4()
     trialInput.type= 'trial'    
     trialInput.trialId = id
+    trialInput.status = 'registration'
     const newTrial = await this.db.addItem(this.containerId, trialInput)
     return newTrial 
   }
