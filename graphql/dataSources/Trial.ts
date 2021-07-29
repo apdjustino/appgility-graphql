@@ -1,18 +1,18 @@
 import { v4 as uuidv4 } from 'uuid';
-import { CreateNewTrialInput, Trial as TrialType } from '../types'
+import { CreateNewEventInput, Event as EventType } from '../types'
 import Database from './db/cosmos'
 
-export default class Trial {
+export default class Event {
   db = new Database()
   containerId = 'trial'
 
-  async addTrial(input: CreateNewTrialInput): Promise<TrialType> {
-    const trialInput: TrialType = { ...input } as TrialType
+  async addEvent(input: CreateNewEventInput): Promise<EventType> {
+    const eventInput: EventType = { ...input } as EventType
     const id = uuidv4()
-    trialInput.type= 'trial'    
-    trialInput.trialId = id
-    trialInput.status = 'registration'
-    const newTrial = await this.db.addItem(this.containerId, trialInput)
+    eventInput.type= 'event'    
+    eventInput.eventId = id
+    eventInput.status = 'New'
+    const newTrial = await this.db.addItem(this.containerId, eventInput)
     return newTrial 
   }
 }

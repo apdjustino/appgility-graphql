@@ -13,21 +13,34 @@ export type Scalars = {
   Float: number;
 };
 
-export type CreateNewTrialInput = {
+export type CreateNewEventInput = {
   name: Scalars['String'];
-  startDate: Scalars['String'];
-  endDate: Scalars['String'];
   locationCity: Scalars['String'];
   locationState: Scalars['String'];
-  locationVenue?: Maybe<Scalars['String']>;
+  trialSite?: Maybe<Scalars['String']>;
   hostClub?: Maybe<Scalars['String']>;
+};
+
+export type Event = {
+  __typename?: 'Event';
+  eventId: Scalars['String'];
+  type: Scalars['String'];
+  name: Scalars['String'];
+  locationCity: Scalars['String'];
+  locationState: Scalars['String'];
+  status: Scalars['String'];
+  trialSite?: Maybe<Scalars['String']>;
+  hostClub?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['Int']>;
+  altPrice?: Maybe<Scalars['Int']>;
+  premiumLink?: Maybe<Scalars['String']>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']>;
   addPerson?: Maybe<Person>;
-  addTrial?: Maybe<Trial>;
+  addEvent?: Maybe<Event>;
 };
 
 
@@ -36,8 +49,8 @@ export type MutationAddPersonArgs = {
 };
 
 
-export type MutationAddTrialArgs = {
-  data?: Maybe<CreateNewTrialInput>;
+export type MutationAddEventArgs = {
+  data?: Maybe<CreateNewEventInput>;
   personId?: Maybe<Scalars['String']>;
 };
 
@@ -51,6 +64,18 @@ export type Person = {
   role?: Maybe<Scalars['String']>;
 };
 
+export type PersonEvent = {
+  __typename?: 'PersonEvent';
+  eventId: Scalars['String'];
+  personId: Scalars['String'];
+  type: Scalars['String'];
+  name: Scalars['String'];
+  locationCity: Scalars['String'];
+  locationState: Scalars['String'];
+  status: Scalars['String'];
+  trialSite?: Maybe<Scalars['String']>;
+};
+
 export type PersonInput = {
   id?: Maybe<Scalars['String']>;
   personId?: Maybe<Scalars['String']>;
@@ -59,25 +84,11 @@ export type PersonInput = {
   role?: Maybe<Scalars['String']>;
 };
 
-export type PersonTrial = {
-  __typename?: 'PersonTrial';
-  trialId: Scalars['String'];
-  personId: Scalars['String'];
-  type: Scalars['String'];
-  name: Scalars['String'];
-  startDate: Scalars['String'];
-  endDate: Scalars['String'];
-  locationCity: Scalars['String'];
-  locationState: Scalars['String'];
-  status: Scalars['String'];
-  locationVenue?: Maybe<Scalars['String']>;
-};
-
 export type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['String']>;
   getPersonById?: Maybe<Person>;
-  getPersonTrials?: Maybe<Array<Maybe<PersonTrial>>>;
+  getPersonEvents?: Maybe<Array<Maybe<PersonEvent>>>;
 };
 
 
@@ -86,28 +97,8 @@ export type QueryGetPersonByIdArgs = {
 };
 
 
-export type QueryGetPersonTrialsArgs = {
+export type QueryGetPersonEventsArgs = {
   personId: Scalars['String'];
-};
-
-export type Trial = {
-  __typename?: 'Trial';
-  trialId: Scalars['String'];
-  type: Scalars['String'];
-  name: Scalars['String'];
-  startDate: Scalars['String'];
-  endDate: Scalars['String'];
-  locationCity: Scalars['String'];
-  locationState: Scalars['String'];
-  status: Scalars['String'];
-  locationVenue?: Maybe<Scalars['String']>;
-  hostClub?: Maybe<Scalars['String']>;
-  price?: Maybe<Scalars['Int']>;
-  onlineEntryLimit?: Maybe<Scalars['Int']>;
-  mailEntryLimit?: Maybe<Scalars['Int']>;
-  premiumLink?: Maybe<Scalars['String']>;
-  allowedClasses?: Maybe<Array<Maybe<Scalars['String']>>>;
-  judges?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -189,36 +180,51 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  CreateNewTrialInput: CreateNewTrialInput;
+  CreateNewEventInput: CreateNewEventInput;
   String: ResolverTypeWrapper<Scalars['String']>;
+  Event: ResolverTypeWrapper<Event>;
+  Int: ResolverTypeWrapper<Scalars['Int']>;
   Mutation: ResolverTypeWrapper<{}>;
   Person: ResolverTypeWrapper<Person>;
+  PersonEvent: ResolverTypeWrapper<PersonEvent>;
   PersonInput: PersonInput;
-  PersonTrial: ResolverTypeWrapper<PersonTrial>;
   Query: ResolverTypeWrapper<{}>;
-  Trial: ResolverTypeWrapper<Trial>;
-  Int: ResolverTypeWrapper<Scalars['Int']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  CreateNewTrialInput: CreateNewTrialInput;
+  CreateNewEventInput: CreateNewEventInput;
   String: Scalars['String'];
+  Event: Event;
+  Int: Scalars['Int'];
   Mutation: {};
   Person: Person;
+  PersonEvent: PersonEvent;
   PersonInput: PersonInput;
-  PersonTrial: PersonTrial;
   Query: {};
-  Trial: Trial;
-  Int: Scalars['Int'];
   Boolean: Scalars['Boolean'];
+}>;
+
+export type EventResolvers<ContextType = any, ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event']> = ResolversObject<{
+  eventId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  locationCity?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  locationState?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  trialSite?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  hostClub?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  price?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  altPrice?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  premiumLink?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   addPerson?: Resolver<Maybe<ResolversTypes['Person']>, ParentType, ContextType, RequireFields<MutationAddPersonArgs, never>>;
-  addTrial?: Resolver<Maybe<ResolversTypes['Trial']>, ParentType, ContextType, RequireFields<MutationAddTrialArgs, never>>;
+  addEvent?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationAddEventArgs, never>>;
 }>;
 
 export type PersonResolvers<ContextType = any, ParentType extends ResolversParentTypes['Person'] = ResolversParentTypes['Person']> = ResolversObject<{
@@ -231,52 +237,30 @@ export type PersonResolvers<ContextType = any, ParentType extends ResolversParen
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type PersonTrialResolvers<ContextType = any, ParentType extends ResolversParentTypes['PersonTrial'] = ResolversParentTypes['PersonTrial']> = ResolversObject<{
-  trialId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+export type PersonEventResolvers<ContextType = any, ParentType extends ResolversParentTypes['PersonEvent'] = ResolversParentTypes['PersonEvent']> = ResolversObject<{
+  eventId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   personId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  startDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  endDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   locationCity?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   locationState?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  locationVenue?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  trialSite?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   getPersonById?: Resolver<Maybe<ResolversTypes['Person']>, ParentType, ContextType, RequireFields<QueryGetPersonByIdArgs, 'personId'>>;
-  getPersonTrials?: Resolver<Maybe<Array<Maybe<ResolversTypes['PersonTrial']>>>, ParentType, ContextType, RequireFields<QueryGetPersonTrialsArgs, 'personId'>>;
-}>;
-
-export type TrialResolvers<ContextType = any, ParentType extends ResolversParentTypes['Trial'] = ResolversParentTypes['Trial']> = ResolversObject<{
-  trialId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  startDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  endDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  locationCity?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  locationState?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  locationVenue?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  hostClub?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  price?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  onlineEntryLimit?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  mailEntryLimit?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  premiumLink?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  allowedClasses?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
-  judges?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+  getPersonEvents?: Resolver<Maybe<Array<Maybe<ResolversTypes['PersonEvent']>>>, ParentType, ContextType, RequireFields<QueryGetPersonEventsArgs, 'personId'>>;
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  Event?: EventResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Person?: PersonResolvers<ContextType>;
-  PersonTrial?: PersonTrialResolvers<ContextType>;
+  PersonEvent?: PersonEventResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
-  Trial?: TrialResolvers<ContextType>;
 }>;
 
 

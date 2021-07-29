@@ -2,14 +2,14 @@ const { ApolloServer } = require('apollo-server-azure-functions');
 import { schema } from './schema/schema'
 import Person from './dataSources/Person'
 import { DataSources } from './types/dataSources';
-import Trial from './dataSources/Trial';
+import Event from './dataSources/Trial';
 import { Context, HttpRequest } from '@azure/functions';
 
 const server = new ApolloServer({ 
     schema,
     dataSources: (): DataSources => ({
       person: new Person(),
-      trial: new Trial()
+      event: new Event()
     }),
     context: async ({ request }) => {
       const token = request.headers["authorization"] || ''            

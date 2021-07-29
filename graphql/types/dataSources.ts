@@ -1,9 +1,9 @@
 import Person from "../dataSources/Person";
-import Trial from "../dataSources/Trial"
+import Event from "../dataSources/Trial"
 
 export interface DataSources {
   person: Person,
-  trial: Trial
+  event: Event
 }
 
 export interface QueryParameters {

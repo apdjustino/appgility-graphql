@@ -1,5 +1,5 @@
 import Database from './db/cosmos'
-import { PersonInput, Person as PersonType, CreateNewTrialInput, PersonTrial } from '../types'
+import { PersonInput, Person as PersonType, CreateNewEventInput, PersonEvent } from '../types'
 import { QuerySpec } from '../types/dataSources'
 
 export default class Person {
@@ -19,17 +19,17 @@ export default class Person {
     return newPerson
   }
 
-  async addPersonTrial(input: CreateNewTrialInput, personId: string, trialId: string): Promise<PersonTrial> {    
-    const personTrial: PersonTrial = { ...input } as PersonTrial
-    personTrial.type = 'trial'
+  async addPersonTrial(input: CreateNewEventInput, personId: string, eventId: string): Promise<PersonEvent> {    
+    const personTrial: PersonEvent = { ...input } as PersonEvent
+    personTrial.type = 'event'
     personTrial.personId = personId
-    personTrial.trialId = trialId
-    personTrial.status = 'registration'
-    const newPersonTrial = await this.db.addItem<PersonTrial>(this.containerId, personTrial)
+    personTrial.eventId = eventId
+    personTrial.status = 'New'
+    const newPersonTrial = await this.db.addItem<PersonEvent>(this.containerId, personTrial)
     return newPersonTrial
   }
 
-  async getPersonTrials(personId: string): Promise<PersonTrial[]> {
+  async getPersonEvents(personId: string): Promise<PersonEvent[]> {
     const querySpec: QuerySpec = {
       query: 'select * from c where c.personId = @personId and c.type = @type',
       parameters: [
@@ -43,7 +43,7 @@ export default class Person {
         }
       ]
     }
-    const personTrials = await this.db.queryItems<PersonTrial[]>(this.containerId, querySpec)
+    const personTrials = await this.db.queryItems<PersonEvent[]>(this.containerId, querySpec)
     return personTrials
   }
 
