@@ -22,7 +22,8 @@ const typeDef = gql`
     role: String
   }
 
-  type PersonEvent {    
+  type PersonEvent {
+    id: String!,    
     eventId: String!,
     personId: String!,
     type: String!,

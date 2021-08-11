@@ -24,6 +24,7 @@ export default class Person {
     personTrial.type = 'event'
     personTrial.personId = personId
     personTrial.eventId = eventId
+    personTrial.id = eventId
     personTrial.status = 'New'
     const newPersonTrial = await this.db.addItem<PersonEvent>(this.containerId, personTrial)
     return newPersonTrial
@@ -39,7 +40,7 @@ export default class Person {
         },
         {
           name: '@type',
-          value: 'trial'
+          value: 'event'
         }
       ]
     }
