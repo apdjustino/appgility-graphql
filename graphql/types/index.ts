@@ -44,6 +44,7 @@ export type Mutation = {
   _empty?: Maybe<Scalars['String']>;
   addPerson?: Maybe<Person>;
   addEvent?: Maybe<Event>;
+  updateEvent?: Maybe<Event>;
 };
 
 
@@ -55,6 +56,12 @@ export type MutationAddPersonArgs = {
 export type MutationAddEventArgs = {
   data?: Maybe<CreateNewEventInput>;
   personId?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateEventArgs = {
+  eventId: Scalars['String'];
+  updatedEvent: UpdateEventInput;
 };
 
 export type Person = {
@@ -93,6 +100,7 @@ export type Query = {
   _empty?: Maybe<Scalars['String']>;
   getPersonById?: Maybe<Person>;
   getPersonEvents?: Maybe<Array<Maybe<PersonEvent>>>;
+  getPersonEvent?: Maybe<PersonEvent>;
   getEvent?: Maybe<Event>;
 };
 
@@ -107,8 +115,31 @@ export type QueryGetPersonEventsArgs = {
 };
 
 
+export type QueryGetPersonEventArgs = {
+  personId: Scalars['String'];
+  eventId: Scalars['String'];
+};
+
+
 export type QueryGetEventArgs = {
   eventId: Scalars['String'];
+};
+
+export type UpdateEventInput = {
+  id: Scalars['String'];
+  eventId: Scalars['String'];
+  type: Scalars['String'];
+  name: Scalars['String'];
+  locationCity: Scalars['String'];
+  locationState: Scalars['String'];
+  status: Scalars['String'];
+  trialSite?: Maybe<Scalars['String']>;
+  hostClub?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['Int']>;
+  altPrice?: Maybe<Scalars['Int']>;
+  premiumLink?: Maybe<Scalars['String']>;
+  registrationEnabled?: Maybe<Scalars['Boolean']>;
+  registrationCutoff?: Maybe<Scalars['String']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -200,6 +231,7 @@ export type ResolversTypes = ResolversObject<{
   PersonEvent: ResolverTypeWrapper<PersonEvent>;
   PersonInput: PersonInput;
   Query: ResolverTypeWrapper<{}>;
+  UpdateEventInput: UpdateEventInput;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -214,6 +246,7 @@ export type ResolversParentTypes = ResolversObject<{
   PersonEvent: PersonEvent;
   PersonInput: PersonInput;
   Query: {};
+  UpdateEventInput: UpdateEventInput;
 }>;
 
 export type EventResolvers<ContextType = any, ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event']> = ResolversObject<{
@@ -238,6 +271,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   addPerson?: Resolver<Maybe<ResolversTypes['Person']>, ParentType, ContextType, RequireFields<MutationAddPersonArgs, never>>;
   addEvent?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationAddEventArgs, never>>;
+  updateEvent?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationUpdateEventArgs, 'eventId' | 'updatedEvent'>>;
 }>;
 
 export type PersonResolvers<ContextType = any, ParentType extends ResolversParentTypes['Person'] = ResolversParentTypes['Person']> = ResolversObject<{
@@ -267,6 +301,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   getPersonById?: Resolver<Maybe<ResolversTypes['Person']>, ParentType, ContextType, RequireFields<QueryGetPersonByIdArgs, 'personId'>>;
   getPersonEvents?: Resolver<Maybe<Array<Maybe<ResolversTypes['PersonEvent']>>>, ParentType, ContextType, RequireFields<QueryGetPersonEventsArgs, 'personId'>>;
+  getPersonEvent?: Resolver<Maybe<ResolversTypes['PersonEvent']>, ParentType, ContextType, RequireFields<QueryGetPersonEventArgs, 'personId' | 'eventId'>>;
   getEvent?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<QueryGetEventArgs, 'eventId'>>;
 }>;
 

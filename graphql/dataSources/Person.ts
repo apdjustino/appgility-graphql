@@ -48,6 +48,11 @@ export default class Person {
     return personTrials
   }
 
+  async getPersonEvent(personId: string, eventId: string): Promise<PersonEvent> {
+    const personEvent = await this.db.getItemById<PersonEvent>(this.containerId, eventId, personId)
+    return personEvent
+  }
+
 
 }
 

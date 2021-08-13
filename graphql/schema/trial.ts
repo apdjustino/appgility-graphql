@@ -1,6 +1,6 @@
 
 import { ValidationRules, verify } from "../dataSources/utils"
-import { MutationAddEventArgs, QueryGetEventArgs } from "../types"
+import { MutationAddEventArgs, MutationUpdateEventArgs, QueryGetEventArgs } from "../types"
 import { DataSources } from "../types/dataSources"
 
 const { gql } = require('apollo-server-azure-functions')
@@ -12,6 +12,23 @@ const typeDef = gql`
     locationState: String!,    
     trialSite: String,   
     hostClub: String,
+  }
+
+  input UpdateEventInput {
+    id: String!,
+    eventId: String!,
+    type: String!,
+    name: String!,    
+    locationCity: String!,
+    locationState: String!,
+    status: String!,
+    trialSite: String
+    hostClub: String,
+    price: Int,
+    altPrice: Int,
+    premiumLink: String,
+    registrationEnabled: Boolean,
+    registrationCutoff: String 
   }
 
   type Event {
@@ -36,7 +53,8 @@ const typeDef = gql`
   }
 
   extend type Mutation {
-    addEvent(data: CreateNewEventInput, personId: String): Event
+    addEvent(data: CreateNewEventInput, personId: String): Event,
+    updateEvent(eventId: String!, updatedEvent: UpdateEventInput!): Event
   }
 `
 
@@ -51,6 +69,15 @@ const resolvers = {
       const { event, person } = dataSources
       const result = await event.addEvent(args.data)
       const ___ = await person.addPersonTrial(args.data, args.personId, result.eventId)
+      return result
+    },
+    updateEvent: async (_, args: MutationUpdateEventArgs, { dataSources, token } : { dataSources: DataSources, token: string, __}) => {
+      const rules: ValidationRules = {
+        allowedRoles: ['secretary']
+      }
+      await verify(token, rules)
+      const { event } = dataSources
+      const result = await event.updateEvent(args.eventId, args.updatedEvent)
       return result
     }
   },
