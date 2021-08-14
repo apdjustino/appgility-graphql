@@ -13,6 +13,32 @@ export type Scalars = {
   Float: number;
 };
 
+export type AddEventTrial = {
+  eventId: Scalars['String'];
+  akcTrialNumber?: Maybe<Scalars['String']>;
+  trialDate?: Maybe<Scalars['String']>;
+  onlineEntries?: Maybe<Scalars['Int']>;
+  mailEntries?: Maybe<Scalars['Int']>;
+  standardClass?: Maybe<Scalars['Boolean']>;
+  standardAbility?: Maybe<Array<Maybe<Scalars['String']>>>;
+  standardPreferred?: Maybe<Array<Maybe<Scalars['String']>>>;
+  jumpersClass?: Maybe<Scalars['Boolean']>;
+  jumpersAbility?: Maybe<Array<Maybe<Scalars['String']>>>;
+  jumpersPreferred?: Maybe<Array<Maybe<Scalars['String']>>>;
+  fastClass?: Maybe<Scalars['Boolean']>;
+  fastAbility?: Maybe<Array<Maybe<Scalars['String']>>>;
+  fastPreferred?: Maybe<Array<Maybe<Scalars['String']>>>;
+  t2bClass?: Maybe<Scalars['Boolean']>;
+  premierStandard?: Maybe<Scalars['Boolean']>;
+  premierJumpers?: Maybe<Scalars['Boolean']>;
+};
+
+export type AddTrial = {
+  eventId: Scalars['String'];
+  akcTrialNumber?: Maybe<Scalars['String']>;
+  trialDate?: Maybe<Scalars['String']>;
+};
+
 export type CreateNewEventInput = {
   name: Scalars['String'];
   locationCity: Scalars['String'];
@@ -39,12 +65,38 @@ export type Event = {
   registrationCutoff?: Maybe<Scalars['String']>;
 };
 
+export type EventTrial = {
+  __typename?: 'EventTrial';
+  id: Scalars['String'];
+  trialId: Scalars['String'];
+  eventId: Scalars['String'];
+  type: Scalars['String'];
+  akcTrialNumber?: Maybe<Scalars['String']>;
+  trialDate?: Maybe<Scalars['String']>;
+  onlineEntries?: Maybe<Scalars['Int']>;
+  mailEntries?: Maybe<Scalars['Int']>;
+  standardClass?: Maybe<Scalars['Boolean']>;
+  standardAbility?: Maybe<Array<Maybe<Scalars['String']>>>;
+  standardPreferred?: Maybe<Array<Maybe<Scalars['String']>>>;
+  jumpersClass?: Maybe<Scalars['Boolean']>;
+  jumpersAbility?: Maybe<Array<Maybe<Scalars['String']>>>;
+  jumpersPreferred?: Maybe<Array<Maybe<Scalars['String']>>>;
+  fastClass?: Maybe<Scalars['Boolean']>;
+  fastAbility?: Maybe<Array<Maybe<Scalars['String']>>>;
+  fastPreferred?: Maybe<Array<Maybe<Scalars['String']>>>;
+  t2bClass?: Maybe<Scalars['Boolean']>;
+  premierStandard?: Maybe<Scalars['Boolean']>;
+  premierJumpers?: Maybe<Scalars['Boolean']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']>;
   addPerson?: Maybe<Person>;
   addEvent?: Maybe<Event>;
   updateEvent?: Maybe<Event>;
+  addEventTrial?: Maybe<EventTrial>;
+  updateEventTrial?: Maybe<EventTrial>;
 };
 
 
@@ -62,6 +114,18 @@ export type MutationAddEventArgs = {
 export type MutationUpdateEventArgs = {
   eventId: Scalars['String'];
   updatedEvent: UpdateEventInput;
+};
+
+
+export type MutationAddEventTrialArgs = {
+  eventTrial: AddEventTrial;
+};
+
+
+export type MutationUpdateEventTrialArgs = {
+  trialId: Scalars['String'];
+  eventId: Scalars['String'];
+  eventTrial: UpdateEventTrial;
 };
 
 export type Person = {
@@ -102,6 +166,7 @@ export type Query = {
   getPersonEvents?: Maybe<Array<Maybe<PersonEvent>>>;
   getPersonEvent?: Maybe<PersonEvent>;
   getEvent?: Maybe<Event>;
+  getEventTrials?: Maybe<Array<Maybe<EventTrial>>>;
 };
 
 
@@ -125,6 +190,21 @@ export type QueryGetEventArgs = {
   eventId: Scalars['String'];
 };
 
+
+export type QueryGetEventTrialsArgs = {
+  eventId: Scalars['String'];
+};
+
+export type Trial = {
+  __typename?: 'Trial';
+  id: Scalars['String'];
+  trialId: Scalars['String'];
+  eventId: Scalars['String'];
+  type: Scalars['String'];
+  akcTrialNumber?: Maybe<Scalars['String']>;
+  trialDate?: Maybe<Scalars['String']>;
+};
+
 export type UpdateEventInput = {
   id: Scalars['String'];
   eventId: Scalars['String'];
@@ -140,6 +220,38 @@ export type UpdateEventInput = {
   premiumLink?: Maybe<Scalars['String']>;
   registrationEnabled?: Maybe<Scalars['Boolean']>;
   registrationCutoff?: Maybe<Scalars['String']>;
+};
+
+export type UpdateEventTrial = {
+  id: Scalars['String'];
+  trialId: Scalars['String'];
+  eventId: Scalars['String'];
+  type: Scalars['String'];
+  akcTrialNumber?: Maybe<Scalars['String']>;
+  trialDate?: Maybe<Scalars['String']>;
+  onlineEntries?: Maybe<Scalars['Int']>;
+  mailEntries?: Maybe<Scalars['Int']>;
+  standardClass?: Maybe<Scalars['Boolean']>;
+  standardAbility?: Maybe<Array<Maybe<Scalars['String']>>>;
+  standardPreferred?: Maybe<Array<Maybe<Scalars['String']>>>;
+  jumpersClass?: Maybe<Scalars['Boolean']>;
+  jumpersAbility?: Maybe<Array<Maybe<Scalars['String']>>>;
+  jumpersPreferred?: Maybe<Array<Maybe<Scalars['String']>>>;
+  fastClass?: Maybe<Scalars['Boolean']>;
+  fastAbility?: Maybe<Array<Maybe<Scalars['String']>>>;
+  fastPreferred?: Maybe<Array<Maybe<Scalars['String']>>>;
+  t2bClass?: Maybe<Scalars['Boolean']>;
+  premierStandard?: Maybe<Scalars['Boolean']>;
+  premierJumpers?: Maybe<Scalars['Boolean']>;
+};
+
+export type UpdateTrial = {
+  id: Scalars['String'];
+  trialId: Scalars['String'];
+  eventId: Scalars['String'];
+  type: Scalars['String'];
+  akcTrialNumber?: Maybe<Scalars['String']>;
+  trialDate?: Maybe<Scalars['String']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -221,32 +333,44 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  CreateNewEventInput: CreateNewEventInput;
+  AddEventTrial: AddEventTrial;
   String: ResolverTypeWrapper<Scalars['String']>;
-  Event: ResolverTypeWrapper<Event>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
+  AddTrial: AddTrial;
+  CreateNewEventInput: CreateNewEventInput;
+  Event: ResolverTypeWrapper<Event>;
+  EventTrial: ResolverTypeWrapper<EventTrial>;
   Mutation: ResolverTypeWrapper<{}>;
   Person: ResolverTypeWrapper<Person>;
   PersonEvent: ResolverTypeWrapper<PersonEvent>;
   PersonInput: PersonInput;
   Query: ResolverTypeWrapper<{}>;
+  Trial: ResolverTypeWrapper<Trial>;
   UpdateEventInput: UpdateEventInput;
+  UpdateEventTrial: UpdateEventTrial;
+  UpdateTrial: UpdateTrial;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  CreateNewEventInput: CreateNewEventInput;
+  AddEventTrial: AddEventTrial;
   String: Scalars['String'];
-  Event: Event;
   Int: Scalars['Int'];
   Boolean: Scalars['Boolean'];
+  AddTrial: AddTrial;
+  CreateNewEventInput: CreateNewEventInput;
+  Event: Event;
+  EventTrial: EventTrial;
   Mutation: {};
   Person: Person;
   PersonEvent: PersonEvent;
   PersonInput: PersonInput;
   Query: {};
+  Trial: Trial;
   UpdateEventInput: UpdateEventInput;
+  UpdateEventTrial: UpdateEventTrial;
+  UpdateTrial: UpdateTrial;
 }>;
 
 export type EventResolvers<ContextType = any, ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event']> = ResolversObject<{
@@ -267,11 +391,37 @@ export type EventResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type EventTrialResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventTrial'] = ResolversParentTypes['EventTrial']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  trialId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  eventId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  akcTrialNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  trialDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  onlineEntries?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  mailEntries?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  standardClass?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  standardAbility?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  standardPreferred?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  jumpersClass?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  jumpersAbility?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  jumpersPreferred?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  fastClass?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  fastAbility?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  fastPreferred?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  t2bClass?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  premierStandard?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  premierJumpers?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   addPerson?: Resolver<Maybe<ResolversTypes['Person']>, ParentType, ContextType, RequireFields<MutationAddPersonArgs, never>>;
   addEvent?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationAddEventArgs, never>>;
   updateEvent?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationUpdateEventArgs, 'eventId' | 'updatedEvent'>>;
+  addEventTrial?: Resolver<Maybe<ResolversTypes['EventTrial']>, ParentType, ContextType, RequireFields<MutationAddEventTrialArgs, 'eventTrial'>>;
+  updateEventTrial?: Resolver<Maybe<ResolversTypes['EventTrial']>, ParentType, ContextType, RequireFields<MutationUpdateEventTrialArgs, 'trialId' | 'eventId' | 'eventTrial'>>;
 }>;
 
 export type PersonResolvers<ContextType = any, ParentType extends ResolversParentTypes['Person'] = ResolversParentTypes['Person']> = ResolversObject<{
@@ -303,14 +453,27 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getPersonEvents?: Resolver<Maybe<Array<Maybe<ResolversTypes['PersonEvent']>>>, ParentType, ContextType, RequireFields<QueryGetPersonEventsArgs, 'personId'>>;
   getPersonEvent?: Resolver<Maybe<ResolversTypes['PersonEvent']>, ParentType, ContextType, RequireFields<QueryGetPersonEventArgs, 'personId' | 'eventId'>>;
   getEvent?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<QueryGetEventArgs, 'eventId'>>;
+  getEventTrials?: Resolver<Maybe<Array<Maybe<ResolversTypes['EventTrial']>>>, ParentType, ContextType, RequireFields<QueryGetEventTrialsArgs, 'eventId'>>;
+}>;
+
+export type TrialResolvers<ContextType = any, ParentType extends ResolversParentTypes['Trial'] = ResolversParentTypes['Trial']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  trialId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  eventId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  akcTrialNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  trialDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
   Event?: EventResolvers<ContextType>;
+  EventTrial?: EventTrialResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Person?: PersonResolvers<ContextType>;
   PersonEvent?: PersonEventResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Trial?: TrialResolvers<ContextType>;
 }>;
 
 

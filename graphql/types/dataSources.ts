@@ -1,5 +1,5 @@
 import Person from "../dataSources/Person";
-import Event from "../dataSources/Trial"
+import Event from "../dataSources/Event"
 
 export interface DataSources {
   person: Person,
