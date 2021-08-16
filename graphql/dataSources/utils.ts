@@ -1,4 +1,5 @@
-import { Person } from "../types"
+import { Person, PersonEvent } from "../types"
+import { QuerySpec } from "../types/dataSources"
 import Database from "./db/cosmos"
 
 const jwks = require('jwks-rsa')
@@ -6,7 +7,12 @@ const jwt = require('jsonwebtoken')
 
 export interface ValidationRules {
   allowedRoles: string[],
-  personId?: string
+  eventId?: string
+}
+
+type PersonValidationResponse = {
+  person: Person,
+  personEvents: PersonEvent[]
 }
 
 const jwksClient = jwks({
@@ -24,7 +30,7 @@ const getKey = (header, callback) => {
 }
 
 export const verify = (token: string, rules: ValidationRules) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {    
     if (token !== "" && token !== undefined && token !== null) {      
       jwt.verify(token, getKey, async (err, decoded) => {
         if (err) {
@@ -33,14 +39,17 @@ export const verify = (token: string, rules: ValidationRules) => {
           const personId = decoded['https://graph.appgility.com/personId']
           try {
             const user = await getUser(personId)
-            const { role } = user
+            const { person, personEvents } = user
             
-            if (!rules.allowedRoles.includes(role)) {
+            if (!rules.allowedRoles.includes(person.role)) {
               reject ('User does not have permission for this action')
             }
             
-            if (rules.personId && rules.personId !== user.personId) {
-              reject('User does not have permission for this action')
+            if (rules.eventId) {
+              const userEventIds = personEvents.map((personEvent) => personEvent.eventId)
+              if (!userEventIds.includes(rules.eventId)) {
+                reject('User does not have permission for this action')
+              }              
             }
             
             resolve(user)
@@ -52,20 +61,40 @@ export const verify = (token: string, rules: ValidationRules) => {
         }
       })
     } else {
-      resolve('')
+      reject('Unauthenticated request')
     }
 
   })
 }
 
-export const getUser = async (personId: string): Promise<Person> => {
+export const getUser = async (personId: string): Promise<PersonValidationResponse> => {
   const db = new Database()
   let person: Person = {}
+  let personEvents: PersonEvent[] = []
   try {
     person = await db.getItemById<Person>('person', personId, personId)
+
+    const querySpec: QuerySpec = {
+      query: 'select * from c where c.personId = @personId and c.type = @type',
+      parameters: [
+        {
+          name: '@personId',
+          value: personId
+        },
+        {
+          name: '@type',
+          value: 'event'
+        }
+      ]
+    }
+    personEvents = await db.queryItems<PersonEvent[]>('person', querySpec)
+    
   } catch (e) {
     console.log(e)    
   }
   
-  return person
+  return {
+    person,
+    personEvents
+  }
 }

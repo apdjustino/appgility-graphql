@@ -1,7 +1,8 @@
 const { makeExecutableSchema, gql } = require('apollo-server-azure-functions')
 const { merge } = require('lodash')
 const { Person, personResolvers } = require('./person')
-const { Trial, trialResolvers } = require('./trial')
+const { Trial, eventResolvers } = require('./event')
+const { TrialSchema, trialResolvers } = require('./trial')
 
 const Query = gql`
   type Query {
@@ -20,6 +21,6 @@ const resolvers = {
 }
 
 export const schema = makeExecutableSchema({
-  typeDefs: [Query, Mutation, Person, Trial],
-  resolvers: merge(resolvers, personResolvers, trialResolvers)
+  typeDefs: [Query, Mutation, Person, Trial, TrialSchema],
+  resolvers: merge(resolvers, personResolvers, trialResolvers, eventResolvers)
 })

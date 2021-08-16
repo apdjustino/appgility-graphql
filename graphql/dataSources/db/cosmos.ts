@@ -32,6 +32,13 @@ class Database {
     return createResponse.resource
   }
 
+  async updateItem<T>(containerId: string, itemId: string, partitionKey: string, updatedItem: T): Promise<T> {
+    const container = this._getContainer(containerId)    
+    const item = container.item(itemId, partitionKey)
+    await item.replace(updatedItem)
+    return updatedItem
+  }
+
   async queryItems<T>(containerId: string, query: QuerySpec): Promise<T> {
     const container = this._getContainer(containerId)
     const { resources } = await container.items.query(query).fetchAll()

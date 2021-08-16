@@ -1,5 +1,5 @@
 import { ValidationRules, verify } from "../dataSources/utils"
-import { MutationAddPersonArgs, QueryGetPersonByIdArgs, QueryGetPersonEventsArgs } from "../types"
+import { MutationAddPersonArgs, QueryGetPersonByIdArgs, QueryGetPersonEventArgs, QueryGetPersonEventsArgs } from "../types"
 import { DataSources } from "../types/dataSources"
 
 const { gql } = require('apollo-server-azure-functions')
@@ -22,7 +22,8 @@ const typeDef = gql`
     role: String
   }
 
-  type PersonEvent {    
+  type PersonEvent {
+    id: String!,    
     eventId: String!,
     personId: String!,
     type: String!,
@@ -35,7 +36,8 @@ const typeDef = gql`
 
   extend type Query {
     getPersonById(personId: String!): Person,
-    getPersonEvents(personId: String!): [PersonEvent]
+    getPersonEvents(personId: String!): [PersonEvent],
+    getPersonEvent(personId: String!, eventId: String!): PersonEvent
   }
 
   extend type Mutation {
@@ -57,13 +59,22 @@ const resolvers = {
     },
     getPersonEvents: async (_, args: QueryGetPersonEventsArgs, { dataSources, token }: { dataSources: DataSources, token: string}, __) => {
       const rules: ValidationRules = {
-        allowedRoles: ['secretary', 'exhibitor'],
-        personId: args.personId
+        allowedRoles: ['secretary', 'exhibitor']        
       }
       await verify(token, rules)      
       const { person } = dataSources
       const { personId } = args
       const result = await person.getPersonEvents(personId)
+      return result
+    },
+    getPersonEvent: async (_, args: QueryGetPersonEventArgs, { dataSources, token }: { dataSources: DataSources, token: string}, __) => {
+      const rules: ValidationRules = {
+        allowedRoles: ['secretary', 'exhibitor']       
+      }
+      await verify(token, rules)      
+      const { person } = dataSources
+      const { personId, eventId } = args
+      const result = await person.getPersonEvent(personId, eventId)
       return result
     }
   },

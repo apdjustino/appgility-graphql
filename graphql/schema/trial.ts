@@ -1,53 +1,54 @@
-
 import { ValidationRules, verify } from "../dataSources/utils"
-import { MutationAddEventArgs } from "../types"
+import { QueryGetTrialArgs } from "../types"
 import { DataSources } from "../types/dataSources"
 
 const { gql } = require('apollo-server-azure-functions')
 
 const typeDef = gql`
-  input CreateNewEventInput {            
-    name: String!,    
-    locationCity: String!,
-    locationState: String!,    
-    trialSite: String,   
-    hostClub: String,
+  input AddTrial {
+    eventId: String!,    
+    akcTrialNumber: String,
+    trialDate: String
   }
 
-  type Event {
+  input UpdateTrial {
+    id: String!,
+    trialId: String!,
     eventId: String!,
     type: String!,
-    name: String!,    
-    locationCity: String!,
-    locationState: String!,
-    status: String!,
-    trialSite: String
-    hostClub: String,
-    price: Int,
-    altPrice: Int,
-    premiumLink: String
+    akcTrialNumber: String,
+    trialDate: String
   }
 
-  extend type Mutation {
-    addEvent(data: CreateNewEventInput, personId: String): Event
+  type Trial {
+    id: String!,
+    trialId: String!,
+    eventId: String!,
+    type: String!,
+    akcTrialNumber: String,
+    trialDate: String
+  }
+
+  extend type Query {
+    getTrial(trialId: String!): Trial
   }
 `
 
-const resolvers = {
-  Mutation: {
-    addEvent: async (_, args: MutationAddEventArgs, { dataSources, token }: { dataSources: DataSources, token: string}, __) => {
+const resolvers = {  
+  Query: {
+    getTrial: async (_, args: QueryGetTrialArgs, { dataSources, token } : { dataSources: DataSources, token: string }, __) => {
       const rules: ValidationRules = {
-        allowedRoles: ['secretary'],
-        personId: args.personId
+        allowedRoles: ['secretary', 'exhibitor']
       }
+
       await verify(token, rules)
-      const { event, person } = dataSources
-      const result = await event.addEvent(args.data)
-      const ___ = await person.addPersonTrial(args.data, args.personId, result.eventId)
+      
+      const { trial } = dataSources
+      const result = trial.getTrial(args.trialId)
       return result
     }
   }
 }
 
-exports.Trial = typeDef
+exports.TrialSchema = typeDef
 exports.trialResolvers = resolvers
