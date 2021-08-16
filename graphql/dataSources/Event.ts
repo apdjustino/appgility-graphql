@@ -28,12 +28,11 @@ export default class Event {
     return updated
   }
 
-  async addEventTrial(eventTrial: AddEventTrial): Promise<EventTrialType> {
+  async addEventTrial(trialId: string, eventTrial: AddEventTrial): Promise<EventTrialType> {
     const newEventTrial: EventTrialType = { ...eventTrial } as EventTrialType
-    const id = uuidv4()
     newEventTrial.type = 'trial'
-    newEventTrial.id = id
-    newEventTrial.trialId = id
+    newEventTrial.id = trialId
+    newEventTrial.trialId = trialId
     const newItem = await this.db.addItem(this.containerId, newEventTrial)
     return newItem
   }

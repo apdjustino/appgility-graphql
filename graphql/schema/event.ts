@@ -1,7 +1,8 @@
 
 import { ValidationRules, verify } from "../dataSources/utils"
-import { MutationAddEventArgs, MutationAddEventTrialArgs, MutationUpdateEventArgs, MutationUpdateEventTrialArgs, QueryGetEventArgs, QueryGetEventTrialsArgs } from "../types"
+import { AddTrial, MutationAddEventArgs, MutationAddEventTrialArgs, MutationUpdateEventArgs, MutationUpdateEventTrialArgs, QueryGetEventArgs, QueryGetEventTrialsArgs, UpdateTrial } from "../types"
 import { DataSources } from "../types/dataSources"
+import { v4 as uuidv4 } from 'uuid';
 
 const { gql } = require('apollo-server-azure-functions')
 
@@ -156,8 +157,16 @@ const resolvers = {
       }
 
       await verify(token, rules)
-      const { event } = dataSources
-      const result = await event.addEventTrial(args.eventTrial)
+      const { event, trial } = dataSources
+      const trialId = uuidv4()
+      const result = await event.addEventTrial(trialId, args.eventTrial)
+      
+      const addTrialInput: AddTrial = {
+        akcTrialNumber: args.eventTrial.akcTrialNumber,
+        eventId: args.eventTrial.eventId,
+        trialDate: args.eventTrial.trialDate
+      }
+      const ___ = await trial.addTrial(trialId, addTrialInput)
       return result
     },
     updateEventTrial: async (_, args: MutationUpdateEventTrialArgs, { dataSources, token } : { dataSources: DataSources, token: string, __ }) => {
@@ -167,8 +176,19 @@ const resolvers = {
       }
 
       await verify(token, rules)
-      const { event } = dataSources
+      const { event, trial } = dataSources
+
+      const updateTrialInput: UpdateTrial = {
+        id: args.trialId,
+        trialId: args.trialId,
+        eventId: args.eventId,
+        type: 'trial',
+        akcTrialNumber: args.eventTrial.akcTrialNumber,
+        trialDate: args.eventTrial.trialDate
+      }
+
       const result = await event.updateEventTrial(args.trialId, args.eventId, args.eventTrial)
+      const ___ = await trial.updateTrial(args.trialId, updateTrialInput)
       return result
     }
   },
@@ -197,4 +217,4 @@ const resolvers = {
 }
 
 exports.Trial = typeDef
-exports.trialResolvers = resolvers
+exports.eventResolvers = resolvers
