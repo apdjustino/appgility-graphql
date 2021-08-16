@@ -131,8 +131,7 @@ const resolvers = {
   Mutation: {
     addEvent: async (_, args: MutationAddEventArgs, { dataSources, token }: { dataSources: DataSources, token: string}, __) => {
       const rules: ValidationRules = {
-        allowedRoles: ['secretary'],
-        personId: args.personId
+        allowedRoles: ['secretary']        
       }
       await verify(token, rules)
       const { event, person } = dataSources
@@ -142,7 +141,8 @@ const resolvers = {
     },
     updateEvent: async (_, args: MutationUpdateEventArgs, { dataSources, token } : { dataSources: DataSources, token: string, __}) => {
       const rules: ValidationRules = {
-        allowedRoles: ['secretary']
+        allowedRoles: ['secretary'],
+        eventId: args.eventId
       }
       await verify(token, rules)
       const { event } = dataSources
@@ -151,7 +151,8 @@ const resolvers = {
     },
     addEventTrial: async (_, args: MutationAddEventTrialArgs, { dataSources, token } : { dataSources: DataSources, token: string, __ }) => {
       const rules: ValidationRules = {
-        allowedRoles: ['secretary']
+        allowedRoles: ['secretary'],
+        eventId: args.eventTrial.eventId
       }
 
       await verify(token, rules)
@@ -161,7 +162,8 @@ const resolvers = {
     },
     updateEventTrial: async (_, args: MutationUpdateEventTrialArgs, { dataSources, token } : { dataSources: DataSources, token: string, __ }) => {
       const rules: ValidationRules = {
-        allowedRoles: ['secretary']
+        allowedRoles: ['secretary'],
+        eventId: args.eventId
       }
 
       await verify(token, rules)

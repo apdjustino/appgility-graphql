@@ -59,8 +59,7 @@ const resolvers = {
     },
     getPersonEvents: async (_, args: QueryGetPersonEventsArgs, { dataSources, token }: { dataSources: DataSources, token: string}, __) => {
       const rules: ValidationRules = {
-        allowedRoles: ['secretary', 'exhibitor'],
-        personId: args.personId
+        allowedRoles: ['secretary', 'exhibitor']        
       }
       await verify(token, rules)      
       const { person } = dataSources
@@ -70,8 +69,7 @@ const resolvers = {
     },
     getPersonEvent: async (_, args: QueryGetPersonEventArgs, { dataSources, token }: { dataSources: DataSources, token: string}, __) => {
       const rules: ValidationRules = {
-        allowedRoles: ['secretary', 'exhibitor'],
-        personId: args.personId
+        allowedRoles: ['secretary', 'exhibitor']       
       }
       await verify(token, rules)      
       const { person } = dataSources
