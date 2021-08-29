@@ -1,6 +1,6 @@
 
 import { ValidationRules, verify } from "../dataSources/utils"
-import { AddTrial, MutationAddEventArgs, MutationAddEventTrialArgs, MutationUpdateEventArgs, MutationUpdateEventTrialArgs, QueryGetEventArgs, QueryGetEventTrialsArgs, UpdateTrial } from "../types"
+import { AddTrial, MutationAddEventArgs, MutationAddEventTrialArgs, MutationUpdateEventArgs, MutationUpdateEventTrialArgs, PersonEvent, QueryGetEventArgs, QueryGetEventTrialArgs, QueryGetEventTrialsArgs, UpdateTrial } from "../types"
 import { DataSources } from "../types/dataSources"
 import { v4 as uuidv4 } from 'uuid';
 
@@ -28,8 +28,11 @@ const typeDef = gql`
     price: Int,
     altPrice: Int,
     premiumLink: String,
-    registrationEnabled: Boolean,
-    registrationCutoff: String 
+    openingDate: String,
+    closingDate: String,
+    trialChairName: String,
+    trialChairEmail: String,
+    trialChairPhone: String 
   }
 
   input AddEventTrial {    
@@ -49,7 +52,8 @@ const typeDef = gql`
     fastPreferred: [String],
     t2bClass: Boolean,
     premierStandard: Boolean,
-    premierJumpers: Boolean
+    premierJumpers: Boolean,
+    runLimit: Int
   }
 
   input UpdateEventTrial {
@@ -72,7 +76,8 @@ const typeDef = gql`
     fastPreferred: [String],
     t2bClass: Boolean,
     premierStandard: Boolean,
-    premierJumpers: Boolean
+    premierJumpers: Boolean,
+    runLimit: Int
   }
 
   type Event {
@@ -88,8 +93,11 @@ const typeDef = gql`
     price: Int,
     altPrice: Int,
     premiumLink: String,
-    registrationEnabled: Boolean,
-    registrationCutoff: String    
+    openingDate: String,
+    closingDate: String,
+    trialChairName: String,
+    trialChairEmail: String,
+    trialChairPhone: String 
   }
 
   type EventTrial {
@@ -112,17 +120,19 @@ const typeDef = gql`
     fastPreferred: [String],
     t2bClass: Boolean,
     premierStandard: Boolean,
-    premierJumpers: Boolean
+    premierJumpers: Boolean,
+    runLimit: Int
   }
 
   extend type Query {
     getEvent(eventId: String!): Event,
-    getEventTrials(eventId: String!): [EventTrial]
+    getEventTrials(eventId: String!): [EventTrial],
+    getEventTrial(trialId: String!, eventId: String!): EventTrial
   }
 
   extend type Mutation {
     addEvent(data: CreateNewEventInput, personId: String): Event,
-    updateEvent(eventId: String!, updatedEvent: UpdateEventInput!): Event,
+    updateEvent(eventId: String!, updatedEvent: UpdateEventInput!, personId: String!): Event,
     addEventTrial(eventTrial: AddEventTrial!): EventTrial,
     updateEventTrial(trialId: String!, eventId: String!, eventTrial: UpdateEventTrial!): EventTrial
   }
@@ -146,8 +156,17 @@ const resolvers = {
         eventId: args.eventId
       }
       await verify(token, rules)
-      const { event } = dataSources
+      const { event, person } = dataSources
+
+      const personEvent: PersonEvent = await person.getPersonEvent(args.personId, args.eventId)
+      personEvent.name = args.updatedEvent.name
+      personEvent.locationCity = args.updatedEvent.locationCity
+      personEvent.locationState = args.updatedEvent.locationState
+      personEvent.status = args.updatedEvent.status
+      personEvent.trialSite = args.updatedEvent.trialSite
+      
       const result = await event.updateEvent(args.eventId, args.updatedEvent)
+      const ___ = await person.updatePersonEvent(args.personId, args.eventId, personEvent)
       return result
     },
     addEventTrial: async (_, args: MutationAddEventTrialArgs, { dataSources, token } : { dataSources: DataSources, token: string, __ }) => {
@@ -211,6 +230,16 @@ const resolvers = {
       await verify(token, rules)
       const { event } = dataSources
       const result = await event.getEventTrials(args.eventId)
+      return result
+    },
+    getEventTrial: async (_, args: QueryGetEventTrialArgs, { dataSources, token }: { dataSources: DataSources, token: string }, __) => {
+      const rules: ValidationRules = {
+        allowedRoles: ['exhibitor', 'secretary']
+      }
+
+      await verify(token, rules)
+      const { event } = dataSources
+      const result = await event.getEventTrial(args.trialId, args.eventId)
       return result
     }
   }  

@@ -13,6 +13,18 @@ const typeDef = gql`
     role: String
   }
 
+  input PersonEventInput {
+    id: String!,    
+    eventId: String!,
+    personId: String!,
+    type: String!,
+    name: String!,
+    locationCity: String!,
+    locationState: String!,
+    status: String!,
+    trialSite: String
+  }
+
   type Person {
     id: String,
     type: String,
@@ -41,7 +53,7 @@ const typeDef = gql`
   }
 
   extend type Mutation {
-    addPerson(data: PersonInput): Person,
+    addPerson(data: PersonInput): Person 
   }
 `
 
@@ -83,7 +95,7 @@ const resolvers = {
       const { person } = dataSources      
       const result = await person.addNewPerson(args.data)
       return result
-    }
+    }    
   }
 }
 

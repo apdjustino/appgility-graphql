@@ -37,6 +37,11 @@ export default class Event {
     return newItem
   }
 
+  async getEventTrial(trialId: string, eventId: string): Promise<EventTrialType> {
+    const eventTrial = await this.db.getItemById<EventTrialType>(this.containerId, trialId, eventId)
+    return eventTrial
+  }
+
   async getEventTrials(eventId: string): Promise<EventTrialType[]> {
     const querySpec: QuerySpec = {
       query: 'select * from c where c.eventId = @eventId and c.type = @type',
