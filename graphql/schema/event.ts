@@ -28,8 +28,11 @@ const typeDef = gql`
     price: Int,
     altPrice: Int,
     premiumLink: String,
-    registrationEnabled: Boolean,
-    registrationCutoff: String 
+    openingDate: String,
+    closingDate: String,
+    trialChairName: String,
+    trialChairEmail: String,
+    trialChairPhone: String 
   }
 
   input AddEventTrial {    
@@ -49,7 +52,8 @@ const typeDef = gql`
     fastPreferred: [String],
     t2bClass: Boolean,
     premierStandard: Boolean,
-    premierJumpers: Boolean
+    premierJumpers: Boolean,
+    runLimit: Int
   }
 
   input UpdateEventTrial {
@@ -72,7 +76,8 @@ const typeDef = gql`
     fastPreferred: [String],
     t2bClass: Boolean,
     premierStandard: Boolean,
-    premierJumpers: Boolean
+    premierJumpers: Boolean,
+    runLimit: Int
   }
 
   type Event {
@@ -88,8 +93,11 @@ const typeDef = gql`
     price: Int,
     altPrice: Int,
     premiumLink: String,
-    registrationEnabled: Boolean,
-    registrationCutoff: String    
+    openingDate: String,
+    closingDate: String,
+    trialChairName: String,
+    trialChairEmail: String,
+    trialChairPhone: String 
   }
 
   type EventTrial {
@@ -112,7 +120,8 @@ const typeDef = gql`
     fastPreferred: [String],
     t2bClass: Boolean,
     premierStandard: Boolean,
-    premierJumpers: Boolean
+    premierJumpers: Boolean,
+    runLimit: Int
   }
 
   extend type Query {
