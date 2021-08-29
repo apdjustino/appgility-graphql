@@ -53,6 +53,11 @@ export default class Person {
     return personEvent
   }
 
+  async updatePersonEvent(personId: string, eventId: string, updatedPersonEvent: PersonEvent): Promise<PersonEvent> {
+    const personEvent = await this.db.updateItem(this.containerId, eventId, personId, updatedPersonEvent)
+    return personEvent
+  }
+
 
 }
 
