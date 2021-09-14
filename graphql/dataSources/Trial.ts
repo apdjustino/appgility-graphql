@@ -1,6 +1,6 @@
 import Database from './db/cosmos'
 import { AddTrial, Trial as TrialType, UpdateTrial } from '../types'
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
 
 export default class Trial {
   db = new Database()
@@ -13,7 +13,7 @@ export default class Trial {
 
   async addTrial(trialId: string, trialInput: AddTrial): Promise<TrialType> {
     const trial: TrialType = { ...trialInput } as TrialType
-    
+
     trial.type = 'trial'
     trial.id = trialId
     trial.trialId = trialId
@@ -25,5 +25,4 @@ export default class Trial {
     const updated = this.db.updateItem(this.containerId, trialId, trialId, updatedTrial)
     return updated
   }
-
 }

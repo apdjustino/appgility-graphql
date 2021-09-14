@@ -3,14 +3,13 @@ import { Person } from '../../types'
 import { QuerySpec } from '../../types/dataSources'
 
 class Database {
-
   _connection: CosmosClient
 
   _getContainer(containerId: string): Container {
     if (!this._connection) {
-      this._connection = new CosmosClient({ 
+      this._connection = new CosmosClient({
         endpoint: process.env.COSMOS_ENDPOINT,
-        key: process.env.COSMOS_KEY
+        key: process.env.COSMOS_KEY,
       })
     }
 
@@ -19,10 +18,10 @@ class Database {
   }
 
   async getItemById<T>(containerId: string, itemId: string, partitionKey: string): Promise<T> {
-    const container = this._getContainer(containerId)    
-    const item = container.item(itemId, partitionKey)    
+    const container = this._getContainer(containerId)
+    const item = container.item(itemId, partitionKey)
     const { resource } = await item.read()
-    
+
     return resource as T
   }
 
@@ -33,7 +32,7 @@ class Database {
   }
 
   async updateItem<T>(containerId: string, itemId: string, partitionKey: string, updatedItem: T): Promise<T> {
-    const container = this._getContainer(containerId)    
+    const container = this._getContainer(containerId)
     const item = container.item(itemId, partitionKey)
     await item.replace(updatedItem)
     return updatedItem
@@ -45,7 +44,6 @@ class Database {
     const uResources = resources as unknown
     return uResources as T
   }
-  
 }
 
 export default Database

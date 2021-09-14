@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   parserOptions: {
-    sourceType: "module",
+    sourceType: 'module',
     ecmaFeatures: {
       jsx: true,
     },
@@ -14,33 +14,33 @@ module.exports = {
     jest: true,
   },
   // extending recommended config and config derived from eslint-config-prettier
-  extends: ["plugin:prettier/recommended", "plugin:react/recommended"],
+  extends: ['plugin:prettier/recommended'],
   // required to lint *.vue files
-  plugins: ["html", "prettier", "react", "react-hooks"],
+  plugins: ['html', 'prettier'],
   // add your custom rules here
   rules: {
-    "prettier/prettier": [
-      "error",
+    'prettier/prettier': [
+      'error',
       {
-        endOfLine: "auto",
+        endOfLine: 'auto',
       },
     ],
     // allow paren-less arrow functions
-    "arrow-parens": 0,
+    'arrow-parens': 0,
     // allow async-await
-    "generator-star-spacing": 0,
+    'generator-star-spacing': 0,
     // allow debugger during development
-    "no-debugger": process.env.NODE_ENV === "production" ? 2 : 0,
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
     // allow the use of console (no-console) only for warning and error messages
-    "no-console": ["error", { allow: ["warn", "error"] }],
-    "react/prop-types": 0,
-    "react/display-name": 0,
-    "max-len": ["error", { code: 160, ignoreStrings: true, ignoreRegExpLiterals: true }],
-    "no-console": "off",
+    'no-console': ['error', { allow: ['warn', 'error'] }],
+    'react/prop-types': 0,
+    'react/display-name': 0,
+    'max-len': ['error', { code: 160, ignoreStrings: true, ignoreRegExpLiterals: true }],
+    'no-console': 'off',
   },
   settings: {
     react: {
-      version: "detect",
+      version: 'detect',
     },
   },
-};
+}

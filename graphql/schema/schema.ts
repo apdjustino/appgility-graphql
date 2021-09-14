@@ -17,10 +17,10 @@ const Mutation = gql`
 `
 
 const resolvers = {
-  Query: {}
+  Query: {},
 }
 
 export const schema = makeExecutableSchema({
   typeDefs: [Query, Mutation, Person, Trial, TrialSchema],
-  resolvers: merge(resolvers, personResolvers, trialResolvers, eventResolvers)
+  resolvers: merge(resolvers, personResolvers, trialResolvers, eventResolvers),
 })
