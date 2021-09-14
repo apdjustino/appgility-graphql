@@ -1,5 +1,5 @@
 import Database from './db/cosmos'
-import { PersonInput, Person as PersonType, CreateNewEventInput, PersonEvent } from '../types'
+import { PersonInput, Person as PersonType, CreateNewEventInput, PersonEvent, Dog as DogType } from '../types'
 import { QuerySpec } from '../types/dataSources'
 
 export default class Person {
@@ -75,5 +75,23 @@ export default class Person {
   async updatePersonEvent(personId: string, eventId: string, updatedPersonEvent: PersonEvent): Promise<PersonEvent> {
     const personEvent = await this.db.updateItem(this.containerId, eventId, personId, updatedPersonEvent)
     return personEvent
+  }
+
+  async getPersonDogs(personId: string): Promise<DogType[]> {
+    const querySpec: QuerySpec = {
+      query: 'select * from c where c.personId = @personId and c.type = @type',
+      parameters: [
+        {
+          name: '@personId',
+          value: personId,
+        },
+        {
+          name: '@type',
+          value: 'dog',
+        },
+      ],
+    }
+    const dogs = await this.db.queryItems<DogType[]>(this.containerId, querySpec, personId)
+    return dogs
   }
 }

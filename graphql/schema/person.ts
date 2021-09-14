@@ -1,5 +1,12 @@
 import { ValidationRules, verify } from '../dataSources/utils'
-import { MutationAddPersonArgs, QueryGetPersonByEmailArgs, QueryGetPersonByIdArgs, QueryGetPersonEventArgs, QueryGetPersonEventsArgs } from '../types'
+import {
+  MutationAddPersonArgs,
+  QueryGetPersonByEmailArgs,
+  QueryGetPersonByIdArgs,
+  QueryGetPersonDogsArgs,
+  QueryGetPersonEventArgs,
+  QueryGetPersonEventsArgs,
+} from '../types'
 import { DataSources } from '../types/dataSources'
 
 const { gql } = require('apollo-server-azure-functions')
@@ -46,11 +53,32 @@ const typeDef = gql`
     trialSite: String
   }
 
+  enum Sex {
+    MALE
+    FEMALE
+  }
+
+  type Dog {
+    id: String!
+    personId: String!
+    type: String!
+    callName: String
+    akcNumber: String
+    akcName: String
+    akcPrefix: String
+    akcSuffix: String
+    breed: String
+    dob: String
+    jumpHeight: Int
+    sex: Sex
+  }
+
   extend type Query {
     getPersonById(personId: String!): Person
     getPersonEvents(personId: String!): [PersonEvent]
     getPersonEvent(personId: String!, eventId: String!): PersonEvent
     getPersonByEmail(email: String!): Person
+    getPersonDogs(personId: String!): [Dog]
   }
 
   extend type Mutation {
@@ -90,10 +118,20 @@ const resolvers = {
       const result = await person.getPersonEvent(personId, eventId)
       return result
     },
-    getPersonByEmail: async (_, args: QueryGetPersonByEmailArgs, { dataSources, token }: { dataSources: DataSources; token: string }, __) => {
+    getPersonByEmail: async (_, args: QueryGetPersonByEmailArgs, { dataSources }: { dataSources: DataSources; token: string }, __) => {
       const { person } = dataSources
       const { email } = args
       const result = await person.getByEmail(email)
+      return result
+    },
+    getPersonDogs: async (_, args: QueryGetPersonDogsArgs, { dataSources, token }: { dataSources: DataSources; token: string }, __) => {
+      const rules: ValidationRules = {
+        allowedRoles: ['secretary', 'exhibitor'],
+      }
+      await verify(token, rules)
+      const { person } = dataSources
+      const { personId } = args
+      const result = person.getPersonDogs(personId)
       return result
     },
   },
