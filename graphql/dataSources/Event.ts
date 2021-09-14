@@ -1,6 +1,6 @@
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
 import { CreateNewEventInput, Event as EventType, UpdateEventInput, EventTrial as EventTrialType, AddEventTrial, UpdateEventTrial } from '../types'
-import { QuerySpec } from '../types/dataSources';
+import { QuerySpec } from '../types/dataSources'
 import Database from './db/cosmos'
 
 export default class Event {
@@ -10,12 +10,12 @@ export default class Event {
   async addEvent(input: CreateNewEventInput): Promise<EventType> {
     const eventInput: EventType = { ...input } as EventType
     const id = uuidv4()
-    eventInput.type= 'event'    
+    eventInput.type = 'event'
     eventInput.eventId = id
     eventInput.status = 'New'
     eventInput.id = id
     const newTrial = await this.db.addItem(this.containerId, eventInput)
-    return newTrial 
+    return newTrial
   }
 
   async getEvent(eventId: string): Promise<EventType> {
@@ -48,13 +48,13 @@ export default class Event {
       parameters: [
         {
           name: '@eventId',
-          value: eventId
+          value: eventId,
         },
         {
           name: '@type',
-          value: 'trial'
-        }
-      ]
+          value: 'trial',
+        },
+      ],
     }
     const eventTrials = await this.db.queryItems<EventTrialType[]>(this.containerId, querySpec)
     return eventTrials

@@ -3,23 +3,22 @@ import { PersonInput, Person as PersonType, CreateNewEventInput, PersonEvent } f
 import { QuerySpec } from '../types/dataSources'
 
 export default class Person {
-
   db = new Database()
   containerId = 'person'
 
-  async getById(personId: string): Promise<PersonType> {    
+  async getById(personId: string): Promise<PersonType> {
     const person = await this.db.getItemById<PersonType>(this.containerId, personId, personId)
     return person
   }
 
-  async addNewPerson(personInput: PersonInput): Promise<PersonType> {    
+  async addNewPerson(personInput: PersonInput): Promise<PersonType> {
     const person: PersonType = { ...personInput } as PersonType
     person.type = 'person'
     const newPerson = await this.db.addItem<PersonType>(this.containerId, person)
     return newPerson
   }
 
-  async addPersonTrial(input: CreateNewEventInput, personId: string, eventId: string): Promise<PersonEvent> {    
+  async addPersonTrial(input: CreateNewEventInput, personId: string, eventId: string): Promise<PersonEvent> {
     const personTrial: PersonEvent = { ...input } as PersonEvent
     personTrial.type = 'event'
     personTrial.personId = personId
@@ -36,13 +35,13 @@ export default class Person {
       parameters: [
         {
           name: '@personId',
-          value: personId
+          value: personId,
         },
         {
           name: '@type',
-          value: 'event'
-        }
-      ]
+          value: 'event',
+        },
+      ],
     }
     const personTrials = await this.db.queryItems<PersonEvent[]>(this.containerId, querySpec)
     return personTrials
@@ -57,7 +56,4 @@ export default class Person {
     const personEvent = await this.db.updateItem(this.containerId, eventId, personId, updatedPersonEvent)
     return personEvent
   }
-
-
 }
-
