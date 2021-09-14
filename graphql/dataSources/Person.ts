@@ -11,6 +11,26 @@ export default class Person {
     return person
   }
 
+  async getByEmail(email: string): Promise<PersonType> {
+    const querySpec: QuerySpec = {
+      query: 'select * from c where c.email = @email and c.type = @type',
+      parameters: [
+        {
+          name: '@email',
+          value: email,
+        },
+        {
+          name: '@type',
+          value: 'person',
+        },
+      ],
+    }
+
+    const personList = await this.db.queryItems<PersonType[]>(this.containerId, querySpec)
+    console.log(personList)
+    return personList[0]
+  }
+
   async addNewPerson(personInput: PersonInput): Promise<PersonType> {
     const person: PersonType = { ...personInput } as PersonType
     person.type = 'person'

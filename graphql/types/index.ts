@@ -31,6 +31,7 @@ export type AddEventTrial = {
   t2bClass?: Maybe<Scalars['Boolean']>
   premierStandard?: Maybe<Scalars['Boolean']>
   premierJumpers?: Maybe<Scalars['Boolean']>
+  runLimit?: Maybe<Scalars['Int']>
 }
 
 export type AddTrial = {
@@ -61,8 +62,11 @@ export type Event = {
   price?: Maybe<Scalars['Int']>
   altPrice?: Maybe<Scalars['Int']>
   premiumLink?: Maybe<Scalars['String']>
-  registrationEnabled?: Maybe<Scalars['Boolean']>
-  registrationCutoff?: Maybe<Scalars['String']>
+  openingDate?: Maybe<Scalars['String']>
+  closingDate?: Maybe<Scalars['String']>
+  trialChairName?: Maybe<Scalars['String']>
+  trialChairEmail?: Maybe<Scalars['String']>
+  trialChairPhone?: Maybe<Scalars['String']>
 }
 
 export type EventTrial = {
@@ -87,6 +91,7 @@ export type EventTrial = {
   t2bClass?: Maybe<Scalars['Boolean']>
   premierStandard?: Maybe<Scalars['Boolean']>
   premierJumpers?: Maybe<Scalars['Boolean']>
+  runLimit?: Maybe<Scalars['Int']>
 }
 
 export type Mutation = {
@@ -173,6 +178,7 @@ export type Query = {
   getPersonById?: Maybe<Person>
   getPersonEvents?: Maybe<Array<Maybe<PersonEvent>>>
   getPersonEvent?: Maybe<PersonEvent>
+  getPersonByEmail?: Maybe<Person>
   getEvent?: Maybe<Event>
   getEventTrials?: Maybe<Array<Maybe<EventTrial>>>
   getEventTrial?: Maybe<EventTrial>
@@ -190,6 +196,10 @@ export type QueryGetPersonEventsArgs = {
 export type QueryGetPersonEventArgs = {
   personId: Scalars['String']
   eventId: Scalars['String']
+}
+
+export type QueryGetPersonByEmailArgs = {
+  email: Scalars['String']
 }
 
 export type QueryGetEventArgs = {
@@ -232,8 +242,11 @@ export type UpdateEventInput = {
   price?: Maybe<Scalars['Int']>
   altPrice?: Maybe<Scalars['Int']>
   premiumLink?: Maybe<Scalars['String']>
-  registrationEnabled?: Maybe<Scalars['Boolean']>
-  registrationCutoff?: Maybe<Scalars['String']>
+  openingDate?: Maybe<Scalars['String']>
+  closingDate?: Maybe<Scalars['String']>
+  trialChairName?: Maybe<Scalars['String']>
+  trialChairEmail?: Maybe<Scalars['String']>
+  trialChairPhone?: Maybe<Scalars['String']>
 }
 
 export type UpdateEventTrial = {
@@ -257,6 +270,7 @@ export type UpdateEventTrial = {
   t2bClass?: Maybe<Scalars['Boolean']>
   premierStandard?: Maybe<Scalars['Boolean']>
   premierJumpers?: Maybe<Scalars['Boolean']>
+  runLimit?: Maybe<Scalars['Int']>
 }
 
 export type UpdateTrial = {
@@ -403,8 +417,11 @@ export type EventResolvers<ContextType = any, ParentType extends ResolversParent
   price?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   altPrice?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   premiumLink?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
-  registrationEnabled?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
-  registrationCutoff?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  openingDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  closingDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  trialChairName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  trialChairEmail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
+  trialChairPhone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }>
 
@@ -432,6 +449,7 @@ export type EventTrialResolvers<
   t2bClass?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
   premierStandard?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
   premierJumpers?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>
+  runLimit?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }>
 
@@ -485,6 +503,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getPersonById?: Resolver<Maybe<ResolversTypes['Person']>, ParentType, ContextType, RequireFields<QueryGetPersonByIdArgs, 'personId'>>
   getPersonEvents?: Resolver<Maybe<Array<Maybe<ResolversTypes['PersonEvent']>>>, ParentType, ContextType, RequireFields<QueryGetPersonEventsArgs, 'personId'>>
   getPersonEvent?: Resolver<Maybe<ResolversTypes['PersonEvent']>, ParentType, ContextType, RequireFields<QueryGetPersonEventArgs, 'personId' | 'eventId'>>
+  getPersonByEmail?: Resolver<Maybe<ResolversTypes['Person']>, ParentType, ContextType, RequireFields<QueryGetPersonByEmailArgs, 'email'>>
   getEvent?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<QueryGetEventArgs, 'eventId'>>
   getEventTrials?: Resolver<Maybe<Array<Maybe<ResolversTypes['EventTrial']>>>, ParentType, ContextType, RequireFields<QueryGetEventTrialsArgs, 'eventId'>>
   getEventTrial?: Resolver<Maybe<ResolversTypes['EventTrial']>, ParentType, ContextType, RequireFields<QueryGetEventTrialArgs, 'trialId' | 'eventId'>>

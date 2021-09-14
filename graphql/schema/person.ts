@@ -1,5 +1,5 @@
 import { ValidationRules, verify } from '../dataSources/utils'
-import { MutationAddPersonArgs, QueryGetPersonByIdArgs, QueryGetPersonEventArgs, QueryGetPersonEventsArgs } from '../types'
+import { MutationAddPersonArgs, QueryGetPersonByEmailArgs, QueryGetPersonByIdArgs, QueryGetPersonEventArgs, QueryGetPersonEventsArgs } from '../types'
 import { DataSources } from '../types/dataSources'
 
 const { gql } = require('apollo-server-azure-functions')
@@ -50,6 +50,7 @@ const typeDef = gql`
     getPersonById(personId: String!): Person
     getPersonEvents(personId: String!): [PersonEvent]
     getPersonEvent(personId: String!, eventId: String!): PersonEvent
+    getPersonByEmail(email: String!): Person
   }
 
   extend type Mutation {
@@ -87,6 +88,12 @@ const resolvers = {
       const { person } = dataSources
       const { personId, eventId } = args
       const result = await person.getPersonEvent(personId, eventId)
+      return result
+    },
+    getPersonByEmail: async (_, args: QueryGetPersonByEmailArgs, { dataSources, token }: { dataSources: DataSources; token: string }, __) => {
+      const { person } = dataSources
+      const { email } = args
+      const result = await person.getByEmail(email)
       return result
     },
   },
