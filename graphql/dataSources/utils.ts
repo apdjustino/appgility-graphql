@@ -85,7 +85,7 @@ export const getUser = async (personId: string): Promise<PersonValidationRespons
         },
       ],
     }
-    personEvents = await db.queryItems<PersonEvent[]>('person', querySpec)
+    personEvents = await db.queryItems<PersonEvent[]>('person', querySpec, personId)
   } catch (e) {
     console.log(e)
   }

@@ -43,7 +43,7 @@ export default class Person {
         },
       ],
     }
-    const personTrials = await this.db.queryItems<PersonEvent[]>(this.containerId, querySpec)
+    const personTrials = await this.db.queryItems<PersonEvent[]>(this.containerId, querySpec, personId)
     return personTrials
   }
 
