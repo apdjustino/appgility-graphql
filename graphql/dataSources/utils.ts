@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken')
 export interface ValidationRules {
   allowedRoles: string[]
   eventId?: string
+  personId?: string
 }
 
 type PersonValidationResponse = {
@@ -48,6 +49,12 @@ export const verify = (token: string, rules: ValidationRules) => {
             if (rules.eventId) {
               const userEventIds = personEvents.map((personEvent) => personEvent.eventId)
               if (!userEventIds.includes(rules.eventId)) {
+                reject('User does not have permission for this action')
+              }
+            }
+
+            if (rules.personId) {
+              if (rules.personId !== personId) {
                 reject('User does not have permission for this action')
               }
             }
