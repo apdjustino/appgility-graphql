@@ -1,6 +1,7 @@
 import Database from './db/cosmos'
-import { PersonInput, Person as PersonType, CreateNewEventInput, PersonEvent } from '../types'
+import { PersonInput, Person as PersonType, CreateNewEventInput, PersonEvent, Dog as DogType, DogInput } from '../types'
 import { QuerySpec } from '../types/dataSources'
+import { v4 as uuidv4 } from 'uuid'
 
 export default class Person {
   db = new Database()
@@ -9,6 +10,26 @@ export default class Person {
   async getById(personId: string): Promise<PersonType> {
     const person = await this.db.getItemById<PersonType>(this.containerId, personId, personId)
     return person
+  }
+
+  async getByEmail(email: string): Promise<PersonType> {
+    const querySpec: QuerySpec = {
+      query: 'select * from c where c.email = @email and c.type = @type',
+      parameters: [
+        {
+          name: '@email',
+          value: email,
+        },
+        {
+          name: '@type',
+          value: 'person',
+        },
+      ],
+    }
+
+    const personList = await this.db.queryItems<PersonType[]>(this.containerId, querySpec)
+    console.log(personList)
+    return personList[0]
   }
 
   async addNewPerson(personInput: PersonInput): Promise<PersonType> {
@@ -43,7 +64,7 @@ export default class Person {
         },
       ],
     }
-    const personTrials = await this.db.queryItems<PersonEvent[]>(this.containerId, querySpec)
+    const personTrials = await this.db.queryItems<PersonEvent[]>(this.containerId, querySpec, personId)
     return personTrials
   }
 
@@ -55,5 +76,55 @@ export default class Person {
   async updatePersonEvent(personId: string, eventId: string, updatedPersonEvent: PersonEvent): Promise<PersonEvent> {
     const personEvent = await this.db.updateItem(this.containerId, eventId, personId, updatedPersonEvent)
     return personEvent
+  }
+
+  async getPersonDogs(personId: string): Promise<DogType[]> {
+    const querySpec: QuerySpec = {
+      query: 'select * from c where c.personId = @personId and c.type = @type and c.deleted = false',
+      parameters: [
+        {
+          name: '@personId',
+          value: personId,
+        },
+        {
+          name: '@type',
+          value: 'dog',
+        }
+      ],
+    }
+    const dogs = await this.db.queryItems<DogType[]>(this.containerId, querySpec, personId)
+    return dogs
+  }
+
+  async addDog(personId: string, dog: DogInput): Promise<DogType> {
+    const dogObj = { ...dog } as DogType
+    const id = uuidv4()
+    
+    dogObj.type = 'dog'
+    dogObj.personId = personId
+    dogObj.id = id
+    dogObj.dogId = id
+    dogObj.deleted = false
+
+    const newDog = await this.db.addItem(this.containerId, dogObj)
+    return newDog
+  }
+
+  async updateDog(personId: string, dogId: string, dog: DogInput): Promise<DogType> {
+    const dogInput = { ...dog } as DogType
+    const dogToUpdate = await this.db.getItemById<DogType>(this.containerId, dogId, personId)
+
+    Object.keys(dogInput).forEach(key => {
+      dogToUpdate[key] = dogInput[key]
+    })
+    const updatedDog = await this.db.updateItem(this.containerId, dogId, personId, dogToUpdate)
+    return updatedDog
+  }
+
+  async removeDog(personId: string, dogId: string): Promise<DogType> {
+    const dogToRemove = await this.db.getItemById<DogType>(this.containerId, dogId, personId)
+    dogToRemove.deleted = true
+    const updatedDog = await this.db.updateItem(this.containerId, dogId, personId, dogToRemove)
+    return updatedDog
   }
 }

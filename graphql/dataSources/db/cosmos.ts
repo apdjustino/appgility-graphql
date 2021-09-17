@@ -38,9 +38,10 @@ class Database {
     return updatedItem
   }
 
-  async queryItems<T>(containerId: string, query: QuerySpec): Promise<T> {
+  async queryItems<T>(containerId: string, query: QuerySpec, partitionKey = ''): Promise<T> {
     const container = this._getContainer(containerId)
-    const { resources } = await container.items.query(query).fetchAll()
+    const { resources } =
+      partitionKey === '' ? await container.items.query(query).fetchAll() : await container.items.query(query, { partitionKey: partitionKey }).fetchAll()
     const uResources = resources as unknown
     return uResources as T
   }

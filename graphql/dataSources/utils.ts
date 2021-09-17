@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken')
 export interface ValidationRules {
   allowedRoles: string[]
   eventId?: string
+  personId?: string
 }
 
 type PersonValidationResponse = {
@@ -52,6 +53,12 @@ export const verify = (token: string, rules: ValidationRules) => {
               }
             }
 
+            if (rules.personId) {
+              if (rules.personId !== personId) {
+                reject('User does not have permission for this action')
+              }
+            }
+
             resolve(user)
           } catch (e) {
             console.log(e)
@@ -85,7 +92,7 @@ export const getUser = async (personId: string): Promise<PersonValidationRespons
         },
       ],
     }
-    personEvents = await db.queryItems<PersonEvent[]>('person', querySpec)
+    personEvents = await db.queryItems<PersonEvent[]>('person', querySpec, personId)
   } catch (e) {
     console.log(e)
   }

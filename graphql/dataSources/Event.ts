@@ -56,7 +56,7 @@ export default class Event {
         },
       ],
     }
-    const eventTrials = await this.db.queryItems<EventTrialType[]>(this.containerId, querySpec)
+    const eventTrials = await this.db.queryItems<EventTrialType[]>(this.containerId, querySpec, eventId)
     return eventTrials
   }
 
