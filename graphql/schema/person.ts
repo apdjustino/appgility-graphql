@@ -21,6 +21,12 @@ const typeDef = gql`
     name: String
     email: String
     role: String
+    phone: String
+    address: String
+    city: String
+    state: String
+    zip: String
+    sponsorId: String
   }
 
   input PersonEventInput {
@@ -42,6 +48,12 @@ const typeDef = gql`
     name: String
     email: String
     role: String
+    phone: String
+    address: String
+    city: String
+    state: String
+    zip: String
+    sponsorId: String
   }
 
   type PersonEvent {
@@ -101,6 +113,7 @@ const typeDef = gql`
 
   extend type Mutation {
     addPerson(data: PersonInput): Person
+    addAuth0(data: PersonInput): Person
     addDog(personId: String!, dog: DogInput!): Dog
     updateDog(personId: String!, dogId: String!, dog: DogInput!): Dog
     removeDog(personId: String!, dogId: String!): Dog
@@ -161,6 +174,9 @@ const resolvers = {
       const { person } = dataSources
       const result = await person.addNewPerson(args.data)
       return result
+    },
+    addPersonBySecretary: async () => {
+
     },
     addDog: async (_, args: MutationAddDogArgs, { dataSources, token }: { dataSources: DataSources, token: string}, __) => {
       const rules: ValidationRules = {
