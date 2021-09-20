@@ -55,6 +55,13 @@ export enum AgilityClass {
   Premier = 'PREMIER'
 }
 
+export type Auth0User = {
+  email?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  connection?: Maybe<Scalars['String']>;
+  password?: Maybe<Scalars['String']>;
+};
+
 export type CreateNewEventInput = {
   name: Scalars['String'];
   locationCity: Scalars['String'];
@@ -144,7 +151,6 @@ export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']>;
   addPerson?: Maybe<Person>;
-  addPersonBySecretary?: Maybe<Person>;
   addDog?: Maybe<Dog>;
   updateDog?: Maybe<Dog>;
   removeDog?: Maybe<Dog>;
@@ -157,11 +163,7 @@ export type Mutation = {
 
 export type MutationAddPersonArgs = {
   data?: Maybe<PersonInput>;
-};
-
-
-export type MutationAddPersonBySecretaryArgs = {
-  data?: Maybe<PersonInput>;
+  password?: Maybe<Scalars['String']>;
 };
 
 
@@ -221,7 +223,7 @@ export type Person = {
   city?: Maybe<Scalars['String']>;
   state?: Maybe<Scalars['String']>;
   zip?: Maybe<Scalars['String']>;
-  sponsorId?: Maybe<Scalars['String']>;
+  claimed?: Maybe<Scalars['Boolean']>;
 };
 
 export type PersonEvent = {
@@ -252,15 +254,15 @@ export type PersonEventInput = {
 export type PersonInput = {
   id?: Maybe<Scalars['String']>;
   personId?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
-  role?: Maybe<Scalars['String']>;
-  phone?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  email: Scalars['String'];
+  role: Scalars['String'];
+  phone: Scalars['String'];
   address?: Maybe<Scalars['String']>;
   city?: Maybe<Scalars['String']>;
   state?: Maybe<Scalars['String']>;
   zip?: Maybe<Scalars['String']>;
-  sponsorId?: Maybe<Scalars['String']>;
+  claimed?: Maybe<Scalars['Boolean']>;
 };
 
 export type Query = {
@@ -531,6 +533,7 @@ export type ResolversTypes = ResolversObject<{
   AddTrial: AddTrial;
   AgilityAbility: AgilityAbility;
   AgilityClass: AgilityClass;
+  Auth0User: Auth0User;
   CreateNewEventInput: CreateNewEventInput;
   Dog: ResolverTypeWrapper<Dog>;
   DogInput: DogInput;
@@ -559,6 +562,7 @@ export type ResolversParentTypes = ResolversObject<{
   Int: Scalars['Int'];
   Boolean: Scalars['Boolean'];
   AddTrial: AddTrial;
+  Auth0User: Auth0User;
   CreateNewEventInput: CreateNewEventInput;
   Dog: Dog;
   DogInput: DogInput;
@@ -646,7 +650,6 @@ export type EventTrialResolvers<ContextType = any, ParentType extends ResolversP
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   addPerson?: Resolver<Maybe<ResolversTypes['Person']>, ParentType, ContextType, RequireFields<MutationAddPersonArgs, never>>;
-  addPersonBySecretary?: Resolver<Maybe<ResolversTypes['Person']>, ParentType, ContextType, RequireFields<MutationAddPersonBySecretaryArgs, never>>;
   addDog?: Resolver<Maybe<ResolversTypes['Dog']>, ParentType, ContextType, RequireFields<MutationAddDogArgs, 'personId' | 'dog'>>;
   updateDog?: Resolver<Maybe<ResolversTypes['Dog']>, ParentType, ContextType, RequireFields<MutationUpdateDogArgs, 'personId' | 'dogId' | 'dog'>>;
   removeDog?: Resolver<Maybe<ResolversTypes['Dog']>, ParentType, ContextType, RequireFields<MutationRemoveDogArgs, 'personId' | 'dogId'>>;
@@ -668,7 +671,7 @@ export type PersonResolvers<ContextType = any, ParentType extends ResolversParen
   city?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   state?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   zip?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  sponsorId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  claimed?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
