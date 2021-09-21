@@ -20,6 +20,21 @@ const typeDef = gql`
     trialDate: String
   }
 
+  enum AgilityClass {
+    STANDARD
+    JUMPERS
+    FAST
+    T2B
+    PREMIER
+  }
+
+  enum AgilityAbility {
+    NOVICE
+    OPEN
+    EXCELLENT
+    MASTERS
+  }
+
   type Trial {
     id: String!
     trialId: String!
@@ -27,6 +42,58 @@ const typeDef = gql`
     type: String!
     akcTrialNumber: String
     trialDate: String
+  }
+
+  type Run {
+    id: String!
+    type: String!
+    runId: String!
+    trialId: String!
+    personId: String!
+    dogId: String!
+    class: AgilityClass!
+    ability: AgilityAbility!
+    preferred: Boolean!
+    jumpHeight: Int!
+    armband: String
+    courseLength: Int
+    score: Int
+    timeDeduction: Int
+    time: Float
+    qualified: Boolean
+    points: Int
+    sendBonus: Boolean
+    wrongCourse: Int
+    excusal: Int
+    refusal: Int
+    failure: Int
+    table: Int
+    rank: Int
+    obstacles: [Boolean]
+    paid: Boolean!
+  }
+
+  input RunInput {
+    class: AgilityClass
+    ability: AgilityAbility
+    preferred: Boolean
+    jumpHeight: Int
+    armband: String
+    courseLength: Int
+    score: Int
+    timeDeduction: Float
+    time: Float
+    qualified: Boolean
+    points: Int
+    sendBonus: Boolean
+    wrongCourse: Int
+    excusal: Int
+    refusal: Int
+    failure: Int
+    table: Int
+    rank: Int
+    obstacles: [Boolean]
+    paid: Boolean
   }
 
   extend type Query {

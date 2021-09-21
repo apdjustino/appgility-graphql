@@ -27,8 +27,7 @@ export default class Person {
       ],
     }
 
-    const personList = await this.db.queryItems<PersonType[]>(this.containerId, querySpec)
-    console.log(personList)
+    const personList = await this.db.queryItems<PersonType[]>(this.containerId, querySpec)    
     return personList[0]
   }
 
