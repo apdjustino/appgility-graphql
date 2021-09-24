@@ -55,11 +55,16 @@ export enum AgilityClass {
   Premier = 'PREMIER'
 }
 
+export type AppMetadata = {
+  personId?: Maybe<Scalars['String']>;
+};
+
 export type Auth0User = {
   email?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   connection?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
+  app_metadata?: Maybe<AppMetadata>;
 };
 
 export type CreateNewEventInput = {
@@ -533,6 +538,7 @@ export type ResolversTypes = ResolversObject<{
   AddTrial: AddTrial;
   AgilityAbility: AgilityAbility;
   AgilityClass: AgilityClass;
+  AppMetadata: AppMetadata;
   Auth0User: Auth0User;
   CreateNewEventInput: CreateNewEventInput;
   Dog: ResolverTypeWrapper<Dog>;
@@ -562,6 +568,7 @@ export type ResolversParentTypes = ResolversObject<{
   Int: Scalars['Int'];
   Boolean: Scalars['Boolean'];
   AddTrial: AddTrial;
+  AppMetadata: AppMetadata;
   Auth0User: Auth0User;
   CreateNewEventInput: CreateNewEventInput;
   Dog: Dog;
