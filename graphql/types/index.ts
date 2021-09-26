@@ -84,12 +84,17 @@ export type Dog = {
   callName: Scalars['String'];
   akcNumber?: Maybe<Scalars['String']>;
   akcName?: Maybe<Scalars['String']>;
-  akcPrefix?: Maybe<Scalars['String']>;
-  akcSuffix?: Maybe<Scalars['String']>;
+  withersHeight?: Maybe<Scalars['String']>;
+  needsMeasured?: Maybe<Scalars['Boolean']>;
   breed?: Maybe<Scalars['String']>;
+  variety?: Maybe<Scalars['String']>;
+  placeOfBirth?: Maybe<Scalars['String']>;
   dob?: Maybe<Scalars['String']>;
-  jumpHeight?: Maybe<Scalars['Int']>;
+  jumpHeight?: Maybe<Scalars['String']>;
   sex?: Maybe<Sex>;
+  breeder?: Maybe<Scalars['String']>;
+  sire?: Maybe<Scalars['String']>;
+  dam?: Maybe<Scalars['String']>;
   deleted?: Maybe<Scalars['Boolean']>;
 };
 
@@ -97,13 +102,17 @@ export type DogInput = {
   callName: Scalars['String'];
   akcNumber?: Maybe<Scalars['String']>;
   akcName?: Maybe<Scalars['String']>;
-  akcPrefix?: Maybe<Scalars['String']>;
-  akcSuffix?: Maybe<Scalars['String']>;
+  withersHeight?: Maybe<Scalars['String']>;
+  needsMeasured?: Maybe<Scalars['Boolean']>;
   breed?: Maybe<Scalars['String']>;
+  variety?: Maybe<Scalars['String']>;
+  placeOfBirth?: Maybe<Scalars['String']>;
   dob?: Maybe<Scalars['String']>;
-  jumpHeight?: Maybe<Scalars['Int']>;
+  jumpHeight?: Maybe<Scalars['String']>;
   sex?: Maybe<Sex>;
-  deleted?: Maybe<Scalars['Boolean']>;
+  breeder?: Maybe<Scalars['String']>;
+  sire?: Maybe<Scalars['String']>;
+  dam?: Maybe<Scalars['String']>;
 };
 
 export type Event = {
@@ -598,12 +607,17 @@ export type DogResolvers<ContextType = any, ParentType extends ResolversParentTy
   callName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   akcNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   akcName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  akcPrefix?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  akcSuffix?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  withersHeight?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  needsMeasured?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   breed?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  variety?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  placeOfBirth?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dob?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  jumpHeight?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  jumpHeight?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   sex?: Resolver<Maybe<ResolversTypes['Sex']>, ParentType, ContextType>;
+  breeder?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  sire?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dam?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   deleted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;

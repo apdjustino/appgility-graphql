@@ -83,12 +83,17 @@ const typeDef = gql`
     callName: String!
     akcNumber: String
     akcName: String
-    akcPrefix: String
-    akcSuffix: String
+    withersHeight: String
+    needsMeasured: Boolean
     breed: String
+    variety: String
+    placeOfBirth: String
     dob: String
-    jumpHeight: Int
+    jumpHeight: String
     sex: Sex
+    breeder: String
+    sire: String
+    dam: String
     deleted: Boolean
   }
 
@@ -96,13 +101,17 @@ const typeDef = gql`
     callName: String!
     akcNumber: String
     akcName: String
-    akcPrefix: String
-    akcSuffix: String
+    withersHeight: String
+    needsMeasured: Boolean
     breed: String
+    variety: String
+    placeOfBirth: String
     dob: String
-    jumpHeight: Int
+    jumpHeight: String
     sex: Sex
-    deleted: Boolean
+    breeder: String
+    sire: String
+    dam: String
   }
 
   input AppMetadata {
