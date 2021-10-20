@@ -3,6 +3,7 @@ const { merge } = require('lodash')
 const { Person, personResolvers } = require('./person')
 const { Trial, eventResolvers } = require('./event')
 const { TrialSchema, trialResolvers } = require('./trial')
+const { Schedule } = require('./schedule')
 
 const Query = gql`
   type Query {
@@ -21,6 +22,6 @@ const resolvers = {
 }
 
 export const schema = makeExecutableSchema({
-  typeDefs: [Query, Mutation, Person, Trial, TrialSchema],
+  typeDefs: [Query, Mutation, Person, Trial, TrialSchema, Schedule],
   resolvers: merge(resolvers, personResolvers, trialResolvers, eventResolvers),
 })

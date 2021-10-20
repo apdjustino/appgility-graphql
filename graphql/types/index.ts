@@ -52,7 +52,8 @@ export enum AgilityClass {
   Jumpers = 'JUMPERS',
   Fast = 'FAST',
   T2B = 'T2B',
-  Premier = 'PREMIER'
+  PremierStandard = 'PREMIER_STANDARD',
+  PremierJumpers = 'PREMIER_JUMPERS'
 }
 
 export type AppMetadata = {
@@ -172,6 +173,7 @@ export type Mutation = {
   updateEvent?: Maybe<Event>;
   addEventTrial?: Maybe<EventTrial>;
   updateEventTrial?: Maybe<EventTrial>;
+  addRun?: Maybe<Run>;
 };
 
 
@@ -222,6 +224,15 @@ export type MutationUpdateEventTrialArgs = {
   trialId: Scalars['String'];
   eventId: Scalars['String'];
   eventTrial: UpdateEventTrial;
+};
+
+
+export type MutationAddRunArgs = {
+  eventId: Scalars['String'];
+  trialId: Scalars['String'];
+  personId: Scalars['String'];
+  dogId: Scalars['String'];
+  run: RunInput;
 };
 
 export type Person = {
@@ -277,6 +288,22 @@ export type PersonInput = {
   state?: Maybe<Scalars['String']>;
   zip?: Maybe<Scalars['String']>;
   claimed?: Maybe<Scalars['Boolean']>;
+};
+
+export type PersonRun = {
+  __typename?: 'PersonRun';
+  id: Scalars['String'];
+  type: Scalars['String'];
+  runId: Scalars['String'];
+  personId: Scalars['String'];
+  dogId: Scalars['String'];
+  trialId: Scalars['String'];
+  agilityClass: AgilityClass;
+  level: AgilityAbility;
+  jumpHeight: Scalars['Int'];
+  preferred: Scalars['Boolean'];
+  group?: Maybe<Scalars['String']>;
+  qualified?: Maybe<Scalars['Boolean']>;
 };
 
 export type Query = {
@@ -348,10 +375,11 @@ export type Run = {
   trialId: Scalars['String'];
   personId: Scalars['String'];
   dogId: Scalars['String'];
-  class: AgilityClass;
-  ability: AgilityAbility;
+  agilityClass: AgilityClass;
+  level: AgilityAbility;
   preferred: Scalars['Boolean'];
   jumpHeight: Scalars['Int'];
+  group?: Maybe<Scalars['String']>;
   armband?: Maybe<Scalars['String']>;
   courseLength?: Maybe<Scalars['Int']>;
   score?: Maybe<Scalars['Int']>;
@@ -371,10 +399,11 @@ export type Run = {
 };
 
 export type RunInput = {
-  class?: Maybe<AgilityClass>;
-  ability?: Maybe<AgilityAbility>;
-  preferred?: Maybe<Scalars['Boolean']>;
-  jumpHeight?: Maybe<Scalars['Int']>;
+  agilityClass: AgilityClass;
+  level: AgilityAbility;
+  preferred: Scalars['Boolean'];
+  jumpHeight: Scalars['Int'];
+  group?: Maybe<Scalars['String']>;
   armband?: Maybe<Scalars['String']>;
   courseLength?: Maybe<Scalars['Int']>;
   score?: Maybe<Scalars['Int']>;
@@ -391,6 +420,22 @@ export type RunInput = {
   rank?: Maybe<Scalars['Int']>;
   obstacles?: Maybe<Array<Maybe<Scalars['Boolean']>>>;
   paid?: Maybe<Scalars['Boolean']>;
+};
+
+export type ScheduleRun = {
+  __typename?: 'ScheduleRun';
+  id: Scalars['String'];
+  runId: Scalars['String'];
+  type: Scalars['String'];
+  personId: Scalars['String'];
+  dogId: Scalars['String'];
+  trialId: Scalars['String'];
+  agilityClass: AgilityClass;
+  level: AgilityAbility;
+  preferred: Scalars['Boolean'];
+  parent?: Maybe<Scalars['String']>;
+  jumpHeight: Scalars['Int'];
+  group?: Maybe<Scalars['String']>;
 };
 
 export enum Sex {
@@ -559,10 +604,12 @@ export type ResolversTypes = ResolversObject<{
   PersonEvent: ResolverTypeWrapper<PersonEvent>;
   PersonEventInput: PersonEventInput;
   PersonInput: PersonInput;
+  PersonRun: ResolverTypeWrapper<PersonRun>;
   Query: ResolverTypeWrapper<{}>;
   Run: ResolverTypeWrapper<Run>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   RunInput: RunInput;
+  ScheduleRun: ResolverTypeWrapper<ScheduleRun>;
   Sex: Sex;
   Trial: ResolverTypeWrapper<Trial>;
   UpdateEventInput: UpdateEventInput;
@@ -589,10 +636,12 @@ export type ResolversParentTypes = ResolversObject<{
   PersonEvent: PersonEvent;
   PersonEventInput: PersonEventInput;
   PersonInput: PersonInput;
+  PersonRun: PersonRun;
   Query: {};
   Run: Run;
   Float: Scalars['Float'];
   RunInput: RunInput;
+  ScheduleRun: ScheduleRun;
   Trial: Trial;
   UpdateEventInput: UpdateEventInput;
   UpdateEventTrial: UpdateEventTrial;
@@ -678,6 +727,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateEvent?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<MutationUpdateEventArgs, 'eventId' | 'updatedEvent' | 'personId'>>;
   addEventTrial?: Resolver<Maybe<ResolversTypes['EventTrial']>, ParentType, ContextType, RequireFields<MutationAddEventTrialArgs, 'eventTrial'>>;
   updateEventTrial?: Resolver<Maybe<ResolversTypes['EventTrial']>, ParentType, ContextType, RequireFields<MutationUpdateEventTrialArgs, 'trialId' | 'eventId' | 'eventTrial'>>;
+  addRun?: Resolver<Maybe<ResolversTypes['Run']>, ParentType, ContextType, RequireFields<MutationAddRunArgs, 'eventId' | 'trialId' | 'personId' | 'dogId' | 'run'>>;
 }>;
 
 export type PersonResolvers<ContextType = any, ParentType extends ResolversParentTypes['Person'] = ResolversParentTypes['Person']> = ResolversObject<{
@@ -709,6 +759,22 @@ export type PersonEventResolvers<ContextType = any, ParentType extends Resolvers
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type PersonRunResolvers<ContextType = any, ParentType extends ResolversParentTypes['PersonRun'] = ResolversParentTypes['PersonRun']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  runId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  personId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  dogId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  trialId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  agilityClass?: Resolver<ResolversTypes['AgilityClass'], ParentType, ContextType>;
+  level?: Resolver<ResolversTypes['AgilityAbility'], ParentType, ContextType>;
+  jumpHeight?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  preferred?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  group?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  qualified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   getPersonById?: Resolver<Maybe<ResolversTypes['Person']>, ParentType, ContextType, RequireFields<QueryGetPersonByIdArgs, 'personId'>>;
@@ -729,10 +795,11 @@ export type RunResolvers<ContextType = any, ParentType extends ResolversParentTy
   trialId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   personId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   dogId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  class?: Resolver<ResolversTypes['AgilityClass'], ParentType, ContextType>;
-  ability?: Resolver<ResolversTypes['AgilityAbility'], ParentType, ContextType>;
+  agilityClass?: Resolver<ResolversTypes['AgilityClass'], ParentType, ContextType>;
+  level?: Resolver<ResolversTypes['AgilityAbility'], ParentType, ContextType>;
   preferred?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   jumpHeight?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  group?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   armband?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   courseLength?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   score?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -749,6 +816,22 @@ export type RunResolvers<ContextType = any, ParentType extends ResolversParentTy
   rank?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   obstacles?: Resolver<Maybe<Array<Maybe<ResolversTypes['Boolean']>>>, ParentType, ContextType>;
   paid?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ScheduleRunResolvers<ContextType = any, ParentType extends ResolversParentTypes['ScheduleRun'] = ResolversParentTypes['ScheduleRun']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  runId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  personId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  dogId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  trialId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  agilityClass?: Resolver<ResolversTypes['AgilityClass'], ParentType, ContextType>;
+  level?: Resolver<ResolversTypes['AgilityAbility'], ParentType, ContextType>;
+  preferred?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  parent?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  jumpHeight?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  group?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -769,8 +852,10 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Mutation?: MutationResolvers<ContextType>;
   Person?: PersonResolvers<ContextType>;
   PersonEvent?: PersonEventResolvers<ContextType>;
+  PersonRun?: PersonRunResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Run?: RunResolvers<ContextType>;
+  ScheduleRun?: ScheduleRunResolvers<ContextType>;
   Trial?: TrialResolvers<ContextType>;
 }>;
 

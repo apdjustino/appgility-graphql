@@ -4,6 +4,7 @@ import { DataSources } from './types/dataSources'
 import Event from './dataSources/Event'
 import Person from './dataSources/Person'
 import Trial from './dataSources/Trial'
+import Schedule from './dataSources/Schedule'
 import Auth0 from './dataSources/Auth0'
 import { Context, HttpRequest } from '@azure/functions'
 
@@ -13,7 +14,8 @@ const server = new ApolloServer({
     person: new Person(),
     event: new Event(),
     trial: new Trial(),
-    auth0: new Auth0()
+    auth0: new Auth0(),
+    schedule: new Schedule()
   }),
   context: async ({ request }) => {
     const token = request.headers['authorization'] || ''

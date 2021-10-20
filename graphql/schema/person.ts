@@ -97,6 +97,21 @@ const typeDef = gql`
     deleted: Boolean
   }
 
+  type PersonRun {
+    id: String!
+    type: String!
+    runId: String!
+    personId: String!
+    dogId: String!
+    trialId: String!
+    agilityClass: AgilityClass!
+    level: AgilityAbility!
+    jumpHeight: Int!
+    preferred: Boolean!
+    group: String
+    qualified: Boolean
+  }
+
   input DogInput {
     callName: String!
     akcNumber: String
