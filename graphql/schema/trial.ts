@@ -1,6 +1,7 @@
 import { ValidationRules, verify } from '../dataSources/utils'
-import { QueryGetTrialArgs } from '../types'
+import { QueryGetTrialArgs, MutationAddRunArgs, QueryGetTrialRunsArgs } from '../types'
 import { DataSources } from '../types/dataSources'
+import { v4 as uuid } from 'uuid'
 
 const { gql } = require('apollo-server-azure-functions')
 
@@ -25,7 +26,8 @@ const typeDef = gql`
     JUMPERS
     FAST
     T2B
-    PREMIER
+    PREMIER_STANDARD
+    PREMIER_JUMPERS
   }
 
   enum AgilityAbility {
@@ -51,10 +53,11 @@ const typeDef = gql`
     trialId: String!
     personId: String!
     dogId: String!
-    class: AgilityClass!
-    ability: AgilityAbility!
+    agilityClass: AgilityClass!
+    level: AgilityAbility
     preferred: Boolean!
     jumpHeight: Int!
+    group: String
     armband: String
     courseLength: Int
     score: Int
@@ -70,14 +73,16 @@ const typeDef = gql`
     table: Int
     rank: Int
     obstacles: [Boolean]
-    paid: Boolean!
+    paid: Boolean
+    deleted: Boolean!
   }
 
   input RunInput {
-    class: AgilityClass
-    ability: AgilityAbility
-    preferred: Boolean
-    jumpHeight: Int
+    agilityClass: AgilityClass!
+    level: AgilityAbility
+    preferred: Boolean!
+    jumpHeight: Int!
+    group: String
     armband: String
     courseLength: Int
     score: Int
@@ -98,6 +103,11 @@ const typeDef = gql`
 
   extend type Query {
     getTrial(trialId: String!): Trial
+    getTrialRuns(trialId: String!): [Run]
+  }
+
+  extend type Mutation {
+    addRun(eventId: String!, trialId: String!, personId: String!, dogId: String!, run: RunInput!): Run
   }
 `
 
@@ -111,10 +121,41 @@ const resolvers = {
       await verify(token, rules)
 
       const { trial } = dataSources
-      const result = trial.getTrial(args.trialId)
+      const result = await trial.getTrial(args.trialId)
       return result
     },
+    getTrialRuns: async (_, args: QueryGetTrialRunsArgs, { dataSources, token } : { dataSources: DataSources, token: string }, __) => {
+      const rules: ValidationRules = {
+        allowedRoles: ['secretary', 'exhibitor']
+      }
+
+      await verify(token, rules)
+
+      const { trial } = dataSources
+      const result = await trial.getTrialRuns(args.trialId)
+      return result
+    }
   },
+  Mutation: {
+    addRun: async (_, args: MutationAddRunArgs, { dataSources, token } : { dataSources: DataSources, token: string }, __) => {
+      const rules: ValidationRules = {
+        allowedRoles: ['secretary'],
+        eventId: args.eventId
+      }
+
+      await verify(token, rules)
+
+      const { trial, person, schedule } = dataSources
+      const { personId, dogId, trialId, run } = args 
+      const runId = uuid()
+
+      const trialRun = await trial.addTrialRun(runId, personId, dogId, trialId, run)
+      await person.addPersonRun(args.personId, dogId, runId, trialId, run)
+      await schedule.addScheduleRun(runId, personId, dogId, trialId, run)
+
+      return trialRun
+    }
+  }
 }
 
 exports.TrialSchema = typeDef

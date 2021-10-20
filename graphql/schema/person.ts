@@ -83,33 +83,63 @@ const typeDef = gql`
     callName: String!
     akcNumber: String
     akcName: String
-    akcPrefix: String
-    akcSuffix: String
+    withersHeight: String
+    needsMeasured: Boolean
     breed: String
+    variety: String
+    placeOfBirth: String
     dob: String
-    jumpHeight: Int
+    jumpHeight: String
     sex: Sex
+    breeder: String
+    sire: String
+    dam: String
     deleted: Boolean
+  }
+
+  type PersonRun {
+    id: String!
+    type: String!
+    runId: String!
+    personId: String!
+    dogId: String!
+    trialId: String!
+    agilityClass: AgilityClass!
+    level: AgilityAbility
+    jumpHeight: Int!
+    preferred: Boolean!
+    group: String
+    qualified: Boolean
+    deleted: Boolean!
   }
 
   input DogInput {
     callName: String!
     akcNumber: String
     akcName: String
-    akcPrefix: String
-    akcSuffix: String
+    withersHeight: String
+    needsMeasured: Boolean
     breed: String
+    variety: String
+    placeOfBirth: String
     dob: String
-    jumpHeight: Int
+    jumpHeight: String
     sex: Sex
-    deleted: Boolean
+    breeder: String
+    sire: String
+    dam: String
+  }
+
+  input AppMetadata {
+    personId: String
   }
 
   input Auth0User {
     email: String    
     name: String
     connection: String
-    password: String
+    password: String,
+    app_metadata: AppMetadata
   }
 
   extend type Query {
@@ -227,23 +257,25 @@ const resolvers = {
       }    
       
       args.data.personId = uuid()
-      args.data.claimed = true
-      
-      if (!args.password) {
-        // This is the case when a secretary is adding the person, so add a placeholder password and set claimed to false
-        args.password = uuid()
-        args.data.claimed = false
-      }
-
+      args.data.id = args.data.personId
+      args.data.claimed = false
+            
       const newPersonResult = await person.addNewPerson(args.data)
       
-      const auth0Payload: Auth0User = {
-        email: args.data.email,        
-        name: args.data.name,
-        password: args.password
+      if (args.password) {                
+        args.data.claimed = true
+
+        const auth0Payload: Auth0User = {
+          email: args.data.email,        
+          name: args.data.name,
+          password: args.password,
+          app_metadata: {
+            personId: newPersonResult.personId
+          }
+        }
+        
+        await auth0.createNewUser(auth0Payload)
       }
-      
-      await auth0.createNewUser(auth0Payload)
 
       return newPersonResult
     },

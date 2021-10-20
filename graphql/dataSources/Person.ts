@@ -1,5 +1,5 @@
 import Database from './db/cosmos'
-import { PersonInput, Person as PersonType, CreateNewEventInput, PersonEvent, Dog as DogType, DogInput } from '../types'
+import { PersonInput, Person as PersonType, CreateNewEventInput, PersonEvent, Dog as DogType, DogInput, PersonRun as RunType, RunInput } from '../types'
 import { QuerySpec } from '../types/dataSources'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -126,4 +126,26 @@ export default class Person {
     const updatedDog = await this.db.updateItem(this.containerId, dogId, personId, dogToRemove)
     return updatedDog
   }
+
+  async addPersonRun(personId: string, dogId: string, runId: string, trialId: string, runInput: RunInput): Promise<RunType> {
+    const personRunToAdd: RunType = {} as RunType
+
+    personRunToAdd.personId = personId
+    personRunToAdd.dogId = dogId
+    personRunToAdd.runId = runId
+    personRunToAdd.id = uuidv4()
+    personRunToAdd.trialId = trialId
+    personRunToAdd.level = runInput.level
+    personRunToAdd.agilityClass = runInput.agilityClass
+    personRunToAdd.jumpHeight = runInput.jumpHeight
+    personRunToAdd.preferred = runInput.preferred
+    personRunToAdd.qualified = runInput.qualified
+    personRunToAdd.group = runInput.group 
+    personRunToAdd.type = 'run'
+    personRunToAdd.deleted = false
+
+    const newPersonRun = await this.db.addItem<RunType>(this.containerId, personRunToAdd)
+    return newPersonRun
+
+  } 
 }
