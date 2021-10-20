@@ -1,6 +1,7 @@
 import Database from './db/cosmos'
 import { AddTrial, Trial as TrialType, UpdateTrial, RunInput, Run as RunType } from '../types'
 import { v4 as uuidv4 } from 'uuid'
+import { QuerySpec } from '../types/dataSources'
 
 export default class Trial {
   db = new Database()
@@ -35,8 +36,22 @@ export default class Trial {
     trialRun.personId = personId
     trialRun.dogId = dogId
     trialRun.trialId = trialId
+    trialRun.deleted = false
 
     const newTrialRun = await this.db.addItem<RunType>(this.containerId, trialRun)
     return newTrialRun
+  }
+
+  async getTrialRuns(trialId: string): Promise<RunType[]> {
+    const querySpec: QuerySpec = {
+      query: 'select * from c where c.trialId = @trialId and c.type = @type and c.deleted = false',
+      parameters: [
+        { name: '@trialId', value: trialId },
+        { name: '@type', value: 'run'}
+      ]
+    }
+
+    const trialRuns = await this.db.queryItems<RunType[]>(this.containerId, querySpec, trialId)
+    return trialRuns
   }
 }

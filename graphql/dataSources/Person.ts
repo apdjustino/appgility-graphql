@@ -142,6 +142,7 @@ export default class Person {
     personRunToAdd.qualified = runInput.qualified
     personRunToAdd.group = runInput.group 
     personRunToAdd.type = 'run'
+    personRunToAdd.deleted = false
 
     const newPersonRun = await this.db.addItem<RunType>(this.containerId, personRunToAdd)
     return newPersonRun

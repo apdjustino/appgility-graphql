@@ -1,5 +1,5 @@
 import { ValidationRules, verify } from '../dataSources/utils'
-import { QueryGetTrialArgs, MutationAddRunArgs } from '../types'
+import { QueryGetTrialArgs, MutationAddRunArgs, QueryGetTrialRunsArgs } from '../types'
 import { DataSources } from '../types/dataSources'
 import { v4 as uuid } from 'uuid'
 
@@ -54,7 +54,7 @@ const typeDef = gql`
     personId: String!
     dogId: String!
     agilityClass: AgilityClass!
-    level: AgilityAbility!
+    level: AgilityAbility
     preferred: Boolean!
     jumpHeight: Int!
     group: String
@@ -73,7 +73,8 @@ const typeDef = gql`
     table: Int
     rank: Int
     obstacles: [Boolean]
-    paid: Boolean!
+    paid: Boolean
+    deleted: Boolean!
   }
 
   input RunInput {
@@ -102,6 +103,7 @@ const typeDef = gql`
 
   extend type Query {
     getTrial(trialId: String!): Trial
+    getTrialRuns(trialId: String!): [Run]
   }
 
   extend type Mutation {
@@ -120,6 +122,17 @@ const resolvers = {
 
       const { trial } = dataSources
       const result = await trial.getTrial(args.trialId)
+      return result
+    },
+    getTrialRuns: async (_, args: QueryGetTrialRunsArgs, { dataSources, token } : { dataSources: DataSources, token: string }, __) => {
+      const rules: ValidationRules = {
+        allowedRoles: ['secretary', 'exhibitor']
+      }
+
+      await verify(token, rules)
+
+      const { trial } = dataSources
+      const result = await trial.getTrialRuns(args.trialId)
       return result
     }
   },

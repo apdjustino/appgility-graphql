@@ -105,11 +105,12 @@ const typeDef = gql`
     dogId: String!
     trialId: String!
     agilityClass: AgilityClass!
-    level: AgilityAbility!
+    level: AgilityAbility
     jumpHeight: Int!
     preferred: Boolean!
     group: String
     qualified: Boolean
+    deleted: Boolean!
   }
 
   input DogInput {

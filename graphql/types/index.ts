@@ -304,6 +304,7 @@ export type PersonRun = {
   preferred: Scalars['Boolean'];
   group?: Maybe<Scalars['String']>;
   qualified?: Maybe<Scalars['Boolean']>;
+  deleted: Scalars['Boolean'];
 };
 
 export type Query = {
@@ -318,6 +319,7 @@ export type Query = {
   getEventTrials?: Maybe<Array<Maybe<EventTrial>>>;
   getEventTrial?: Maybe<EventTrial>;
   getTrial?: Maybe<Trial>;
+  getTrialRuns?: Maybe<Array<Maybe<Run>>>;
 };
 
 
@@ -367,6 +369,11 @@ export type QueryGetTrialArgs = {
   trialId: Scalars['String'];
 };
 
+
+export type QueryGetTrialRunsArgs = {
+  trialId: Scalars['String'];
+};
+
 export type Run = {
   __typename?: 'Run';
   id: Scalars['String'];
@@ -396,11 +403,12 @@ export type Run = {
   rank?: Maybe<Scalars['Int']>;
   obstacles?: Maybe<Array<Maybe<Scalars['Boolean']>>>;
   paid: Scalars['Boolean'];
+  deleted: Scalars['Boolean'];
 };
 
 export type RunInput = {
   agilityClass: AgilityClass;
-  level: AgilityAbility;
+  level?: Maybe<AgilityAbility>;
   preferred: Scalars['Boolean'];
   jumpHeight: Scalars['Int'];
   group?: Maybe<Scalars['String']>;
@@ -772,6 +780,7 @@ export type PersonRunResolvers<ContextType = any, ParentType extends ResolversPa
   preferred?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   group?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   qualified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  deleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -786,6 +795,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getEventTrials?: Resolver<Maybe<Array<Maybe<ResolversTypes['EventTrial']>>>, ParentType, ContextType, RequireFields<QueryGetEventTrialsArgs, 'eventId'>>;
   getEventTrial?: Resolver<Maybe<ResolversTypes['EventTrial']>, ParentType, ContextType, RequireFields<QueryGetEventTrialArgs, 'trialId' | 'eventId'>>;
   getTrial?: Resolver<Maybe<ResolversTypes['Trial']>, ParentType, ContextType, RequireFields<QueryGetTrialArgs, 'trialId'>>;
+  getTrialRuns?: Resolver<Maybe<Array<Maybe<ResolversTypes['Run']>>>, ParentType, ContextType, RequireFields<QueryGetTrialRunsArgs, 'trialId'>>;
 }>;
 
 export type RunResolvers<ContextType = any, ParentType extends ResolversParentTypes['Run'] = ResolversParentTypes['Run']> = ResolversObject<{
@@ -816,6 +826,7 @@ export type RunResolvers<ContextType = any, ParentType extends ResolversParentTy
   rank?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   obstacles?: Resolver<Maybe<Array<Maybe<ResolversTypes['Boolean']>>>, ParentType, ContextType>;
   paid?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  deleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

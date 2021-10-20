@@ -12,7 +12,7 @@ const typeDef = gql`
     dogId: String!
     trialId: String!
     agilityClass: AgilityClass!
-    level: AgilityAbility!
+    level: AgilityAbility
     preferred: Boolean!    
     parent: String
     jumpHeight: Int!
