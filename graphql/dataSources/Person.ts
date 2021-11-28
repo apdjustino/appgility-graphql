@@ -127,6 +127,11 @@ export default class Person {
     return updatedDog
   }
 
+  async getDog(dogId: string, personId: string): Promise<DogType> {
+    const dog = await this.db.getItemById<DogType>(this.containerId, dogId, personId);
+    return dog;
+  }
+
   async addPersonRun(personId: string, dogId: string, runId: string, trialId: string, runInput: RunInput): Promise<RunType> {
     const personRunToAdd: RunType = {} as RunType
 
