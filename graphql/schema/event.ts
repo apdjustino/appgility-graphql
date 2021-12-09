@@ -52,14 +52,14 @@ const typeDef = gql`
     onlineEntries: Int
     mailEntries: Int
     standardClass: Boolean
-    standardAbility: [String]
-    standardPreferred: [String]
+    standardAbility: [AbilityInput]
+    standardPreferred: [AbilityInput]
     jumpersClass: Boolean
-    jumpersAbility: [String]
-    jumpersPreferred: [String]
+    jumpersAbility: [AbilityInput]
+    jumpersPreferred: [AbilityInput]
     fastClass: Boolean
-    fastAbility: [String]
-    fastPreferred: [String]
+    fastAbility: [AbilityInput]
+    fastPreferred: [AbilityInput]
     t2bClass: Boolean
     premierStandard: Boolean
     premierJumpers: Boolean
@@ -76,14 +76,14 @@ const typeDef = gql`
     onlineEntries: Int
     mailEntries: Int
     standardClass: Boolean
-    standardAbility: [String]
-    standardPreferred: [String]
+    standardAbility: [AbilityInput]
+    standardPreferred: [AbilityInput]
     jumpersClass: Boolean
-    jumpersAbility: [String]
-    jumpersPreferred: [String]
+    jumpersAbility: [AbilityInput]
+    jumpersPreferred: [AbilityInput]
     fastClass: Boolean
-    fastAbility: [String]
-    fastPreferred: [String]
+    fastAbility: [AbilityInput]
+    fastPreferred: [AbilityInput]
     t2bClass: Boolean
     premierStandard: Boolean
     premierJumpers: Boolean
@@ -120,18 +120,28 @@ const typeDef = gql`
     onlineEntries: Int
     mailEntries: Int
     standardClass: Boolean
-    standardAbility: [String]
-    standardPreferred: [String]
+    standardAbility: [Ability]
+    standardPreferred: [Ability]
     jumpersClass: Boolean
-    jumpersAbility: [String]
-    jumpersPreferred: [String]
+    jumpersAbility: [Ability]
+    jumpersPreferred: [Ability]
     fastClass: Boolean
-    fastAbility: [String]
-    fastPreferred: [String]
+    fastAbility: [Ability]
+    fastPreferred: [Ability]
     t2bClass: Boolean
     premierStandard: Boolean
     premierJumpers: Boolean
     runLimit: Int
+  }
+
+  type Ability {
+    label: String!
+    value: String!
+  }
+
+  input AbilityInput {
+    label: String!
+    value: String!
   }
 
   extend type Query {
