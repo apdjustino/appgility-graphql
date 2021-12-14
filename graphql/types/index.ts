@@ -326,6 +326,7 @@ export type Query = {
   getPersonEvent?: Maybe<PersonEvent>;
   getPersonByEmail?: Maybe<Person>;
   getPersonDogs?: Maybe<Array<Maybe<Dog>>>;
+  searchPerson?: Maybe<Array<Maybe<Person>>>;
   getEvent?: Maybe<Event>;
   getEventTrials?: Maybe<Array<Maybe<EventTrial>>>;
   getEventTrial?: Maybe<EventTrial>;
@@ -357,6 +358,11 @@ export type QueryGetPersonByEmailArgs = {
 
 export type QueryGetPersonDogsArgs = {
   personId: Scalars['String'];
+};
+
+
+export type QuerySearchPersonArgs = {
+  query: Scalars['String'];
 };
 
 
@@ -846,6 +852,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getPersonEvent?: Resolver<Maybe<ResolversTypes['PersonEvent']>, ParentType, ContextType, RequireFields<QueryGetPersonEventArgs, 'personId' | 'eventId'>>;
   getPersonByEmail?: Resolver<Maybe<ResolversTypes['Person']>, ParentType, ContextType, RequireFields<QueryGetPersonByEmailArgs, 'email'>>;
   getPersonDogs?: Resolver<Maybe<Array<Maybe<ResolversTypes['Dog']>>>, ParentType, ContextType, RequireFields<QueryGetPersonDogsArgs, 'personId'>>;
+  searchPerson?: Resolver<Maybe<Array<Maybe<ResolversTypes['Person']>>>, ParentType, ContextType, RequireFields<QuerySearchPersonArgs, 'query'>>;
   getEvent?: Resolver<Maybe<ResolversTypes['Event']>, ParentType, ContextType, RequireFields<QueryGetEventArgs, 'eventId'>>;
   getEventTrials?: Resolver<Maybe<Array<Maybe<ResolversTypes['EventTrial']>>>, ParentType, ContextType, RequireFields<QueryGetEventTrialsArgs, 'eventId'>>;
   getEventTrial?: Resolver<Maybe<ResolversTypes['EventTrial']>, ParentType, ContextType, RequireFields<QueryGetEventTrialArgs, 'trialId' | 'eventId'>>;

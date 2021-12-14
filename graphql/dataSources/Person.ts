@@ -31,6 +31,25 @@ export default class Person {
     return personList[0]
   }
 
+  async findPerson(query: string): Promise<PersonType[]> {
+    const querySpec: QuerySpec = {
+      query: 'select * from c where c.type = @type and (LOWER(c.name) like @query or LOWER(c.email) like @query)',
+      parameters: [
+        {
+          name: '@query',
+          value: `%${query.toLowerCase()}%`
+        },
+        {
+          name: '@type',
+          value: 'person'
+        }
+      ]
+    }    
+
+    const personList = await this.db.queryItems<PersonType[]>(this.containerId, querySpec);
+    return personList;
+  }
+
   async addNewPerson(personInput: PersonInput): Promise<PersonType> {
     const person: PersonType = { ...personInput } as PersonType
     person.type = 'person'
