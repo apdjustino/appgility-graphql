@@ -154,7 +154,7 @@ const typeDef = gql`
 
   extend type Mutation {
     addPerson(data: PersonInput, password: String): Person    
-    addDog(personId: String!, dog: DogInput!): Dog
+    addDog(personId: String!, secretaryId: String!, dog: DogInput!): Dog
     updateDog(personId: String!, dogId: String!, dog: DogInput!): Dog
     removeDog(personId: String!, dogId: String!): Dog    
   }
@@ -290,7 +290,7 @@ const resolvers = {
     addDog: async (_, args: MutationAddDogArgs, { dataSources, token }: { dataSources: DataSources, token: string}, __) => {
       const rules: ValidationRules = {
         allowedRoles: ['secretary', 'exhibitor'],
-        personId: args.personId
+        personId: args.secretaryId
       }
       await verify(token, rules)
 
