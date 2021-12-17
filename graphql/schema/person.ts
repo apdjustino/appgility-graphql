@@ -10,8 +10,9 @@ import {
   QueryGetPersonDogsArgs,
   QueryGetPersonEventArgs,
   QueryGetPersonEventsArgs,
+  QuerySearchPersonArgs,
 } from '../types'
-import { DataSources } from '../types/dataSources'
+import { DataSources, ResolverParams } from '../types/dataSources'
 import { v4 as uuid } from 'uuid'
 import * as yup from 'yup'
 const { gql } = require('apollo-server-azure-functions')
@@ -147,12 +148,13 @@ const typeDef = gql`
     getPersonEvents(personId: String!): [PersonEvent]
     getPersonEvent(personId: String!, eventId: String!): PersonEvent
     getPersonByEmail(email: String!): Person
-    getPersonDogs(personId: String!): [Dog]    
+    getPersonDogs(personId: String!): [Dog]
+    searchPerson(query: String!): [Person]   
   }
 
   extend type Mutation {
     addPerson(data: PersonInput, password: String): Person    
-    addDog(personId: String!, dog: DogInput!): Dog
+    addDog(personId: String!, secretaryId: String!, dog: DogInput!): Dog
     updateDog(personId: String!, dogId: String!, dog: DogInput!): Dog
     removeDog(personId: String!, dogId: String!): Dog    
   }
@@ -160,7 +162,7 @@ const typeDef = gql`
 
 const resolvers = {
   Query: {
-    getPersonById: async (_, args: QueryGetPersonByIdArgs, { dataSources, token }: { dataSources: DataSources; token: string }, __) => {
+    getPersonById: async (_, args: QueryGetPersonByIdArgs, { dataSources, token }: ResolverParams, __) => {
       const rules: ValidationRules = {
         allowedRoles: ['secretary, exhibitor'],
       }
@@ -170,7 +172,7 @@ const resolvers = {
       const result = await person.getById(personId)
       return result
     },
-    getPersonEvents: async (_, args: QueryGetPersonEventsArgs, { dataSources, token }: { dataSources: DataSources; token: string }, __) => {
+    getPersonEvents: async (_, args: QueryGetPersonEventsArgs, { dataSources, token }: ResolverParams, __) => {
       const rules: ValidationRules = {
         allowedRoles: ['secretary', 'exhibitor'],
       }
@@ -180,7 +182,7 @@ const resolvers = {
       const result = await person.getPersonEvents(personId)
       return result
     },
-    getPersonEvent: async (_, args: QueryGetPersonEventArgs, { dataSources, token }: { dataSources: DataSources; token: string }, __) => {
+    getPersonEvent: async (_, args: QueryGetPersonEventArgs, { dataSources, token }: ResolverParams, __) => {
       const rules: ValidationRules = {
         allowedRoles: ['secretary', 'exhibitor'],
       }
@@ -190,13 +192,13 @@ const resolvers = {
       const result = await person.getPersonEvent(personId, eventId)
       return result
     },
-    getPersonByEmail: async (_, args: QueryGetPersonByEmailArgs, { dataSources }: { dataSources: DataSources; token: string }, __) => {
+    getPersonByEmail: async (_, args: QueryGetPersonByEmailArgs, { dataSources }: ResolverParams, __) => {
       const { person } = dataSources
       const { email } = args
       const result = await person.getByEmail(email)
       return result
     },
-    getPersonDogs: async (_, args: QueryGetPersonDogsArgs, { dataSources, token }: { dataSources: DataSources; token: string }, __) => {
+    getPersonDogs: async (_, args: QueryGetPersonDogsArgs, { dataSources, token }: ResolverParams, __) => {
       const rules: ValidationRules = {
         allowedRoles: ['secretary', 'exhibitor'],
       }
@@ -205,7 +207,13 @@ const resolvers = {
       const { personId } = args
       const result = person.getPersonDogs(personId)
       return result
-    }    
+    },
+    searchPerson: async (_, args: QuerySearchPersonArgs, { dataSources }: ResolverParams, __) => {
+      const { person } = dataSources;
+      const { query } = args;
+      const result = await person.findPerson(query);
+      return result;
+    }
   },
   Mutation: {
     addPerson: async (_, args: MutationAddPersonArgs, { dataSources }: { dataSources: DataSources }, __) => {
@@ -282,7 +290,7 @@ const resolvers = {
     addDog: async (_, args: MutationAddDogArgs, { dataSources, token }: { dataSources: DataSources, token: string}, __) => {
       const rules: ValidationRules = {
         allowedRoles: ['secretary', 'exhibitor'],
-        personId: args.personId
+        personId: args.secretaryId
       }
       await verify(token, rules)
 
