@@ -1,5 +1,5 @@
 import Database from './db/cosmos'
-import { PersonInput, Person as PersonType, CreateNewEventInput, PersonEvent, Dog as DogType, DogInput, PersonRun as RunType, RunInput } from '../types'
+import { PersonInput, Person as PersonType, CreateNewEventInput, PersonEvent, Dog as DogType, DogInput, PersonRun as RunType, RunInput, Dog } from '../types'
 import { QuerySpec } from '../types/dataSources'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -151,11 +151,13 @@ export default class Person {
     return dog;
   }
 
-  async addPersonRun(personId: string, dogId: string, runId: string, trialId: string, runInput: RunInput): Promise<RunType> {
+  async addPersonRun(person: PersonType, dog: Dog, runId: string, trialId: string, runInput: RunInput): Promise<RunType> {
     const personRunToAdd: RunType = {} as RunType
 
-    personRunToAdd.personId = personId
-    personRunToAdd.dogId = dogId
+    personRunToAdd.personId = person.personId
+    personRunToAdd.personName = person.name
+    personRunToAdd.dogId = dog.dogId
+    personRunToAdd.callName = dog.callName
     personRunToAdd.runId = runId
     personRunToAdd.id = uuidv4()
     personRunToAdd.trialId = trialId

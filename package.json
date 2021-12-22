@@ -33,9 +33,11 @@
   "dependencies": {
     "@azure/cosmos": "^3.11.5",
     "@types/azure": "^0.9.20",
+    "@types/faker": "^5.5.9",
     "apollo-datasource-rest": "^3.2.0",
     "apollo-server-azure-functions": "^2.25.2",
     "axios": "^0.21.4",
+    "faker": "^5.5.3",
     "graphql": "^15.5.1",
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^2.0.3",

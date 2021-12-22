@@ -1,18 +1,20 @@
 import Database from './db/cosmos'
 import { v4 as uuidv4 } from 'uuid'
-import { RunInput, ScheduleRun as RunType } from '../types'
+import { Dog, Person, RunInput, ScheduleRun as RunType } from '../types'
 
 export default class Schedule {
   db = new Database()
   containerId = 'schedule'
 
-  async addScheduleRun(runId: string, personId: string, dogId: string, trialId: string, runInput: RunInput): Promise<RunType> {
+  async addScheduleRun(runId: string, person: Person, dog: Dog, trialId: string, runInput: RunInput): Promise<RunType> {
     const scheduleRunToAdd: RunType = {} as RunType
 
     scheduleRunToAdd.runId = runId
     scheduleRunToAdd.id = uuidv4()
-    scheduleRunToAdd.personId = personId
-    scheduleRunToAdd.dogId = dogId
+    scheduleRunToAdd.personId = person.personId
+    scheduleRunToAdd.personName = person.name
+    scheduleRunToAdd.dogId = dog.dogId
+    scheduleRunToAdd.callName = dog.callName
     scheduleRunToAdd.trialId = trialId
     scheduleRunToAdd.level = runInput.level
     scheduleRunToAdd.agilityClass = runInput.agilityClass
