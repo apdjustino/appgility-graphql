@@ -1,5 +1,5 @@
 import { ValidationRules, verify } from '../dataSources/utils'
-import { QueryGetTrialArgs, MutationAddRunArgs, QueryGetTrialRunsArgs, RunView } from '../types'
+import { QueryGetTrialArgs, MutationAddRunArgs, QueryGetTrialRunsArgs, RunView, Run } from '../types'
 import { DataSources } from '../types/dataSources'
 import { v4 as uuid } from 'uuid'
 
@@ -52,7 +52,9 @@ const typeDef = gql`
     runId: String!
     trialId: String!
     personId: String!
+    personName: String!
     dogId: String!
+    callName: String!
     agilityClass: AgilityClass!
     level: AgilityAbility
     preferred: Boolean!
@@ -106,8 +108,8 @@ const typeDef = gql`
     type: String!
     runId: String!
     trialId: String!
-    person: Person!
-    dog: Dog!
+    person: Person
+    dog: Dog
     agilityClass: AgilityClass!
     level: AgilityAbility
     preferred: Boolean!
@@ -134,11 +136,11 @@ const typeDef = gql`
 
   extend type Query {
     getTrial(trialId: String!): Trial
-    getTrialRuns(trialId: String!): [RunView]
+    getTrialRuns(trialId: String!): [Run]
   }
 
   extend type Mutation {
-    addRun(eventId: String!, trialId: String!, personId: String!, dogId: String!, run: RunInput!): RunView
+    addRun(eventId: String!, trialId: String!, personId: String!, dogId: String!, run: RunInput!): Run
   }
 `
 
@@ -155,54 +157,20 @@ const resolvers = {
       const result = await trial.getTrial(args.trialId)
       return result
     },
-    getTrialRuns: async (_, args: QueryGetTrialRunsArgs, { dataSources, token } : { dataSources: DataSources, token: string }, __): Promise<RunView[]> => {
+    getTrialRuns: async (_, args: QueryGetTrialRunsArgs, { dataSources, token } : { dataSources: DataSources, token: string }, __): Promise<Run[]> => {
       const rules: ValidationRules = {
         allowedRoles: ['secretary', 'exhibitor']
       }
 
       await verify(token, rules)
 
-      const { trial, person } = dataSources
+      const { trial } = dataSources
       const runs = await trial.getTrialRuns(args.trialId)
-      const result: RunView[] = await Promise.all(runs.map(async (trialRun) => {
-        const personRecord = await person.getById(trialRun.personId);
-        const dogRecord = await person.getDog(trialRun.dogId, trialRun.personId);
-        return {
-          id: trialRun.id,
-          type: trialRun.type,
-          runId: trialRun.runId,
-          trialId: trialRun.trialId,
-          person: personRecord,
-          dog: dogRecord,
-          agilityClass: trialRun.agilityClass,
-          level: trialRun.level,
-          preferred: trialRun.preferred,
-          jumpHeight: trialRun.jumpHeight,
-          group: trialRun.group,
-          armband: trialRun.armband,
-          courseLength: trialRun.courseLength,
-          score: trialRun.score,
-          timeDeduction: trialRun.timeDeduction,
-          time: trialRun.time,
-          qualified: trialRun.qualified,
-          points: trialRun.points,
-          sendBonus: trialRun.sendBonus,
-          wrongCourse: trialRun.wrongCourse,
-          excusal: trialRun.excusal,
-          refusal: trialRun.refusal,
-          failure: trialRun.failure,
-          table: trialRun.table,
-          rank: trialRun.rank,
-          obstacles: trialRun.obstacles,
-          paid: trialRun.paid,
-          deleted: trialRun.deleted
-        }
-      }))
-      return result;
+      return runs      
     }
   },
   Mutation: {
-    addRun: async (_, args: MutationAddRunArgs, { dataSources, token } : { dataSources: DataSources, token: string }, __): Promise<RunView> => {
+    addRun: async (_, args: MutationAddRunArgs, { dataSources, token } : { dataSources: DataSources, token: string }, __): Promise<Run> => {
       const rules: ValidationRules = {
         allowedRoles: ['secretary'],
         eventId: args.eventId
@@ -217,41 +185,11 @@ const resolvers = {
       const personRecord = await person.getById(personId);
       const dogRecord = await person.getDog(dogId, personId);
 
-      const trialRun = await trial.addTrialRun(runId, personId, dogId, trialId, run)
-      await person.addPersonRun(args.personId, dogId, runId, trialId, run)
-      await schedule.addScheduleRun(runId, personId, dogId, trialId, run)
+      const trialRun = await trial.addTrialRun(runId, personRecord, dogRecord, trialId, run)
+      await person.addPersonRun(personRecord, dogRecord, runId, trialId, run)
+      await schedule.addScheduleRun(runId, personRecord, dogRecord, trialId, run)
 
-      return {
-        id: trialRun.id,
-        type: trialRun.type,
-        runId: trialRun.runId,
-        trialId: trialRun.trialId,
-        person: personRecord,
-        dog: dogRecord,
-        agilityClass: trialRun.agilityClass,
-        level: trialRun.level,
-        preferred: trialRun.preferred,
-        jumpHeight: trialRun.jumpHeight,
-        group: trialRun.group,
-        armband: trialRun.armband,
-        courseLength: trialRun.courseLength,
-        score: trialRun.score,
-        timeDeduction: trialRun.timeDeduction,
-        time: trialRun.time,
-        qualified: trialRun.qualified,
-        points: trialRun.points,
-        sendBonus: trialRun.sendBonus,
-        wrongCourse: trialRun.wrongCourse,
-        excusal: trialRun.excusal,
-        refusal: trialRun.refusal,
-        failure: trialRun.failure,
-        table: trialRun.table,
-        rank: trialRun.rank,
-        obstacles: trialRun.obstacles,
-        paid: trialRun.paid,
-        deleted: trialRun.deleted
-
-      }
+      return trialRun
     }
   }
 }

@@ -9,7 +9,9 @@ const typeDef = gql`
     runId: String!
     type: String!
     personId: String!
+    personName: String!
     dogId: String!
+    callName: String!
     trialId: String!
     agilityClass: AgilityClass!
     level: AgilityAbility

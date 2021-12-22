@@ -31,6 +31,7 @@ const getKey = (header, callback) => {
 }
 
 export const verify = (token: string, rules: ValidationRules) => {
+  // return new Promise((resolve) => { resolve("") })
   return new Promise((resolve, reject) => {
     if (token !== '' && token !== undefined && token !== null) {
       jwt.verify(token, getKey, async (err, decoded) => {

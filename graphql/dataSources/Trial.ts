@@ -1,5 +1,5 @@
 import Database from './db/cosmos'
-import { AddTrial, Trial as TrialType, UpdateTrial, RunInput, Run as RunType } from '../types'
+import { AddTrial, Trial as TrialType, UpdateTrial, RunInput, Run as RunType, Person, Dog } from '../types'
 import { v4 as uuidv4 } from 'uuid'
 import { QuerySpec } from '../types/dataSources'
 
@@ -27,14 +27,16 @@ export default class Trial {
     return updated
   }
 
-  async addTrialRun(runId: string, personId: string, dogId: string, trialId: string, runInput: RunInput): Promise<RunType> {
+  async addTrialRun(runId: string, person: Person, dog: Dog, trialId: string, runInput: RunInput): Promise<RunType> {
     const trialRun: RunType = { ...runInput } as RunType
 
     trialRun.type = 'run'
     trialRun.id = uuidv4()
     trialRun.runId = runId
-    trialRun.personId = personId
-    trialRun.dogId = dogId
+    trialRun.personId = person.personId
+    trialRun.personName = person.name
+    trialRun.callName = dog.callName
+    trialRun.dogId = dog.dogId
     trialRun.trialId = trialId
     trialRun.deleted = false
 
