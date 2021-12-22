@@ -1,5 +1,5 @@
+import { FeedOptions, SqlQuerySpec } from '@azure/cosmos'
 import { Person, PersonEvent } from '../types'
-import { QuerySpec } from '../types/dataSources'
 import Database from './db/cosmos'
 
 const jwks = require('jwks-rsa')
@@ -80,7 +80,7 @@ export const getUser = async (personId: string): Promise<PersonValidationRespons
   try {
     person = await db.getItemById<Person>('person', personId, personId)
 
-    const querySpec: QuerySpec = {
+    const querySpec: SqlQuerySpec = {
       query: 'select * from c where c.personId = @personId and c.type = @type',
       parameters: [
         {
@@ -93,7 +93,12 @@ export const getUser = async (personId: string): Promise<PersonValidationRespons
         },
       ],
     }
-    personEvents = await db.queryItems<PersonEvent[]>('person', querySpec, personId)
+
+    const options: FeedOptions = {
+      partitionKey: personId
+    }
+
+    personEvents = await db.queryItems<PersonEvent>('person', querySpec, options)
   } catch (e) {
     console.log(e)
   }

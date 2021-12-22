@@ -1,5 +1,5 @@
 import { ValidationRules, verify } from '../dataSources/utils'
-import { QueryGetTrialArgs, MutationAddRunArgs, QueryGetTrialRunsArgs, RunView, Run } from '../types'
+import { QueryGetTrialArgs, MutationAddRunArgs, QueryGetTrialRunsArgs, RunView, Run, QueryGetTrialRunsPaginatedArgs, PaginatedRunResponse } from '../types'
 import { DataSources } from '../types/dataSources'
 import { v4 as uuid } from 'uuid'
 
@@ -134,9 +134,16 @@ const typeDef = gql`
     deleted: Boolean!
   }
 
+  type PaginatedRunResponse {
+    runs: [Run]
+    hasMoreResults: Boolean
+    continuationToken: String
+  }
+
   extend type Query {
     getTrial(trialId: String!): Trial
     getTrialRuns(trialId: String!): [Run]
+    getTrialRunsPaginated(trialId: String!, continuationToken: String): PaginatedRunResponse
   }
 
   extend type Mutation {
@@ -167,6 +174,25 @@ const resolvers = {
       const { trial } = dataSources
       const runs = await trial.getTrialRuns(args.trialId)
       return runs      
+    },
+    getTrialRunsPaginated: async (_, args: QueryGetTrialRunsPaginatedArgs, { dataSources, token }: { dataSources: DataSources, token: string }, __): Promise<PaginatedRunResponse>  => {
+      const rules: ValidationRules = {
+        allowedRoles: ['secretary', 'exhibitor']
+      }
+
+      await verify(token, rules)
+      
+      const { trial } = dataSources
+      
+      const { resources, continuationToken, hasMoreResults } = await trial.getTrialRunsPaginated(args.trialId, args.continuationToken)
+      const response: PaginatedRunResponse = {
+        runs: resources,
+        continuationToken,
+        hasMoreResults
+      }
+
+      return response
+
     }
   },
   Mutation: {

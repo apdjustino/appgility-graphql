@@ -1,7 +1,7 @@
 import Database from './db/cosmos'
 import { PersonInput, Person as PersonType, CreateNewEventInput, PersonEvent, Dog as DogType, DogInput, PersonRun as RunType, RunInput, Dog } from '../types'
-import { QuerySpec } from '../types/dataSources'
 import { v4 as uuidv4 } from 'uuid'
+import { FeedOptions, SqlQuerySpec } from '@azure/cosmos'
 
 export default class Person {
   db = new Database()
@@ -13,7 +13,7 @@ export default class Person {
   }
 
   async getByEmail(email: string): Promise<PersonType> {
-    const querySpec: QuerySpec = {
+    const querySpec: SqlQuerySpec = {
       query: 'select * from c where c.email = @email and c.type = @type',
       parameters: [
         {
@@ -27,12 +27,14 @@ export default class Person {
       ],
     }
 
-    const personList = await this.db.queryItems<PersonType[]>(this.containerId, querySpec)    
+    const options: FeedOptions = {}
+
+    const personList = await this.db.queryItems<PersonType>(this.containerId, querySpec, options)    
     return personList[0]
   }
 
   async findPerson(query: string): Promise<PersonType[]> {
-    const querySpec: QuerySpec = {
+    const querySpec: SqlQuerySpec = {
       query: 'select * from c where c.type = @type and (LOWER(c.name) like @query or LOWER(c.email) like @query)',
       parameters: [
         {
@@ -44,9 +46,11 @@ export default class Person {
           value: 'person'
         }
       ]
-    }    
+    }
 
-    const personList = await this.db.queryItems<PersonType[]>(this.containerId, querySpec);
+    const options: FeedOptions = {}
+
+    const personList = await this.db.queryItems<PersonType>(this.containerId, querySpec, options);
     return personList;
   }
 
@@ -69,7 +73,7 @@ export default class Person {
   }
 
   async getPersonEvents(personId: string): Promise<PersonEvent[]> {
-    const querySpec: QuerySpec = {
+    const querySpec: SqlQuerySpec = {
       query: 'select * from c where c.personId = @personId and c.type = @type',
       parameters: [
         {
@@ -82,7 +86,12 @@ export default class Person {
         },
       ],
     }
-    const personTrials = await this.db.queryItems<PersonEvent[]>(this.containerId, querySpec, personId)
+
+    const options: FeedOptions = {
+      partitionKey: personId
+    }
+
+    const personTrials = await this.db.queryItems<PersonEvent>(this.containerId, querySpec, options)
     return personTrials
   }
 
@@ -97,7 +106,7 @@ export default class Person {
   }
 
   async getPersonDogs(personId: string): Promise<DogType[]> {
-    const querySpec: QuerySpec = {
+    const querySpec: SqlQuerySpec = {
       query: 'select * from c where c.personId = @personId and c.type = @type and c.deleted = false',
       parameters: [
         {
@@ -110,7 +119,12 @@ export default class Person {
         }
       ],
     }
-    const dogs = await this.db.queryItems<DogType[]>(this.containerId, querySpec, personId)
+
+    const options: FeedOptions = {
+      partitionKey: personId
+    }
+
+    const dogs = await this.db.queryItems<DogType>(this.containerId, querySpec, options)
     return dogs
   }
 

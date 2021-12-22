@@ -1,7 +1,7 @@
 import Database from './db/cosmos'
 import { AddTrial, Trial as TrialType, UpdateTrial, RunInput, Run as RunType, Person, Dog } from '../types'
 import { v4 as uuidv4 } from 'uuid'
-import { QuerySpec } from '../types/dataSources'
+import { FeedOptions, FeedResponse, SqlQuerySpec } from '@azure/cosmos'
 
 export default class Trial {
   db = new Database()
@@ -45,7 +45,7 @@ export default class Trial {
   }
 
   async getTrialRuns(trialId: string): Promise<RunType[]> {
-    const querySpec: QuerySpec = {
+    const querySpec: SqlQuerySpec = {
       query: 'select * from c where c.trialId = @trialId and c.type = @type and c.deleted = false',
       parameters: [
         { name: '@trialId', value: trialId },
@@ -53,7 +53,33 @@ export default class Trial {
       ]
     }
 
-    const trialRuns = await this.db.queryItems<RunType[]>(this.containerId, querySpec, trialId)
+    const options: FeedOptions = {
+      partitionKey: trialId
+    }
+
+    const trialRuns = await this.db.queryItems<RunType>(this.containerId, querySpec, options)
     return trialRuns
+  }
+
+  async getTrialRunsPaginated(trialId: string, continuationToken?: string): Promise<FeedResponse<RunType>> {
+    const querySpec: SqlQuerySpec = {
+      query: 'select * from c where c.trialId = @trialId and c.type = @type and c.deleted = false',
+      parameters: [
+        { name: '@trialId', value: trialId },
+        { name: '@type', value: 'run'}
+      ]
+    }
+
+    const options: FeedOptions = !!continuationToken ? {
+      partitionKey: trialId,
+      maxItemCount: 20,
+      continuationToken
+    } : {
+      partitionKey: trialId,
+      maxItemCount: 20
+    }
+
+    const response = await this.db.queryPaginatedItems<RunType>(this.containerId, querySpec, options)
+    return response
   }
 }
