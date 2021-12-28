@@ -143,7 +143,7 @@ const typeDef = gql`
   extend type Query {
     getTrial(trialId: String!): Trial
     getTrialRuns(trialId: String!): [Run]
-    getTrialRunsPaginated(trialId: String!, continuationToken: String): PaginatedRunResponse
+    getTrialRunsPaginated(trialId: String!, agilityClass: [AgilityClass], level: [AgilityAbility], jumpHeight: [Int], preferred: Boolean, regular: Boolean, continuationToken: String): PaginatedRunResponse
   }
 
   extend type Mutation {
@@ -184,7 +184,7 @@ const resolvers = {
       
       const { trial } = dataSources
       
-      const { resources, continuationToken, hasMoreResults } = await trial.getTrialRunsPaginated(args.trialId, args.continuationToken)
+      const { resources, continuationToken, hasMoreResults } = await trial.getTrialRunsPaginated(args.trialId, args.agilityClass, args.level, args.jumpHeight, args.preferred, args.regular, args.continuationToken)
       const response: PaginatedRunResponse = {
         runs: resources,
         continuationToken,

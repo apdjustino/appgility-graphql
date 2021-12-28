@@ -405,6 +405,11 @@ export type QueryGetTrialRunsArgs = {
 
 export type QueryGetTrialRunsPaginatedArgs = {
   trialId: Scalars['String'];
+  agilityClass?: Maybe<Array<Maybe<AgilityClass>>>;
+  level?: Maybe<Array<Maybe<AgilityAbility>>>;
+  jumpHeight?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  preferred?: Maybe<Scalars['Boolean']>;
+  regular?: Maybe<Scalars['Boolean']>;
   continuationToken?: Maybe<Scalars['String']>;
 };
 
