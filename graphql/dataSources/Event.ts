@@ -1,6 +1,6 @@
+import { FeedOptions, SqlQuerySpec } from '@azure/cosmos'
 import { v4 as uuidv4 } from 'uuid'
 import { CreateNewEventInput, Event as EventType, UpdateEventInput, EventTrial as EventTrialType, AddEventTrial, UpdateEventTrial } from '../types'
-import { QuerySpec } from '../types/dataSources'
 import Database from './db/cosmos'
 
 export default class Event {
@@ -43,7 +43,7 @@ export default class Event {
   }
 
   async getEventTrials(eventId: string): Promise<EventTrialType[]> {
-    const querySpec: QuerySpec = {
+    const querySpec: SqlQuerySpec = {
       query: 'select * from c where c.eventId = @eventId and c.type = @type',
       parameters: [
         {
@@ -56,7 +56,12 @@ export default class Event {
         },
       ],
     }
-    const eventTrials = await this.db.queryItems<EventTrialType[]>(this.containerId, querySpec, eventId)
+
+    const options: FeedOptions = {
+      partitionKey: eventId
+    }
+
+    const eventTrials = await this.db.queryItems<EventTrialType>(this.containerId, querySpec, options)
     return eventTrials
   }
 

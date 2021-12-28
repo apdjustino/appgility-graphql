@@ -18,11 +18,6 @@ export interface QueryParameters {
   value: string | number
 }
 
-export interface QuerySpec {
-  query: string
-  parameters: QueryParameters[]
-}
-
 export interface ResolverParams {
   dataSources: DataSources
   token?: string

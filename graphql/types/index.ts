@@ -247,6 +247,13 @@ export type MutationAddRunArgs = {
   run: RunInput;
 };
 
+export type PaginatedRunResponse = {
+  __typename?: 'PaginatedRunResponse';
+  runs?: Maybe<Array<Maybe<Run>>>;
+  hasMoreResults?: Maybe<Scalars['Boolean']>;
+  continuationToken?: Maybe<Scalars['String']>;
+};
+
 export type Person = {
   __typename?: 'Person';
   id?: Maybe<Scalars['String']>;
@@ -335,6 +342,7 @@ export type Query = {
   getEventTrial?: Maybe<EventTrial>;
   getTrial?: Maybe<Trial>;
   getTrialRuns?: Maybe<Array<Maybe<Run>>>;
+  getTrialRunsPaginated?: Maybe<PaginatedRunResponse>;
 };
 
 
@@ -392,6 +400,18 @@ export type QueryGetTrialArgs = {
 
 export type QueryGetTrialRunsArgs = {
   trialId: Scalars['String'];
+};
+
+
+export type QueryGetTrialRunsPaginatedArgs = {
+  trialId: Scalars['String'];
+  agilityClass?: Maybe<Array<Maybe<AgilityClass>>>;
+  level?: Maybe<Array<Maybe<AgilityAbility>>>;
+  jumpHeight?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  preferred?: Maybe<Scalars['Boolean']>;
+  regular?: Maybe<Scalars['Boolean']>;
+  search?: Maybe<Scalars['String']>;
+  continuationToken?: Maybe<Scalars['String']>;
 };
 
 export type Run = {
@@ -666,6 +686,7 @@ export type ResolversTypes = ResolversObject<{
   Event: ResolverTypeWrapper<Event>;
   EventTrial: ResolverTypeWrapper<EventTrial>;
   Mutation: ResolverTypeWrapper<{}>;
+  PaginatedRunResponse: ResolverTypeWrapper<PaginatedRunResponse>;
   Person: ResolverTypeWrapper<Person>;
   PersonEvent: ResolverTypeWrapper<PersonEvent>;
   PersonEventInput: PersonEventInput;
@@ -701,6 +722,7 @@ export type ResolversParentTypes = ResolversObject<{
   Event: Event;
   EventTrial: EventTrial;
   Mutation: {};
+  PaginatedRunResponse: PaginatedRunResponse;
   Person: Person;
   PersonEvent: PersonEvent;
   PersonEventInput: PersonEventInput;
@@ -806,6 +828,13 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   addRun?: Resolver<Maybe<ResolversTypes['Run']>, ParentType, ContextType, RequireFields<MutationAddRunArgs, 'eventId' | 'trialId' | 'personId' | 'dogId' | 'run'>>;
 }>;
 
+export type PaginatedRunResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginatedRunResponse'] = ResolversParentTypes['PaginatedRunResponse']> = ResolversObject<{
+  runs?: Resolver<Maybe<Array<Maybe<ResolversTypes['Run']>>>, ParentType, ContextType>;
+  hasMoreResults?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  continuationToken?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type PersonResolvers<ContextType = any, ParentType extends ResolversParentTypes['Person'] = ResolversParentTypes['Person']> = ResolversObject<{
   id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -867,6 +896,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getEventTrial?: Resolver<Maybe<ResolversTypes['EventTrial']>, ParentType, ContextType, RequireFields<QueryGetEventTrialArgs, 'trialId' | 'eventId'>>;
   getTrial?: Resolver<Maybe<ResolversTypes['Trial']>, ParentType, ContextType, RequireFields<QueryGetTrialArgs, 'trialId'>>;
   getTrialRuns?: Resolver<Maybe<Array<Maybe<ResolversTypes['Run']>>>, ParentType, ContextType, RequireFields<QueryGetTrialRunsArgs, 'trialId'>>;
+  getTrialRunsPaginated?: Resolver<Maybe<ResolversTypes['PaginatedRunResponse']>, ParentType, ContextType, RequireFields<QueryGetTrialRunsPaginatedArgs, 'trialId'>>;
 }>;
 
 export type RunResolvers<ContextType = any, ParentType extends ResolversParentTypes['Run'] = ResolversParentTypes['Run']> = ResolversObject<{
@@ -969,6 +999,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Event?: EventResolvers<ContextType>;
   EventTrial?: EventTrialResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  PaginatedRunResponse?: PaginatedRunResponseResolvers<ContextType>;
   Person?: PersonResolvers<ContextType>;
   PersonEvent?: PersonEventResolvers<ContextType>;
   PersonRun?: PersonRunResolvers<ContextType>;
