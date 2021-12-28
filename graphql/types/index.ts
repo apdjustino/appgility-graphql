@@ -410,6 +410,7 @@ export type QueryGetTrialRunsPaginatedArgs = {
   jumpHeight?: Maybe<Array<Maybe<Scalars['Int']>>>;
   preferred?: Maybe<Scalars['Boolean']>;
   regular?: Maybe<Scalars['Boolean']>;
+  search?: Maybe<Scalars['String']>;
   continuationToken?: Maybe<Scalars['String']>;
 };
 

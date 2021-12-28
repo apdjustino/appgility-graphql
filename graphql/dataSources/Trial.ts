@@ -61,7 +61,7 @@ export default class Trial {
     return trialRuns
   }
 
-  async getTrialRunsPaginated(trialId: string, agilityClass?: AgilityClass[], level?: AgilityAbility[], jumpHeight?: number[], preferred?: boolean, regular?: boolean, continuationToken?: string): Promise<FeedResponse<RunType>> {
+  async getTrialRunsPaginated(trialId: string, agilityClass?: AgilityClass[], level?: AgilityAbility[], jumpHeight?: number[], preferred?: boolean, regular?: boolean, search?: string, continuationToken?: string): Promise<FeedResponse<RunType>> {
     
     let query: string = "select * from c where c.trialId = @trialId and c.type = @type and c.deleted = false"
     const parameters: SqlParameter[] = [
@@ -97,6 +97,13 @@ export default class Trial {
     if (!!regular) {
       query = `${query} and c.preferred = false`      
     }
+
+    if (!!search) {
+      query = `${query} and (LOWER(c.personName) like @search or LOWER(c.callName) like @search)`,
+      parameters.push({
+        name: "@search", value: `%${search}%`
+      })
+    }    
     
     const querySpec: SqlQuerySpec = {
       query,
@@ -112,7 +119,8 @@ export default class Trial {
       maxItemCount: 25
     }
 
-    const response = await this.db.queryPaginatedItems<RunType>(this.containerId, querySpec, options)    
+    const response = await this.db.queryPaginatedItems<RunType>(this.containerId, querySpec, options)        
     return response
+    
   }
 }
