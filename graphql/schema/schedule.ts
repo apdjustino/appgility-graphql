@@ -19,6 +19,7 @@ const typeDef = gql`
     parent: String
     jumpHeight: Int!
     group: String
+    createdAt: String
   }
 `
 

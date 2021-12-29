@@ -54,27 +54,29 @@ export default class Person {
     return personList;
   }
 
-  async addNewPerson(personInput: PersonInput): Promise<PersonType> {
+  async addNewPerson(personInput: PersonInput, createdAt: string): Promise<PersonType> {
     const person: PersonType = { ...personInput } as PersonType
     person.type = 'person'
+    person.createdAt = createdAt
     const newPerson = await this.db.addItem<PersonType>(this.containerId, person)
     return newPerson
   }
 
-  async addPersonTrial(input: CreateNewEventInput, personId: string, eventId: string): Promise<PersonEvent> {
+  async addPersonTrial(input: CreateNewEventInput, personId: string, eventId: string, createdAt: string): Promise<PersonEvent> {
     const personTrial: PersonEvent = { ...input } as PersonEvent
     personTrial.type = 'event'
     personTrial.personId = personId
     personTrial.eventId = eventId
     personTrial.id = eventId
     personTrial.status = 'New'
+    personTrial.createdAt = createdAt
     const newPersonTrial = await this.db.addItem<PersonEvent>(this.containerId, personTrial)
     return newPersonTrial
   }
 
   async getPersonEvents(personId: string): Promise<PersonEvent[]> {
     const querySpec: SqlQuerySpec = {
-      query: 'select * from c where c.personId = @personId and c.type = @type',
+      query: 'select * from c where c.personId = @personId and c.type = @type order by c.createdAt DESC',
       parameters: [
         {
           name: '@personId',
@@ -128,7 +130,7 @@ export default class Person {
     return dogs
   }
 
-  async addDog(personId: string, dog: DogInput): Promise<DogType> {
+  async addDog(personId: string, dog: DogInput, createdAt: string): Promise<DogType> {
     const dogObj = { ...dog } as DogType
     const id = uuidv4()
     
@@ -137,6 +139,7 @@ export default class Person {
     dogObj.id = id
     dogObj.dogId = id
     dogObj.deleted = false
+    dogObj.createdAt = createdAt
 
     const newDog = await this.db.addItem(this.containerId, dogObj)
     return newDog
@@ -165,7 +168,7 @@ export default class Person {
     return dog;
   }
 
-  async addPersonRun(person: PersonType, dog: Dog, runId: string, trialId: string, runInput: RunInput): Promise<RunType> {
+  async addPersonRun(person: PersonType, dog: Dog, runId: string, trialId: string, runInput: RunInput, createdAt: string): Promise<RunType> {
     const personRunToAdd: RunType = {} as RunType
 
     personRunToAdd.personId = person.personId
@@ -183,6 +186,7 @@ export default class Person {
     personRunToAdd.group = runInput.group 
     personRunToAdd.type = 'run'
     personRunToAdd.deleted = false
+    personRunToAdd.createdAt = createdAt
 
     const newPersonRun = await this.db.addItem<RunType>(this.containerId, personRunToAdd)
     return newPersonRun

@@ -21,7 +21,7 @@ const createTrial = (date) => {
   const trial = {
     eventId: 'placeholder',
     akcTrialNumber: Math.floor(Math.random() * 1000000000).toString(),
-    trialDate: date,
+    trialDate: parseInputDate(date),
     onlineEntries: 250,
     mailEntries: 150,
     standardClass: true,
@@ -40,6 +40,14 @@ const createTrial = (date) => {
   }
 
   return trial
+}
+
+const parseInputDate = (date) => {
+  const splitDate = date.split('/')
+  const numberDate = [parseInt(splitDate[0]), parseInt(splitDate[1]) - 1, parseInt(splitDate[2])]
+  const dateObj = new Date(numberDate[0], numberDate[1], numberDate[2])
+
+  return dateObj.toISOString()
 }
 
 const events = [

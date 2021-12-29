@@ -108,6 +108,7 @@ const typeDef = gql`
     trialChairName: String
     trialChairEmail: String
     trialChairPhone: String
+    createdAt: String
   }
 
   type EventTrial {
@@ -132,6 +133,7 @@ const typeDef = gql`
     premierStandard: Boolean
     premierJumpers: Boolean
     runLimit: Int
+    createdAt: String
   }
 
   type Ability {
@@ -165,9 +167,11 @@ const resolvers = {
         allowedRoles: ['secretary'],
       }
       await verify(token, rules)
+
+      const createdAt = new Date().toISOString()
       const { event, person } = dataSources
-      const result = await event.addEvent(args.data)
-      const ___ = await person.addPersonTrial(args.data, args.personId, result.eventId)
+      const result = await event.addEvent(args.data, createdAt)
+      const ___ = await person.addPersonTrial(args.data, args.personId, result.eventId, createdAt)
       return result
     },
     updateEvent: async (_, args: MutationUpdateEventArgs, { dataSources, token }: { dataSources: DataSources; token: string; __ }) => {
@@ -196,9 +200,11 @@ const resolvers = {
       }
 
       await verify(token, rules)
+
+      const createdAt = new Date().toISOString()
       const { event, trial } = dataSources
       const trialId = uuidv4()
-      const result = await event.addEventTrial(trialId, args.eventTrial)
+      const result = await event.addEventTrial(trialId, args.eventTrial, createdAt)
 
       const addTrialInput: AddTrial = {
         akcTrialNumber: args.eventTrial.akcTrialNumber,

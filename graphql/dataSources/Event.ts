@@ -7,13 +7,14 @@ export default class Event {
   db = new Database()
   containerId = 'event'
 
-  async addEvent(input: CreateNewEventInput): Promise<EventType> {
+  async addEvent(input: CreateNewEventInput, createdAt: string): Promise<EventType> {
     const eventInput: EventType = { ...input } as EventType
     const id = uuidv4()
     eventInput.type = 'event'
     eventInput.eventId = id
     eventInput.status = 'New'
     eventInput.id = id
+    eventInput.createdAt = createdAt
     const newTrial = await this.db.addItem(this.containerId, eventInput)
     return newTrial
   }
@@ -28,11 +29,12 @@ export default class Event {
     return updated
   }
 
-  async addEventTrial(trialId: string, eventTrial: AddEventTrial): Promise<EventTrialType> {
+  async addEventTrial(trialId: string, eventTrial: AddEventTrial, createdAt: string): Promise<EventTrialType> {
     const newEventTrial: EventTrialType = { ...eventTrial } as EventTrialType
     newEventTrial.type = 'trial'
     newEventTrial.id = trialId
     newEventTrial.trialId = trialId
+    newEventTrial.createdAt = createdAt
     const newItem = await this.db.addItem(this.containerId, newEventTrial)
     return newItem
   }
@@ -44,7 +46,7 @@ export default class Event {
 
   async getEventTrials(eventId: string): Promise<EventTrialType[]> {
     const querySpec: SqlQuerySpec = {
-      query: 'select * from c where c.eventId = @eventId and c.type = @type',
+      query: 'select * from c where c.eventId = @eventId and c.type = @type order by c.trialDate',
       parameters: [
         {
           name: '@eventId',
