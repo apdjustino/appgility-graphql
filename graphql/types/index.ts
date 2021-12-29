@@ -108,6 +108,7 @@ export type Dog = {
   sire?: Maybe<Scalars['String']>;
   dam?: Maybe<Scalars['String']>;
   deleted?: Maybe<Scalars['Boolean']>;
+  createdAt?: Maybe<Scalars['String']>;
 };
 
 export type DogInput = {
@@ -146,6 +147,7 @@ export type Event = {
   trialChairName?: Maybe<Scalars['String']>;
   trialChairEmail?: Maybe<Scalars['String']>;
   trialChairPhone?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['String']>;
 };
 
 export type EventTrial = {
@@ -171,6 +173,7 @@ export type EventTrial = {
   premierStandard?: Maybe<Scalars['Boolean']>;
   premierJumpers?: Maybe<Scalars['Boolean']>;
   runLimit?: Maybe<Scalars['Int']>;
+  createdAt?: Maybe<Scalars['String']>;
 };
 
 export type Mutation = {
@@ -268,6 +271,7 @@ export type Person = {
   state?: Maybe<Scalars['String']>;
   zip?: Maybe<Scalars['String']>;
   claimed?: Maybe<Scalars['Boolean']>;
+  createdAt?: Maybe<Scalars['String']>;
 };
 
 export type PersonEvent = {
@@ -281,6 +285,8 @@ export type PersonEvent = {
   locationState: Scalars['String'];
   status: Scalars['String'];
   trialSite?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['String']>;
+  trialDates?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type PersonEventInput = {
@@ -326,6 +332,7 @@ export type PersonRun = {
   group?: Maybe<Scalars['String']>;
   qualified?: Maybe<Scalars['Boolean']>;
   deleted: Scalars['Boolean'];
+  createdAt?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
@@ -446,6 +453,7 @@ export type Run = {
   obstacles?: Maybe<Array<Maybe<Scalars['Boolean']>>>;
   paid?: Maybe<Scalars['Boolean']>;
   deleted: Scalars['Boolean'];
+  createdAt?: Maybe<Scalars['String']>;
 };
 
 export type RunInput = {
@@ -502,6 +510,7 @@ export type RunView = {
   obstacles?: Maybe<Array<Maybe<Scalars['Boolean']>>>;
   paid?: Maybe<Scalars['Boolean']>;
   deleted: Scalars['Boolean'];
+  createdAt?: Maybe<Scalars['String']>;
 };
 
 export type ScheduleRun = {
@@ -520,6 +529,7 @@ export type ScheduleRun = {
   parent?: Maybe<Scalars['String']>;
   jumpHeight: Scalars['Int'];
   group?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['String']>;
 };
 
 export enum Sex {
@@ -535,6 +545,7 @@ export type Trial = {
   type: Scalars['String'];
   akcTrialNumber?: Maybe<Scalars['String']>;
   trialDate?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['String']>;
 };
 
 export type UpdateEventInput = {
@@ -766,6 +777,7 @@ export type DogResolvers<ContextType = any, ParentType extends ResolversParentTy
   sire?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dam?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   deleted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -787,6 +799,7 @@ export type EventResolvers<ContextType = any, ParentType extends ResolversParent
   trialChairName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   trialChairEmail?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   trialChairPhone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -812,6 +825,7 @@ export type EventTrialResolvers<ContextType = any, ParentType extends ResolversP
   premierStandard?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   premierJumpers?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   runLimit?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -848,6 +862,7 @@ export type PersonResolvers<ContextType = any, ParentType extends ResolversParen
   state?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   zip?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   claimed?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -861,6 +876,8 @@ export type PersonEventResolvers<ContextType = any, ParentType extends Resolvers
   locationState?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   trialSite?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  trialDates?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -880,6 +897,7 @@ export type PersonRunResolvers<ContextType = any, ParentType extends ResolversPa
   group?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   qualified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   deleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -930,6 +948,7 @@ export type RunResolvers<ContextType = any, ParentType extends ResolversParentTy
   obstacles?: Resolver<Maybe<Array<Maybe<ResolversTypes['Boolean']>>>, ParentType, ContextType>;
   paid?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   deleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -962,6 +981,7 @@ export type RunViewResolvers<ContextType = any, ParentType extends ResolversPare
   obstacles?: Resolver<Maybe<Array<Maybe<ResolversTypes['Boolean']>>>, ParentType, ContextType>;
   paid?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   deleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -980,6 +1000,7 @@ export type ScheduleRunResolvers<ContextType = any, ParentType extends Resolvers
   parent?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   jumpHeight?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   group?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -990,6 +1011,7 @@ export type TrialResolvers<ContextType = any, ParentType extends ResolversParent
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   akcTrialNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   trialDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

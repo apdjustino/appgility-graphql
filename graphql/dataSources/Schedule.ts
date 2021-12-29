@@ -6,7 +6,7 @@ export default class Schedule {
   db = new Database()
   containerId = 'schedule'
 
-  async addScheduleRun(runId: string, person: Person, dog: Dog, trialId: string, runInput: RunInput): Promise<RunType> {
+  async addScheduleRun(runId: string, person: Person, dog: Dog, trialId: string, runInput: RunInput, createdAt: string): Promise<RunType> {
     const scheduleRunToAdd: RunType = {} as RunType
 
     scheduleRunToAdd.runId = runId
@@ -23,6 +23,7 @@ export default class Schedule {
     scheduleRunToAdd.preferred = runInput.preferred
     scheduleRunToAdd.type = 'run'
     scheduleRunToAdd.group = runInput.group
+    scheduleRunToAdd.createdAt = createdAt
     
     const newScheduleRun = await this.db.addItem<RunType>(this.containerId, scheduleRunToAdd)
     return newScheduleRun

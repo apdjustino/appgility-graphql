@@ -27,7 +27,7 @@ export default class Trial {
     return updated
   }
 
-  async addTrialRun(runId: string, person: Person, dog: Dog, trialId: string, runInput: RunInput): Promise<RunType> {
+  async addTrialRun(runId: string, person: Person, dog: Dog, trialId: string, runInput: RunInput, createdAt: string): Promise<RunType> {
     const trialRun: RunType = { ...runInput } as RunType
 
     trialRun.type = 'run'
@@ -39,6 +39,7 @@ export default class Trial {
     trialRun.dogId = dog.dogId
     trialRun.trialId = trialId
     trialRun.deleted = false
+    trialRun.createdAt = createdAt
 
     const newTrialRun = await this.db.addItem<RunType>(this.containerId, trialRun)
     return newTrialRun

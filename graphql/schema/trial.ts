@@ -44,6 +44,7 @@ const typeDef = gql`
     type: String!
     akcTrialNumber: String
     trialDate: String
+    createdAt: String
   }
 
   type Run {
@@ -77,6 +78,7 @@ const typeDef = gql`
     obstacles: [Boolean]
     paid: Boolean
     deleted: Boolean!
+    createdAt: String
   }
 
   input RunInput {
@@ -132,6 +134,7 @@ const typeDef = gql`
     obstacles: [Boolean]
     paid: Boolean
     deleted: Boolean!
+    createdAt: String
   }
 
   type PaginatedRunResponse {
@@ -208,12 +211,14 @@ const resolvers = {
       const { personId, dogId, trialId, run } = args 
       const runId = uuid()
 
+      const createdAt = new Date().toISOString()
+
       const personRecord = await person.getById(personId);
       const dogRecord = await person.getDog(dogId, personId);
 
-      const trialRun = await trial.addTrialRun(runId, personRecord, dogRecord, trialId, run)
-      await person.addPersonRun(personRecord, dogRecord, runId, trialId, run)
-      await schedule.addScheduleRun(runId, personRecord, dogRecord, trialId, run)
+      const trialRun = await trial.addTrialRun(runId, personRecord, dogRecord, trialId, run, createdAt)
+      await person.addPersonRun(personRecord, dogRecord, runId, trialId, run, createdAt)
+      await schedule.addScheduleRun(runId, personRecord, dogRecord, trialId, run, createdAt)
 
       return trialRun
     }

@@ -5,6 +5,7 @@ import {
   MutationAddPersonArgs,
   MutationRemoveDogArgs,
   MutationUpdateDogArgs,
+  PersonEvent,
   QueryGetPersonByEmailArgs,
   QueryGetPersonByIdArgs,
   QueryGetPersonDogsArgs,
@@ -57,6 +58,7 @@ const typeDef = gql`
     state: String
     zip: String
     claimed: Boolean
+    createdAt: String
   }
 
   type PersonEvent {
@@ -69,6 +71,8 @@ const typeDef = gql`
     locationState: String!
     status: String!
     trialSite: String
+    createdAt: String
+    trialDates: [String]
   }
 
   enum Sex {
@@ -96,6 +100,7 @@ const typeDef = gql`
     sire: String
     dam: String
     deleted: Boolean
+    createdAt: String
   }
 
   type PersonRun {
@@ -114,6 +119,7 @@ const typeDef = gql`
     group: String
     qualified: Boolean
     deleted: Boolean!
+    createdAt: String
   }
 
   input DogInput {
@@ -179,10 +185,16 @@ const resolvers = {
         allowedRoles: ['secretary', 'exhibitor'],
       }
       await verify(token, rules)
-      const { person } = dataSources
+      const { person, event } = dataSources
       const { personId } = args
       const result = await person.getPersonEvents(personId)
-      return result
+      const personEvents = await Promise.all(result.map(async (personEvent) => {
+        const newPersonEvent: PersonEvent = { ...personEvent }
+        const trials = await event.getEventTrials(personEvent.eventId)
+        newPersonEvent.trialDates = trials.map(trial => trial.trialDate)
+        return newPersonEvent
+      }))
+      return personEvents
     },
     getPersonEvent: async (_, args: QueryGetPersonEventArgs, { dataSources, token }: ResolverParams, __) => {
       const rules: ValidationRules = {
@@ -269,8 +281,10 @@ const resolvers = {
       args.data.personId = uuid()
       args.data.id = args.data.personId
       args.data.claimed = false
+
+      const createdAt = new Date().toISOString()
             
-      const newPersonResult = await person.addNewPerson(args.data)
+      const newPersonResult = await person.addNewPerson(args.data, createdAt)
       
       if (args.password) {                
         args.data.claimed = true
@@ -296,8 +310,9 @@ const resolvers = {
       }
       await verify(token, rules)
 
+      const createdAt = new Date().toISOString()
       const { person } = dataSources
-      const result = await person.addDog(args.personId, args.dog)
+      const result = await person.addDog(args.personId, args.dog, createdAt)
       return result
     },
     updateDog: async (_, args: MutationUpdateDogArgs, { dataSources, token }: { dataSources: DataSources, token: string}, __) => {
