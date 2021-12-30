@@ -43,6 +43,8 @@ export type AddEventTrial = {
   premierStandard?: Maybe<Scalars['Boolean']>;
   premierJumpers?: Maybe<Scalars['Boolean']>;
   runLimit?: Maybe<Scalars['Int']>;
+  dayToDayMoveup?: Maybe<Scalars['Boolean']>;
+  judges?: Maybe<Array<Maybe<JudgeInput>>>;
 };
 
 export type AddTrial = {
@@ -174,6 +176,23 @@ export type EventTrial = {
   premierJumpers?: Maybe<Scalars['Boolean']>;
   runLimit?: Maybe<Scalars['Int']>;
   createdAt?: Maybe<Scalars['String']>;
+  dayToDayMoveup?: Maybe<Scalars['Boolean']>;
+  judges?: Maybe<Array<Maybe<Judge>>>;
+};
+
+export type Judge = {
+  __typename?: 'Judge';
+  name: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  akcIdentifier?: Maybe<Scalars['String']>;
+};
+
+export type JudgeInput = {
+  name: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
+  akcIdentifier?: Maybe<Scalars['String']>;
 };
 
 export type Mutation = {
@@ -590,6 +609,8 @@ export type UpdateEventTrial = {
   premierStandard?: Maybe<Scalars['Boolean']>;
   premierJumpers?: Maybe<Scalars['Boolean']>;
   runLimit?: Maybe<Scalars['Int']>;
+  dayToDayMoveup?: Maybe<Scalars['Boolean']>;
+  judges?: Maybe<Array<Maybe<JudgeInput>>>;
 };
 
 export type UpdateTrial = {
@@ -696,6 +717,8 @@ export type ResolversTypes = ResolversObject<{
   DogInput: DogInput;
   Event: ResolverTypeWrapper<Event>;
   EventTrial: ResolverTypeWrapper<EventTrial>;
+  Judge: ResolverTypeWrapper<Judge>;
+  JudgeInput: JudgeInput;
   Mutation: ResolverTypeWrapper<{}>;
   PaginatedRunResponse: ResolverTypeWrapper<PaginatedRunResponse>;
   Person: ResolverTypeWrapper<Person>;
@@ -732,6 +755,8 @@ export type ResolversParentTypes = ResolversObject<{
   DogInput: DogInput;
   Event: Event;
   EventTrial: EventTrial;
+  Judge: Judge;
+  JudgeInput: JudgeInput;
   Mutation: {};
   PaginatedRunResponse: PaginatedRunResponse;
   Person: Person;
@@ -826,6 +851,16 @@ export type EventTrialResolvers<ContextType = any, ParentType extends ResolversP
   premierJumpers?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   runLimit?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dayToDayMoveup?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  judges?: Resolver<Maybe<Array<Maybe<ResolversTypes['Judge']>>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type JudgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Judge'] = ResolversParentTypes['Judge']> = ResolversObject<{
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  akcIdentifier?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -1020,6 +1055,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Dog?: DogResolvers<ContextType>;
   Event?: EventResolvers<ContextType>;
   EventTrial?: EventTrialResolvers<ContextType>;
+  Judge?: JudgeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   PaginatedRunResponse?: PaginatedRunResponseResolvers<ContextType>;
   Person?: PersonResolvers<ContextType>;

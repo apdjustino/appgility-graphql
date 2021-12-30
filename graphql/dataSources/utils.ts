@@ -42,13 +42,13 @@ export const verify = (token: string, rules: ValidationRules) => {
           try {
             const user = await getUser(personId)
             const { person, personEvents } = user
-
+                        
             if (!rules.allowedRoles.includes(person.role)) {
               reject('User does not have permission for this action')
             }
 
             if (rules.eventId) {
-              const userEventIds = personEvents.map((personEvent) => personEvent.eventId)
+              const userEventIds = personEvents.map((personEvent) => personEvent.eventId)              
               if (!userEventIds.includes(rules.eventId)) {
                 reject('User does not have permission for this action')
               }

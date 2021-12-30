@@ -45,6 +45,42 @@ const typeDef = gql`
     trialSite: String
   }
 
+  input DogInput {
+    callName: String!
+    akcNumber: String
+    akcName: String
+    withersHeight: String
+    needsMeasured: Boolean
+    breed: String
+    variety: String
+    placeOfBirth: String
+    dob: String
+    jumpHeight: String
+    sex: Sex
+    breeder: String
+    sire: String
+    dam: String
+  }
+
+  input AppMetadata {
+    personId: String
+  }
+
+  input Auth0User {
+    email: String    
+    name: String
+    connection: String
+    password: String,
+    app_metadata: AppMetadata
+  }
+
+  input JudgeInput {    
+    name: String!
+    email: String
+    phone: String
+    akcIdentifier: String
+  }
+
   type Person {
     id: String
     type: String
@@ -122,33 +158,11 @@ const typeDef = gql`
     createdAt: String
   }
 
-  input DogInput {
-    callName: String!
-    akcNumber: String
-    akcName: String
-    withersHeight: String
-    needsMeasured: Boolean
-    breed: String
-    variety: String
-    placeOfBirth: String
-    dob: String
-    jumpHeight: String
-    sex: Sex
-    breeder: String
-    sire: String
-    dam: String
-  }
-
-  input AppMetadata {
-    personId: String
-  }
-
-  input Auth0User {
-    email: String    
-    name: String
-    connection: String
-    password: String,
-    app_metadata: AppMetadata
+  type Judge {    
+    name: String!
+    email: String
+    phone: String
+    akcIdentifier: String
   }
 
   extend type Query {
