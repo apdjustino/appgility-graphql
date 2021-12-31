@@ -2,6 +2,7 @@ import { ValidationRules, verify } from '../dataSources/utils'
 import { QueryGetTrialArgs, MutationAddRunArgs, QueryGetTrialRunsArgs, RunView, Run, QueryGetTrialRunsPaginatedArgs, PaginatedRunResponse } from '../types'
 import { DataSources } from '../types/dataSources'
 import { v4 as uuid } from 'uuid'
+import { AuthenticationError } from 'apollo-server-azure-functions'
 
 const { gql } = require('apollo-server-azure-functions')
 
@@ -161,7 +162,11 @@ const resolvers = {
         allowedRoles: ['secretary', 'exhibitor'],
       }
 
-      await verify(token, rules)
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
 
       const { trial } = dataSources
       const result = await trial.getTrial(args.trialId)
@@ -172,7 +177,11 @@ const resolvers = {
         allowedRoles: ['secretary', 'exhibitor']
       }
 
-      await verify(token, rules)
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
 
       const { trial } = dataSources
       const runs = await trial.getTrialRuns(args.trialId)
@@ -183,7 +192,11 @@ const resolvers = {
         allowedRoles: ['secretary', 'exhibitor']
       }
 
-      await verify(token, rules)
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
       
       const { trial } = dataSources
       
@@ -205,7 +218,11 @@ const resolvers = {
         eventId: args.eventId
       }
 
-      await verify(token, rules)
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
 
       const { trial, person, schedule } = dataSources
       const { personId, dogId, trialId, run } = args 
