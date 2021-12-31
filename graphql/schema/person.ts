@@ -16,6 +16,7 @@ import {
 import { DataSources, ResolverParams } from '../types/dataSources'
 import { v4 as uuid } from 'uuid'
 import * as yup from 'yup'
+import { AuthenticationError } from 'apollo-server-azure-functions'
 const { gql } = require('apollo-server-azure-functions')
 
 const typeDef = gql`
@@ -188,7 +189,13 @@ const resolvers = {
       const rules: ValidationRules = {
         allowedRoles: ['secretary, exhibitor'],
       }
-      await verify(token, rules)
+      
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
+
       const { person } = dataSources
       const { personId } = args
       const result = await person.getById(personId)
@@ -198,7 +205,13 @@ const resolvers = {
       const rules: ValidationRules = {
         allowedRoles: ['secretary', 'exhibitor'],
       }
-      await verify(token, rules)
+      
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
+
       const { person, event } = dataSources
       const { personId } = args
       const result = await person.getPersonEvents(personId)
@@ -214,7 +227,13 @@ const resolvers = {
       const rules: ValidationRules = {
         allowedRoles: ['secretary', 'exhibitor'],
       }
-      await verify(token, rules)
+      
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
+
       const { person } = dataSources
       const { personId, eventId } = args
       const result = await person.getPersonEvent(personId, eventId)
@@ -230,7 +249,13 @@ const resolvers = {
       const rules: ValidationRules = {
         allowedRoles: ['secretary', 'exhibitor'],
       }
-      await verify(token, rules)
+      
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
+
       const { person } = dataSources
       const { personId } = args
       const result = person.getPersonDogs(personId)
@@ -322,7 +347,12 @@ const resolvers = {
         allowedRoles: ['secretary', 'exhibitor'],
         personId: args.secretaryId
       }
-      await verify(token, rules)
+      
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
 
       const createdAt = new Date().toISOString()
       const { person } = dataSources
@@ -334,7 +364,12 @@ const resolvers = {
         allowedRoles: ['secretary', 'exhibitor'],
         personId: args.personId
       }
-      await verify(token, rules)
+      
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
 
       const { person } = dataSources
       const result = await person.updateDog(args.personId, args.dogId, args.dog)
@@ -345,7 +380,12 @@ const resolvers = {
         allowedRoles: ['secretary', 'exhibitor'],
         personId: args.personId
       }
-      await verify(token, rules)
+      
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
 
       const { person } = dataSources
       const result = await person.removeDog(args.personId, args.dogId)
