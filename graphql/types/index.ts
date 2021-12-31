@@ -1,4 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
+import { CustomContext } from './dataSources';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -207,6 +208,7 @@ export type Mutation = {
   addEventTrial?: Maybe<EventTrial>;
   updateEventTrial?: Maybe<EventTrial>;
   addRun?: Maybe<Run>;
+  moveUp?: Maybe<Run>;
 };
 
 
@@ -267,6 +269,14 @@ export type MutationAddRunArgs = {
   personId: Scalars['String'];
   dogId: Scalars['String'];
   run: RunInput;
+};
+
+
+export type MutationMoveUpArgs = {
+  eventId: Scalars['String'];
+  trialId: Scalars['String'];
+  runId: Scalars['String'];
+  newLevel: AgilityAbility;
 };
 
 export type PaginatedRunResponse = {
@@ -628,19 +638,10 @@ export type ResolversObject<TObject> = WithIndex<TObject>;
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
 
-export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
-  fragment: string;
+export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-
-export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
-  selectionSet: string;
-  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
-};
-export type StitchingResolver<TResult, TParent, TContext, TArgs> = LegacyStitchingResolver<TResult, TParent, TContext, TArgs> | NewStitchingResolver<TResult, TParent, TContext, TArgs>;
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
-  | ResolverFn<TResult, TParent, TContext, TArgs>
-  | StitchingResolver<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -654,7 +655,7 @@ export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   args: TArgs,
   context: TContext,
   info: GraphQLResolveInfo
-) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -776,13 +777,13 @@ export type ResolversParentTypes = ResolversObject<{
   UpdateTrial: UpdateTrial;
 }>;
 
-export type AbilityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Ability'] = ResolversParentTypes['Ability']> = ResolversObject<{
+export type AbilityResolvers<ContextType = CustomContext, ParentType extends ResolversParentTypes['Ability'] = ResolversParentTypes['Ability']> = ResolversObject<{
   label?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type DogResolvers<ContextType = any, ParentType extends ResolversParentTypes['Dog'] = ResolversParentTypes['Dog']> = ResolversObject<{
+export type DogResolvers<ContextType = CustomContext, ParentType extends ResolversParentTypes['Dog'] = ResolversParentTypes['Dog']> = ResolversObject<{
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   dogId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   personId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -806,7 +807,7 @@ export type DogResolvers<ContextType = any, ParentType extends ResolversParentTy
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type EventResolvers<ContextType = any, ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event']> = ResolversObject<{
+export type EventResolvers<ContextType = CustomContext, ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event']> = ResolversObject<{
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   eventId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -828,7 +829,7 @@ export type EventResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type EventTrialResolvers<ContextType = any, ParentType extends ResolversParentTypes['EventTrial'] = ResolversParentTypes['EventTrial']> = ResolversObject<{
+export type EventTrialResolvers<ContextType = CustomContext, ParentType extends ResolversParentTypes['EventTrial'] = ResolversParentTypes['EventTrial']> = ResolversObject<{
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   trialId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   eventId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -856,7 +857,7 @@ export type EventTrialResolvers<ContextType = any, ParentType extends ResolversP
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type JudgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Judge'] = ResolversParentTypes['Judge']> = ResolversObject<{
+export type JudgeResolvers<ContextType = CustomContext, ParentType extends ResolversParentTypes['Judge'] = ResolversParentTypes['Judge']> = ResolversObject<{
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -864,7 +865,7 @@ export type JudgeResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+export type MutationResolvers<ContextType = CustomContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   addPerson?: Resolver<Maybe<ResolversTypes['Person']>, ParentType, ContextType, RequireFields<MutationAddPersonArgs, never>>;
   addDog?: Resolver<Maybe<ResolversTypes['Dog']>, ParentType, ContextType, RequireFields<MutationAddDogArgs, 'personId' | 'secretaryId' | 'dog'>>;
@@ -875,16 +876,17 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   addEventTrial?: Resolver<Maybe<ResolversTypes['EventTrial']>, ParentType, ContextType, RequireFields<MutationAddEventTrialArgs, 'eventTrial'>>;
   updateEventTrial?: Resolver<Maybe<ResolversTypes['EventTrial']>, ParentType, ContextType, RequireFields<MutationUpdateEventTrialArgs, 'trialId' | 'eventId' | 'eventTrial'>>;
   addRun?: Resolver<Maybe<ResolversTypes['Run']>, ParentType, ContextType, RequireFields<MutationAddRunArgs, 'eventId' | 'trialId' | 'personId' | 'dogId' | 'run'>>;
+  moveUp?: Resolver<Maybe<ResolversTypes['Run']>, ParentType, ContextType, RequireFields<MutationMoveUpArgs, 'eventId' | 'trialId' | 'runId' | 'newLevel'>>;
 }>;
 
-export type PaginatedRunResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['PaginatedRunResponse'] = ResolversParentTypes['PaginatedRunResponse']> = ResolversObject<{
+export type PaginatedRunResponseResolvers<ContextType = CustomContext, ParentType extends ResolversParentTypes['PaginatedRunResponse'] = ResolversParentTypes['PaginatedRunResponse']> = ResolversObject<{
   runs?: Resolver<Maybe<Array<Maybe<ResolversTypes['Run']>>>, ParentType, ContextType>;
   hasMoreResults?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   continuationToken?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type PersonResolvers<ContextType = any, ParentType extends ResolversParentTypes['Person'] = ResolversParentTypes['Person']> = ResolversObject<{
+export type PersonResolvers<ContextType = CustomContext, ParentType extends ResolversParentTypes['Person'] = ResolversParentTypes['Person']> = ResolversObject<{
   id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   personId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -901,7 +903,7 @@ export type PersonResolvers<ContextType = any, ParentType extends ResolversParen
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type PersonEventResolvers<ContextType = any, ParentType extends ResolversParentTypes['PersonEvent'] = ResolversParentTypes['PersonEvent']> = ResolversObject<{
+export type PersonEventResolvers<ContextType = CustomContext, ParentType extends ResolversParentTypes['PersonEvent'] = ResolversParentTypes['PersonEvent']> = ResolversObject<{
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   eventId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   personId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -916,7 +918,7 @@ export type PersonEventResolvers<ContextType = any, ParentType extends Resolvers
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type PersonRunResolvers<ContextType = any, ParentType extends ResolversParentTypes['PersonRun'] = ResolversParentTypes['PersonRun']> = ResolversObject<{
+export type PersonRunResolvers<ContextType = CustomContext, ParentType extends ResolversParentTypes['PersonRun'] = ResolversParentTypes['PersonRun']> = ResolversObject<{
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   runId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -936,7 +938,7 @@ export type PersonRunResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+export type QueryResolvers<ContextType = CustomContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   _empty?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   getPersonById?: Resolver<Maybe<ResolversTypes['Person']>, ParentType, ContextType, RequireFields<QueryGetPersonByIdArgs, 'personId'>>;
   getPersonEvents?: Resolver<Maybe<Array<Maybe<ResolversTypes['PersonEvent']>>>, ParentType, ContextType, RequireFields<QueryGetPersonEventsArgs, 'personId'>>;
@@ -952,7 +954,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   getTrialRunsPaginated?: Resolver<Maybe<ResolversTypes['PaginatedRunResponse']>, ParentType, ContextType, RequireFields<QueryGetTrialRunsPaginatedArgs, 'trialId'>>;
 }>;
 
-export type RunResolvers<ContextType = any, ParentType extends ResolversParentTypes['Run'] = ResolversParentTypes['Run']> = ResolversObject<{
+export type RunResolvers<ContextType = CustomContext, ParentType extends ResolversParentTypes['Run'] = ResolversParentTypes['Run']> = ResolversObject<{
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   runId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -987,7 +989,7 @@ export type RunResolvers<ContextType = any, ParentType extends ResolversParentTy
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type RunViewResolvers<ContextType = any, ParentType extends ResolversParentTypes['RunView'] = ResolversParentTypes['RunView']> = ResolversObject<{
+export type RunViewResolvers<ContextType = CustomContext, ParentType extends ResolversParentTypes['RunView'] = ResolversParentTypes['RunView']> = ResolversObject<{
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   runId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1020,7 +1022,7 @@ export type RunViewResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type ScheduleRunResolvers<ContextType = any, ParentType extends ResolversParentTypes['ScheduleRun'] = ResolversParentTypes['ScheduleRun']> = ResolversObject<{
+export type ScheduleRunResolvers<ContextType = CustomContext, ParentType extends ResolversParentTypes['ScheduleRun'] = ResolversParentTypes['ScheduleRun']> = ResolversObject<{
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   runId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1039,7 +1041,7 @@ export type ScheduleRunResolvers<ContextType = any, ParentType extends Resolvers
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type TrialResolvers<ContextType = any, ParentType extends ResolversParentTypes['Trial'] = ResolversParentTypes['Trial']> = ResolversObject<{
+export type TrialResolvers<ContextType = CustomContext, ParentType extends ResolversParentTypes['Trial'] = ResolversParentTypes['Trial']> = ResolversObject<{
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   trialId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   eventId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1050,7 +1052,7 @@ export type TrialResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type Resolvers<ContextType = any> = ResolversObject<{
+export type Resolvers<ContextType = CustomContext> = ResolversObject<{
   Ability?: AbilityResolvers<ContextType>;
   Dog?: DogResolvers<ContextType>;
   Event?: EventResolvers<ContextType>;
@@ -1068,9 +1070,3 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Trial?: TrialResolvers<ContextType>;
 }>;
 
-
-/**
- * @deprecated
- * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
- */
-export type IResolvers<ContextType = any> = Resolvers<ContextType>;

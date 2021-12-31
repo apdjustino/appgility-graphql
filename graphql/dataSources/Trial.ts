@@ -124,4 +124,14 @@ export default class Trial {
     return response
     
   }
+
+  async getTrialRun(trialId: string, runId: string): Promise<RunType> {
+    const trialRun = await this.db.getItemById<RunType>(this.containerId, runId, trialId);
+    return trialRun
+  }
+
+  async updateTrialRun(trialId: string, runId: string, run: RunType): Promise<RunType> {    
+    const updatedRun = await this.db.updateItem<RunType>(this.containerId, runId, trialId, run);
+    return updatedRun
+  }
 }

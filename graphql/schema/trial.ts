@@ -1,8 +1,9 @@
 import { ValidationRules, verify } from '../dataSources/utils'
-import { QueryGetTrialArgs, MutationAddRunArgs, QueryGetTrialRunsArgs, RunView, Run, QueryGetTrialRunsPaginatedArgs, PaginatedRunResponse } from '../types'
+import { QueryGetTrialArgs, MutationAddRunArgs, QueryGetTrialRunsArgs, RunView, Run, QueryGetTrialRunsPaginatedArgs, PaginatedRunResponse, MutationMoveUpArgs, Resolvers } from '../types'
 import { DataSources } from '../types/dataSources'
 import { v4 as uuid } from 'uuid'
 import { AuthenticationError } from 'apollo-server-azure-functions'
+import { CustomContext } from '../types/dataSources'
 
 const { gql } = require('apollo-server-azure-functions')
 
@@ -152,10 +153,11 @@ const typeDef = gql`
 
   extend type Mutation {
     addRun(eventId: String!, trialId: String!, personId: String!, dogId: String!, run: RunInput!): Run
+    moveUp(eventId: String!, trialId: String!, runId: String!, newLevel: AgilityAbility!): Run
   }
 `
 
-const resolvers = {
+const resolvers: Resolvers = {
   Query: {
     getTrial: async (_, args: QueryGetTrialArgs, { dataSources, token }: { dataSources: DataSources; token: string }, __) => {
       const rules: ValidationRules = {
@@ -238,6 +240,26 @@ const resolvers = {
       await schedule.addScheduleRun(runId, personRecord, dogRecord, trialId, run, createdAt)
 
       return trialRun
+    },
+    moveUp: async (root, args, { dataSources, token }) => {
+      const rules: ValidationRules = {
+        allowedRoles: ["secretary"],
+        eventId: args.eventId
+      }
+
+      try {
+        await verify(token, rules)
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
+
+      const { trial } = dataSources;
+      const trialRun = await trial.getTrialRun(args.trialId, args.runId);
+      const updatedTrialRun = { ...trialRun };
+
+      updatedTrialRun.level = args.newLevel;
+      const response = await trial.updateTrialRun(args.trialId, args.runId, updatedTrialRun);
+      return response;
     }
   }
 }
