@@ -13,6 +13,7 @@ import {
 } from '../types'
 import { DataSources } from '../types/dataSources'
 import { v4 as uuidv4 } from 'uuid'
+import { AuthenticationError } from 'apollo-server-core'
 
 const { gql } = require('apollo-server-azure-functions')
 
@@ -166,7 +167,13 @@ const resolvers = {
       const rules: ValidationRules = {
         allowedRoles: ['secretary'],
       }
-      await verify(token, rules)
+
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
+      
 
       const createdAt = new Date().toISOString()
       const { event, person } = dataSources
@@ -179,7 +186,13 @@ const resolvers = {
         allowedRoles: ['secretary'],
         eventId: args.eventId,
       }
-      await verify(token, rules)
+      
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
+
       const { event, person } = dataSources
 
       const personEvent: PersonEvent = await person.getPersonEvent(args.personId, args.eventId)
@@ -199,7 +212,11 @@ const resolvers = {
         eventId: args.eventTrial.eventId,
       }
 
-      await verify(token, rules)
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
 
       const createdAt = new Date().toISOString()
       const { event, trial } = dataSources
@@ -220,7 +237,12 @@ const resolvers = {
         eventId: args.eventId,
       }
 
-      await verify(token, rules)
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
+
       const { event, trial } = dataSources
 
       const updateTrialInput: UpdateTrial = {
@@ -243,7 +265,12 @@ const resolvers = {
         allowedRoles: ['exhibitor', 'secretary'],
       }
 
-      await verify(token, rules)
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
+
       const { event } = dataSources
       const result = await event.getEvent(args.eventId)
       return result
@@ -253,7 +280,12 @@ const resolvers = {
         allowedRoles: ['exhibitor', 'secretary'],
       }
 
-      await verify(token, rules)
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
+
       const { event } = dataSources
       const result = await event.getEventTrials(args.eventId)
       return result
@@ -263,7 +295,12 @@ const resolvers = {
         allowedRoles: ['exhibitor', 'secretary'],
       }
 
-      await verify(token, rules)
+      try {
+        await verify(token, rules)  
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
+
       const { event } = dataSources
       const result = await event.getEventTrial(args.trialId, args.eventId)
       return result
