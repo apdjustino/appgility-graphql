@@ -153,7 +153,8 @@ const typeDef = gql`
 
   extend type Mutation {
     addRun(eventId: String!, trialId: String!, personId: String!, dogId: String!, run: RunInput!): Run
-    moveUp(eventId: String!, trialId: String!, runId: String!, newLevel: AgilityAbility!): Run
+    moveUp(eventId: String!, trialId: String!, runId: String!, newLevel: AgilityAbility!): Run,
+    editRun(eventId: String!, trialId: String!, runId: String!, updatedRun: RunInput!): Run
   }
 `
 
@@ -257,8 +258,27 @@ const resolvers: Resolvers = {
       const trialRun = await trial.getTrialRun(args.trialId, args.runId);
       const updatedTrialRun = { ...trialRun };
 
-      updatedTrialRun.level = args.newLevel;
+      updatedTrialRun.level = args.newLevel;      
       const response = await trial.updateTrialRun(args.trialId, args.runId, updatedTrialRun);
+      return response;
+    },
+    editRun: async (root, args, { dataSources, token }) => {
+      const rules: ValidationRules = {
+        allowedRoles: ["secretary"],
+        eventId: args.eventId
+      }
+
+      try {
+        await verify(token, rules)
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
+
+      const { trial } = dataSources
+      const trialRun = await trial.getTrialRun(args.trialId, args.runId)
+
+      const updatedRun: Run = { ...trialRun, ...args.updatedRun };
+      const response = await trial.updateTrialRun(args.trialId, args.runId, updatedRun);
       return response;
     }
   }

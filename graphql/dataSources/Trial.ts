@@ -31,7 +31,7 @@ export default class Trial {
     const trialRun: RunType = { ...runInput } as RunType
 
     trialRun.type = 'run'
-    trialRun.id = uuidv4()
+    trialRun.id = runId
     trialRun.runId = runId
     trialRun.personId = person.personId
     trialRun.personName = person.name
@@ -104,7 +104,9 @@ export default class Trial {
       parameters.push({
         name: "@search", value: `%${search}%`
       })
-    }    
+    }
+    
+    query = `${query} ORDER BY c.createdAt DESC`
     
     const querySpec: SqlQuerySpec = {
       query,

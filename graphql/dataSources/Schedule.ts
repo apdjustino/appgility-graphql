@@ -1,5 +1,4 @@
 import Database from './db/cosmos'
-import { v4 as uuidv4 } from 'uuid'
 import { Dog, Person, RunInput, ScheduleRun as RunType } from '../types'
 
 export default class Schedule {
@@ -10,7 +9,7 @@ export default class Schedule {
     const scheduleRunToAdd: RunType = {} as RunType
 
     scheduleRunToAdd.runId = runId
-    scheduleRunToAdd.id = uuidv4()
+    scheduleRunToAdd.id = runId
     scheduleRunToAdd.personId = person.personId
     scheduleRunToAdd.personName = person.name
     scheduleRunToAdd.dogId = dog.dogId

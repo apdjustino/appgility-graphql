@@ -209,6 +209,7 @@ export type Mutation = {
   updateEventTrial?: Maybe<EventTrial>;
   addRun?: Maybe<Run>;
   moveUp?: Maybe<Run>;
+  editRun?: Maybe<Run>;
 };
 
 
@@ -277,6 +278,14 @@ export type MutationMoveUpArgs = {
   trialId: Scalars['String'];
   runId: Scalars['String'];
   newLevel: AgilityAbility;
+};
+
+
+export type MutationEditRunArgs = {
+  eventId: Scalars['String'];
+  trialId: Scalars['String'];
+  runId: Scalars['String'];
+  updatedRun: RunInput;
 };
 
 export type PaginatedRunResponse = {
@@ -877,6 +886,7 @@ export type MutationResolvers<ContextType = CustomContext, ParentType extends Re
   updateEventTrial?: Resolver<Maybe<ResolversTypes['EventTrial']>, ParentType, ContextType, RequireFields<MutationUpdateEventTrialArgs, 'trialId' | 'eventId' | 'eventTrial'>>;
   addRun?: Resolver<Maybe<ResolversTypes['Run']>, ParentType, ContextType, RequireFields<MutationAddRunArgs, 'eventId' | 'trialId' | 'personId' | 'dogId' | 'run'>>;
   moveUp?: Resolver<Maybe<ResolversTypes['Run']>, ParentType, ContextType, RequireFields<MutationMoveUpArgs, 'eventId' | 'trialId' | 'runId' | 'newLevel'>>;
+  editRun?: Resolver<Maybe<ResolversTypes['Run']>, ParentType, ContextType, RequireFields<MutationEditRunArgs, 'eventId' | 'trialId' | 'runId' | 'updatedRun'>>;
 }>;
 
 export type PaginatedRunResponseResolvers<ContextType = CustomContext, ParentType extends ResolversParentTypes['PaginatedRunResponse'] = ResolversParentTypes['PaginatedRunResponse']> = ResolversObject<{
