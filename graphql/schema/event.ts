@@ -65,6 +65,8 @@ const typeDef = gql`
     premierStandard: Boolean
     premierJumpers: Boolean
     runLimit: Int
+    dayToDayMoveup: Boolean
+    judges: [JudgeInput]
   }
 
   input UpdateEventTrial {
@@ -89,6 +91,13 @@ const typeDef = gql`
     premierStandard: Boolean
     premierJumpers: Boolean
     runLimit: Int
+    dayToDayMoveup: Boolean
+    judges: [JudgeInput]
+  }
+
+  input AbilityInput {
+    label: String!
+    value: String!
   }
 
   type Event {
@@ -135,17 +144,14 @@ const typeDef = gql`
     premierJumpers: Boolean
     runLimit: Int
     createdAt: String
+    dayToDayMoveup: Boolean
+    judges: [Judge]
   }
 
   type Ability {
     label: String!
     value: String!
-  }
-
-  input AbilityInput {
-    label: String!
-    value: String!
-  }
+  }  
 
   extend type Query {
     getEvent(eventId: String!): Event

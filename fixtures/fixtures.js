@@ -45,7 +45,7 @@ mutation AddNewRun($eventId: String!, $trialId: String!, $personId: String!, $do
 const graphURL = 'http://localhost:7071/graphql'
 
 const accessToken = 'fake'
-const secretaryId = '0ad358f3-eac2-4113-90c2-089fc73c393f'
+const secretaryId = 'b733d506-2b21-45ab-a145-6f42b1362d68'
 
 const addPeople = async (accessToken) => {
   const n = 250

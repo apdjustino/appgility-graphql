@@ -31,7 +31,7 @@ export default class Trial {
     const trialRun: RunType = { ...runInput } as RunType
 
     trialRun.type = 'run'
-    trialRun.id = uuidv4()
+    trialRun.id = runId
     trialRun.runId = runId
     trialRun.personId = person.personId
     trialRun.personName = person.name
@@ -104,7 +104,9 @@ export default class Trial {
       parameters.push({
         name: "@search", value: `%${search}%`
       })
-    }    
+    }
+    
+    query = `${query} ORDER BY c.createdAt DESC`
     
     const querySpec: SqlQuerySpec = {
       query,
@@ -123,5 +125,15 @@ export default class Trial {
     const response = await this.db.queryPaginatedItems<RunType>(this.containerId, querySpec, options)        
     return response
     
+  }
+
+  async getTrialRun(trialId: string, runId: string): Promise<RunType> {
+    const trialRun = await this.db.getItemById<RunType>(this.containerId, runId, trialId);
+    return trialRun
+  }
+
+  async updateTrialRun(trialId: string, runId: string, run: RunType): Promise<RunType> {    
+    const updatedRun = await this.db.updateItem<RunType>(this.containerId, runId, trialId, run);
+    return updatedRun
   }
 }

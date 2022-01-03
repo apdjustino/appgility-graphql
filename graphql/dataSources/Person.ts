@@ -176,7 +176,7 @@ export default class Person {
     personRunToAdd.dogId = dog.dogId
     personRunToAdd.callName = dog.callName
     personRunToAdd.runId = runId
-    personRunToAdd.id = uuidv4()
+    personRunToAdd.id = runId
     personRunToAdd.trialId = trialId
     personRunToAdd.level = runInput.level
     personRunToAdd.agilityClass = runInput.agilityClass

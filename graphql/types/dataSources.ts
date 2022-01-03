@@ -22,3 +22,8 @@ export interface ResolverParams {
   dataSources: DataSources
   token?: string
 }
+
+export type CustomContext = {
+  token: string;
+  dataSources: DataSources
+}
