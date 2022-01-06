@@ -35,9 +35,8 @@ const typeDef = gql`
     locationState: String!
     status: String!
     trialSite: String
-    hostClub: String
-    price: Int
-    altPrice: Int
+    hostClub: String    
+    runPrices: [Int]
     premiumLink: String
     openingDate: String
     closingDate: String
@@ -110,8 +109,7 @@ const typeDef = gql`
     status: String!
     trialSite: String
     hostClub: String
-    price: Int
-    altPrice: Int
+    runPrices: [Int]
     premiumLink: String
     openingDate: String
     closingDate: String

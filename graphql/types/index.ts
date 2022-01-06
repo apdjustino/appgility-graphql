@@ -142,8 +142,7 @@ export type Event = {
   status: Scalars['String'];
   trialSite?: Maybe<Scalars['String']>;
   hostClub?: Maybe<Scalars['String']>;
-  price?: Maybe<Scalars['Int']>;
-  altPrice?: Maybe<Scalars['Int']>;
+  runPrices?: Maybe<Array<Maybe<Scalars['Int']>>>;
   premiumLink?: Maybe<Scalars['String']>;
   openingDate?: Maybe<Scalars['String']>;
   closingDate?: Maybe<Scalars['String']>;
@@ -596,8 +595,7 @@ export type UpdateEventInput = {
   status: Scalars['String'];
   trialSite?: Maybe<Scalars['String']>;
   hostClub?: Maybe<Scalars['String']>;
-  price?: Maybe<Scalars['Int']>;
-  altPrice?: Maybe<Scalars['Int']>;
+  runPrices?: Maybe<Array<Maybe<Scalars['Int']>>>;
   premiumLink?: Maybe<Scalars['String']>;
   openingDate?: Maybe<Scalars['String']>;
   closingDate?: Maybe<Scalars['String']>;
@@ -826,8 +824,7 @@ export type EventResolvers<ContextType = CustomContext, ParentType extends Resol
   status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   trialSite?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   hostClub?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  price?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  altPrice?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  runPrices?: Resolver<Maybe<Array<Maybe<ResolversTypes['Int']>>>, ParentType, ContextType>;
   premiumLink?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   openingDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   closingDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
