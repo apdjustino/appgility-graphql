@@ -491,6 +491,7 @@ export type Run = {
   paid?: Maybe<Scalars['Boolean']>;
   deleted: Scalars['Boolean'];
   createdAt?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['Int']>;
 };
 
 export type RunInput = {
@@ -515,6 +516,7 @@ export type RunInput = {
   rank?: Maybe<Scalars['Int']>;
   obstacles?: Maybe<Array<Maybe<Scalars['Boolean']>>>;
   paid?: Maybe<Scalars['Boolean']>;
+  price?: Maybe<Scalars['Int']>;
 };
 
 export type RunView = {
@@ -993,6 +995,7 @@ export type RunResolvers<ContextType = CustomContext, ParentType extends Resolve
   paid?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   deleted?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  price?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

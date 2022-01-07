@@ -81,6 +81,7 @@ const typeDef = gql`
     paid: Boolean
     deleted: Boolean!
     createdAt: String
+    price: Int
   }
 
   input RunInput {
@@ -105,6 +106,7 @@ const typeDef = gql`
     rank: Int
     obstacles: [Boolean]
     paid: Boolean
+    price: Int
   }
 
   type RunView {
