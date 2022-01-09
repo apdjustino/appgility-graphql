@@ -157,4 +157,9 @@ export default class Trial {
     const updatedRun = await this.db.updateItem<RunType>(this.containerId, runId, trialId, run);
     return updatedRun
   }
+
+  async deleteTrialRun(trialId: string, runId: string): Promise<RunType> {    
+    const deletedRun = await this.db.deleteItem<RunType>(this.containerId, runId, trialId);
+    return deletedRun;
+  }
 }
