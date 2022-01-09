@@ -2,6 +2,7 @@ import Database from './db/cosmos'
 import { AddTrial, Trial as TrialType, UpdateTrial, RunInput, Run as RunType, Person, Dog, AgilityClass, AgilityAbility } from '../types'
 import { v4 as uuidv4 } from 'uuid'
 import { FeedOptions, FeedResponse, SqlParameter, SqlQuerySpec } from '@azure/cosmos'
+import { RunCount } from '../types/dataSources'
 
 export default class Trial {
   db = new Database()
@@ -60,6 +61,26 @@ export default class Trial {
 
     const trialRuns = await this.db.queryItems<RunType>(this.containerId, querySpec, options)
     return trialRuns
+  }
+
+  async getTrialRunCount(trialId: string): Promise<RunCount> {
+    
+    const querySpec: SqlQuerySpec = {
+      query: 'select count(c.runId) as runCount from c where c.trialId = @trialId and c.type = @type and c.deleted = false',
+      parameters: [
+        { name: '@trialId', value: trialId },
+        { name: '@type', value: 'run'}
+      ]
+    }
+
+    const options: FeedOptions = {
+      partitionKey: trialId
+    }
+
+    const runCount = await this.db.queryItems<RunCount>(this.containerId, querySpec, options);
+    return runCount[0];
+
+
   }
 
   async getTrialRunsPaginated(trialId: string, agilityClass?: AgilityClass[], level?: AgilityAbility[], jumpHeight?: number[], preferred?: boolean, regular?: boolean, search?: string, continuationToken?: string): Promise<FeedResponse<RunType>> {
