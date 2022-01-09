@@ -27,3 +27,7 @@ export type CustomContext = {
   token: string;
   dataSources: DataSources
 }
+
+export type RunCount = {
+  runCount: number;
+}

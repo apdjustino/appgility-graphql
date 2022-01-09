@@ -13,7 +13,8 @@ import {
 } from '../types'
 import { DataSources } from '../types/dataSources'
 import { v4 as uuidv4 } from 'uuid'
-import { AuthenticationError } from 'apollo-server-core'
+import { AuthenticationError, ForbiddenError } from 'apollo-server-core'
+import { checkIfEventHasRuns } from '../dataSources/rules/event'
 
 const { gql } = require('apollo-server-azure-functions')
 
@@ -197,7 +198,7 @@ const resolvers = {
         throw new AuthenticationError(e)
       }
 
-      const { event, person } = dataSources
+      const { event, trial, person } = dataSources
 
       const personEvent: PersonEvent = await person.getPersonEvent(args.personId, args.eventId)
       personEvent.name = args.updatedEvent.name
@@ -205,6 +206,13 @@ const resolvers = {
       personEvent.locationState = args.updatedEvent.locationState
       personEvent.status = args.updatedEvent.status
       personEvent.trialSite = args.updatedEvent.trialSite
+
+      if (!!args.updatedEvent.runPrices) {
+        const eventHasRuns = await checkIfEventHasRuns(event, trial, args.eventId);        
+        if (eventHasRuns) {
+          throw new ForbiddenError("Cannot update event pricing after runs have been added to event trials");
+        }
+      }
 
       const result = await event.updateEvent(args.eventId, args.updatedEvent)
       const ___ = await person.updatePersonEvent(args.personId, args.eventId, personEvent)
