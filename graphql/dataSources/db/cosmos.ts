@@ -37,6 +37,13 @@ class Database {
     return updatedItem
   }
 
+  async deleteItem<T>(containerId: string, itemId: string, partitionKey: string): Promise<T> {
+    const container = this._getContainer(containerId);
+    const item = container.item(itemId, partitionKey);
+    const deletedItem = await item.delete<T>();
+    return deletedItem.resource;
+  }
+
   async queryItems<T>(containerId: string, query: SqlQuerySpec, options: FeedOptions): Promise<T[]> {
     const container = this._getContainer(containerId)
     const { resources } = await container.items.query<T>(query, options).fetchAll()

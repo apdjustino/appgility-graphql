@@ -2,7 +2,7 @@ import { ValidationRules, verify } from '../dataSources/utils'
 import { QueryGetTrialArgs, MutationAddRunArgs, QueryGetTrialRunsArgs, RunView, Run, QueryGetTrialRunsPaginatedArgs, PaginatedRunResponse, MutationMoveUpArgs, Resolvers } from '../types'
 import { DataSources } from '../types/dataSources'
 import { v4 as uuid } from 'uuid'
-import { AuthenticationError } from 'apollo-server-azure-functions'
+import { AuthenticationError, ForbiddenError } from 'apollo-server-azure-functions'
 import { CustomContext } from '../types/dataSources'
 
 const { gql } = require('apollo-server-azure-functions')
@@ -157,6 +157,7 @@ const typeDef = gql`
     addRun(eventId: String!, trialId: String!, personId: String!, dogId: String!, run: RunInput!): Run
     moveUp(eventId: String!, trialId: String!, runId: String!, newLevel: AgilityAbility!): Run,
     editRun(eventId: String!, trialId: String!, runId: String!, updatedRun: RunInput!): Run
+    deleteRun(eventId: String!, trialId: String!, runId: String!): Run
   }
 `
 
@@ -281,6 +282,26 @@ const resolvers: Resolvers = {
 
       const updatedRun: Run = { ...trialRun, ...args.updatedRun };
       const response = await trial.updateTrialRun(args.trialId, args.runId, updatedRun);
+      return response;
+    },
+    deleteRun: async (root, args, { dataSources, token }) => {
+      const rules: ValidationRules = {
+        allowedRoles: ["secretary"],
+        eventId: args.eventId
+      }
+
+      try {
+        await verify(token, rules)
+      } catch (e) {
+        throw new AuthenticationError(e)
+      }
+
+      const { trial } = dataSources;
+
+      const runToDelete = await trial.getTrialRun(args.trialId, args.runId);      
+      runToDelete.deleted = true;
+
+      const response = await trial.updateTrialRun(args.trialId, args.runId, runToDelete);
       return response;
     }
   }
