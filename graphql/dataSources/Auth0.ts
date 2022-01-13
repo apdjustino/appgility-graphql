@@ -1,4 +1,5 @@
 import { RESTDataSource } from 'apollo-datasource-rest'
+import { ApolloError } from "apollo-server-core"
 import { Auth0User } from '../types'
 import { v4 as uuid} from 'uuid'
 
@@ -29,12 +30,23 @@ class Auth0Api extends RESTDataSource {
 
   async createNewUser(user: Auth0User) {    
     user.connection = 'Username-Password-Authentication'
-    const token = await this.getManagementToken()    
-    const data = await this.post('api/v2/users', user, {
-      headers: { 'Authorization': `Bearer ${token}`}
-    })
-
-    return data.user_id
+    let token = ""
+    try {
+      token = await this.getManagementToken()    
+    } catch (e) {
+      throw new ApolloError(e.response.data.message)
+    }
+    
+    try {
+      const data = await this.post('api/v2/users', user, {
+        headers: { 'Authorization': `Bearer ${token}`}
+      })
+  
+      return data.user_id
+    } catch (e) {
+      throw new ApolloError(e.response.data.message);
+    }
+    
 
   }
 }
