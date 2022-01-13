@@ -34,7 +34,7 @@ class Auth0Api extends RESTDataSource {
     try {
       token = await this.getManagementToken()    
     } catch (e) {
-      throw new ApolloError(e.response.data.message)
+      throw new ApolloError(JSON.stringify(e.response))
     }
     
     try {
@@ -44,7 +44,7 @@ class Auth0Api extends RESTDataSource {
   
       return data.user_id
     } catch (e) {
-      throw new ApolloError(e.response.data.message);
+      throw new ApolloError(JSON.stringify(e.response));
     }
     
 
