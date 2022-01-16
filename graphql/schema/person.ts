@@ -300,9 +300,8 @@ const resolvers = {
       })
 
       const passwordSchema = yup.object().shape({
-        password: yup.string()
-          .min(8, 'Password must have a minimum of 8 characters')
-          .matches(/(?=^.{16,}$)((?=.*\w)(?=.*[A-Z])(?=.*[0-9])(?=.*[|!$% &@#/()?^'\+\-*]))^.*/, { message: 'Password must include lower case, lower case, numbers, and special characters', excludeEmptyString: true})          
+        password: yup.string()         
+          .matches(/(?=^.{8,}$)((?=.*\w)(?=.*[A-Z])(?=.*[0-9]))^.*/, { message: 'Password must be at least 8 characters and include a lowercase character, an uppercase character, and a number', excludeEmptyString: true})          
       })
 
       try {
