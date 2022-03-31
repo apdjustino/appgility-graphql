@@ -39,7 +39,7 @@ const typeDef = gql`
         eventId: String!
         personId: String!
         type: String!
-        name: String!
+        hostClub: String!
         locationCity: String!
         locationState: String!
         status: String!
@@ -103,7 +103,7 @@ const typeDef = gql`
         eventId: String!
         personId: String!
         type: String!
-        name: String!
+        hostClub: String!
         locationCity: String!
         locationState: String!
         status: String!

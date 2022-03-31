@@ -20,7 +20,6 @@ const { gql } = require("apollo-server-azure-functions");
 
 const typeDef = gql`
     input CreateNewEventInput {
-        name: String!
         locationCity: String!
         locationState: String!
         trialSite: String
@@ -31,7 +30,6 @@ const typeDef = gql`
         id: String!
         eventId: String!
         type: String!
-        name: String!
         locationCity: String!
         locationState: String!
         status: String!
@@ -104,7 +102,6 @@ const typeDef = gql`
         id: String!
         eventId: String!
         type: String!
-        name: String!
         locationCity: String!
         locationState: String!
         status: String!
@@ -200,7 +197,7 @@ const resolvers = {
             const { event, trial, person } = dataSources;
 
             const personEvent: PersonEvent = await person.getPersonEvent(args.personId, args.eventId);
-            personEvent.name = args.updatedEvent.name;
+            personEvent.hostClub = args.updatedEvent.hostClub;
             personEvent.locationCity = args.updatedEvent.locationCity;
             personEvent.locationState = args.updatedEvent.locationState;
             personEvent.status = args.updatedEvent.status;
