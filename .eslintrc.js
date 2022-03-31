@@ -39,6 +39,7 @@ module.exports = {
         "max-len": ["error", { code: 160, ignoreStrings: true, ignoreRegExpLiterals: true }],
         "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": ["error", { vars: "all", args: "all", ignoreRestSiblings: true, argsIgnorePattern: "^_*" }],
+        "no-extra-boolean-cast": 0,
     },
     settings: {
         react: {
