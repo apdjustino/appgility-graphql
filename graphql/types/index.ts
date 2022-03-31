@@ -83,7 +83,6 @@ export type Auth0User = {
 };
 
 export type CreateNewEventInput = {
-    name: Scalars["String"];
     locationCity: Scalars["String"];
     locationState: Scalars["String"];
     trialSite?: Maybe<Scalars["String"]>;
@@ -136,7 +135,6 @@ export type Event = {
     id: Scalars["String"];
     eventId: Scalars["String"];
     type: Scalars["String"];
-    name: Scalars["String"];
     locationCity: Scalars["String"];
     locationState: Scalars["String"];
     status: Scalars["String"];
@@ -313,7 +311,7 @@ export type PersonEvent = {
     eventId: Scalars["String"];
     personId: Scalars["String"];
     type: Scalars["String"];
-    name: Scalars["String"];
+    hostClub: Scalars["String"];
     locationCity: Scalars["String"];
     locationState: Scalars["String"];
     status: Scalars["String"];
@@ -327,7 +325,7 @@ export type PersonEventInput = {
     eventId: Scalars["String"];
     personId: Scalars["String"];
     type: Scalars["String"];
-    name: Scalars["String"];
+    hostClub: Scalars["String"];
     locationCity: Scalars["String"];
     locationState: Scalars["String"];
     status: Scalars["String"];
@@ -575,7 +573,6 @@ export type UpdateEventInput = {
     id: Scalars["String"];
     eventId: Scalars["String"];
     type: Scalars["String"];
-    name: Scalars["String"];
     locationCity: Scalars["String"];
     locationState: Scalars["String"];
     status: Scalars["String"];
@@ -808,7 +805,6 @@ export type EventResolvers<ContextType = CustomContext, ParentType extends Resol
     id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     eventId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     type?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-    name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     locationCity?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     locationState?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     status?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
@@ -938,7 +934,7 @@ export type PersonEventResolvers<
     eventId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     personId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     type?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-    name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+    hostClub?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     locationCity?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     locationState?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     status?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
