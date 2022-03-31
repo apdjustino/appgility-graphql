@@ -1,6 +1,3 @@
-import { ValidationRules, verify } from "../dataSources/utils";
-import { DataSources } from "../types/dataSources";
-import { v4 as uuid } from "uuid";
 const { gql } = require("apollo-server-azure-functions");
 
 const typeDef = gql`

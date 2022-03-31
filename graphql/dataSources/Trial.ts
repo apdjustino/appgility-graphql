@@ -1,6 +1,5 @@
 import Database from "./db/cosmos";
 import { AddTrial, Trial as TrialType, UpdateTrial, RunInput, Run as RunType, Person, Dog, AgilityClass, AgilityAbility } from "../types";
-import { v4 as uuidv4 } from "uuid";
 import { FeedOptions, FeedResponse, SqlParameter, SqlQuerySpec } from "@azure/cosmos";
 import { RunCount } from "../types/dataSources";
 

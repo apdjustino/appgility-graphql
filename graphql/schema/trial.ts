@@ -1,19 +1,8 @@
 import { ValidationRules, verify } from "../dataSources/utils";
-import {
-    QueryGetTrialArgs,
-    MutationAddRunArgs,
-    QueryGetTrialRunsArgs,
-    RunView,
-    Run,
-    QueryGetTrialRunsPaginatedArgs,
-    PaginatedRunResponse,
-    MutationMoveUpArgs,
-    Resolvers,
-} from "../types";
+import { QueryGetTrialArgs, MutationAddRunArgs, QueryGetTrialRunsArgs, Run, QueryGetTrialRunsPaginatedArgs, PaginatedRunResponse, Resolvers } from "../types";
 import { DataSources } from "../types/dataSources";
 import { v4 as uuid } from "uuid";
-import { AuthenticationError, ForbiddenError } from "apollo-server-azure-functions";
-import { CustomContext } from "../types/dataSources";
+import { AuthenticationError } from "apollo-server-azure-functions";
 
 const { gql } = require("apollo-server-azure-functions");
 

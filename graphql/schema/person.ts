@@ -199,7 +199,7 @@ const resolvers = {
             const { person } = dataSources;
             const { personId } = args;
             const result = await person.getById(personId);
-            console.log(result);
+
             return result;
         },
         getPersonEvents: async (_, args: QueryGetPersonEventsArgs, { dataSources, token }: ResolverParams, __) => {

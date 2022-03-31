@@ -1,7 +1,6 @@
 import { RESTDataSource } from "apollo-datasource-rest";
 import { ApolloError } from "apollo-server-core";
 import { Auth0User } from "../types";
-import { v4 as uuid } from "uuid";
 
 class Auth0Api extends RESTDataSource {
     _grant_type: string = "client_credentials";

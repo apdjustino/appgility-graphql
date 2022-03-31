@@ -1,5 +1,4 @@
 import { Container, CosmosClient, SqlQuerySpec, FeedOptions, FeedResponse } from "@azure/cosmos";
-import { Person } from "../../types";
 
 class Database {
     _connection: CosmosClient;

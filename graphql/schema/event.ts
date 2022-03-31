@@ -182,7 +182,7 @@ const resolvers = {
             const createdAt = new Date().toISOString();
             const { event, person } = dataSources;
             const result = await event.addEvent(args.data, createdAt);
-            const ___ = await person.addPersonTrial(args.data, args.personId, result.eventId, createdAt);
+            await person.addPersonTrial(args.data, args.personId, result.eventId, createdAt);
             return result;
         },
         updateEvent: async (_, args: MutationUpdateEventArgs, { dataSources, token }: { dataSources: DataSources; token: string; __ }) => {
@@ -214,7 +214,7 @@ const resolvers = {
             }
 
             const result = await event.updateEvent(args.eventId, args.updatedEvent);
-            const ___ = await person.updatePersonEvent(args.personId, args.eventId, personEvent);
+            await person.updatePersonEvent(args.personId, args.eventId, personEvent);
             return result;
         },
         addEventTrial: async (_, args: MutationAddEventTrialArgs, { dataSources, token }: { dataSources: DataSources; token: string; __ }) => {
@@ -239,7 +239,7 @@ const resolvers = {
                 eventId: args.eventTrial.eventId,
                 trialDate: args.eventTrial.trialDate,
             };
-            const ___ = await trial.addTrial(trialId, addTrialInput);
+            await trial.addTrial(trialId, addTrialInput);
             return result;
         },
         updateEventTrial: async (_, args: MutationUpdateEventTrialArgs, { dataSources, token }: { dataSources: DataSources; token: string; __ }) => {
@@ -266,7 +266,7 @@ const resolvers = {
             };
 
             const result = await event.updateEventTrial(args.trialId, args.eventId, args.eventTrial);
-            const ___ = await trial.updateTrial(args.trialId, updateTrialInput);
+            await trial.updateTrial(args.trialId, updateTrialInput);
             return result;
         },
     },

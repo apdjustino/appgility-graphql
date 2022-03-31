@@ -62,7 +62,7 @@ export const verify = (token: string, rules: ValidationRules) => {
 
                         resolve(user);
                     } catch (e) {
-                        console.log(e);
+                        console.error(e);
                         reject("Error fetching user data");
                     }
                 }
@@ -100,7 +100,7 @@ export const getUser = async (personId: string): Promise<PersonValidationRespons
 
         personEvents = await db.queryItems<PersonEvent>("person", querySpec, options);
     } catch (e) {
-        console.log(e);
+        console.error(e);
     }
 
     return {
