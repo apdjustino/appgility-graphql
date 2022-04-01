@@ -49,7 +49,6 @@ export type AddEventTrial = {
 
 export type AddTrial = {
     eventId: Scalars["String"];
-    akcTrialNumber?: Maybe<Scalars["String"]>;
     trialDate?: Maybe<Scalars["String"]>;
 };
 
@@ -566,7 +565,6 @@ export type Trial = {
     trialId: Scalars["String"];
     eventId: Scalars["String"];
     type: Scalars["String"];
-    akcTrialNumber?: Maybe<Scalars["String"]>;
     trialDate?: Maybe<Scalars["String"]>;
     createdAt?: Maybe<Scalars["String"]>;
 };
@@ -620,7 +618,6 @@ export type UpdateTrial = {
     trialId: Scalars["String"];
     eventId: Scalars["String"];
     type: Scalars["String"];
-    akcTrialNumber?: Maybe<Scalars["String"]>;
     trialDate?: Maybe<Scalars["String"]>;
 };
 
@@ -1095,7 +1092,6 @@ export type TrialResolvers<ContextType = CustomContext, ParentType extends Resol
     trialId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     eventId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     type?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-    akcTrialNumber?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
     trialDate?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
     createdAt?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
