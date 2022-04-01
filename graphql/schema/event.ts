@@ -20,15 +20,17 @@ const { gql } = require("apollo-server-azure-functions");
 
 const typeDef = gql`
     input CreateNewEventInput {
+        eventNumber: String!
         locationCity: String!
         locationState: String!
-        trialSite: String
-        hostClub: String
+        trialSite: String!
+        hostClub: String!
     }
 
     input UpdateEventInput {
         id: String!
         eventId: String!
+        eventNumber: String!
         type: String!
         locationCity: String!
         locationState: String!
@@ -46,7 +48,6 @@ const typeDef = gql`
 
     input AddEventTrial {
         eventId: String!
-        akcTrialNumber: String
         trialDate: String
         onlineEntries: Int
         mailEntries: Int
@@ -72,7 +73,6 @@ const typeDef = gql`
         trialId: String!
         eventId: String!
         type: String!
-        akcTrialNumber: String
         trialDate: String
         onlineEntries: Int
         mailEntries: Int
@@ -102,6 +102,7 @@ const typeDef = gql`
         id: String!
         eventId: String!
         type: String!
+        eventNumber: String!
         locationCity: String!
         locationState: String!
         status: String!
@@ -122,7 +123,6 @@ const typeDef = gql`
         trialId: String!
         eventId: String!
         type: String!
-        akcTrialNumber: String
         trialDate: String
         onlineEntries: Int
         mailEntries: Int
@@ -232,7 +232,6 @@ const resolvers = {
             const result = await event.addEventTrial(trialId, args.eventTrial, createdAt);
 
             const addTrialInput: AddTrial = {
-                akcTrialNumber: args.eventTrial.akcTrialNumber,
                 eventId: args.eventTrial.eventId,
                 trialDate: args.eventTrial.trialDate,
             };
@@ -258,7 +257,6 @@ const resolvers = {
                 trialId: args.trialId,
                 eventId: args.eventId,
                 type: "trial",
-                akcTrialNumber: args.eventTrial.akcTrialNumber,
                 trialDate: args.eventTrial.trialDate,
             };
 
