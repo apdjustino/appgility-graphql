@@ -37,6 +37,7 @@ const typeDef = gql`
     input PersonEventInput {
         id: String!
         eventId: String!
+        eventNumber: String!
         personId: String!
         type: String!
         hostClub: String!
@@ -101,6 +102,7 @@ const typeDef = gql`
     type PersonEvent {
         id: String!
         eventId: String!
+        eventNumber: String!
         personId: String!
         type: String!
         hostClub: String!

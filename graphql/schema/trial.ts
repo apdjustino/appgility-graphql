@@ -9,7 +9,6 @@ const { gql } = require("apollo-server-azure-functions");
 const typeDef = gql`
     input AddTrial {
         eventId: String!
-        akcTrialNumber: String
         trialDate: String
     }
 
@@ -18,7 +17,6 @@ const typeDef = gql`
         trialId: String!
         eventId: String!
         type: String!
-        akcTrialNumber: String
         trialDate: String
     }
 
@@ -43,7 +41,6 @@ const typeDef = gql`
         trialId: String!
         eventId: String!
         type: String!
-        akcTrialNumber: String
         trialDate: String
         createdAt: String
     }

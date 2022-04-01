@@ -27,7 +27,6 @@ export type AbilityInput = {
 
 export type AddEventTrial = {
     eventId: Scalars["String"];
-    akcTrialNumber?: Maybe<Scalars["String"]>;
     trialDate?: Maybe<Scalars["String"]>;
     onlineEntries?: Maybe<Scalars["Int"]>;
     mailEntries?: Maybe<Scalars["Int"]>;
@@ -50,7 +49,6 @@ export type AddEventTrial = {
 
 export type AddTrial = {
     eventId: Scalars["String"];
-    akcTrialNumber?: Maybe<Scalars["String"]>;
     trialDate?: Maybe<Scalars["String"]>;
 };
 
@@ -83,10 +81,11 @@ export type Auth0User = {
 };
 
 export type CreateNewEventInput = {
+    eventNumber: Scalars["String"];
     locationCity: Scalars["String"];
     locationState: Scalars["String"];
-    trialSite?: Maybe<Scalars["String"]>;
-    hostClub?: Maybe<Scalars["String"]>;
+    trialSite: Scalars["String"];
+    hostClub: Scalars["String"];
 };
 
 export type Dog = {
@@ -135,6 +134,7 @@ export type Event = {
     id: Scalars["String"];
     eventId: Scalars["String"];
     type: Scalars["String"];
+    eventNumber: Scalars["String"];
     locationCity: Scalars["String"];
     locationState: Scalars["String"];
     status: Scalars["String"];
@@ -156,7 +156,6 @@ export type EventTrial = {
     trialId: Scalars["String"];
     eventId: Scalars["String"];
     type: Scalars["String"];
-    akcTrialNumber?: Maybe<Scalars["String"]>;
     trialDate?: Maybe<Scalars["String"]>;
     onlineEntries?: Maybe<Scalars["Int"]>;
     mailEntries?: Maybe<Scalars["Int"]>;
@@ -309,6 +308,7 @@ export type PersonEvent = {
     __typename?: "PersonEvent";
     id: Scalars["String"];
     eventId: Scalars["String"];
+    eventNumber: Scalars["String"];
     personId: Scalars["String"];
     type: Scalars["String"];
     hostClub: Scalars["String"];
@@ -323,6 +323,7 @@ export type PersonEvent = {
 export type PersonEventInput = {
     id: Scalars["String"];
     eventId: Scalars["String"];
+    eventNumber: Scalars["String"];
     personId: Scalars["String"];
     type: Scalars["String"];
     hostClub: Scalars["String"];
@@ -564,7 +565,6 @@ export type Trial = {
     trialId: Scalars["String"];
     eventId: Scalars["String"];
     type: Scalars["String"];
-    akcTrialNumber?: Maybe<Scalars["String"]>;
     trialDate?: Maybe<Scalars["String"]>;
     createdAt?: Maybe<Scalars["String"]>;
 };
@@ -572,6 +572,7 @@ export type Trial = {
 export type UpdateEventInput = {
     id: Scalars["String"];
     eventId: Scalars["String"];
+    eventNumber: Scalars["String"];
     type: Scalars["String"];
     locationCity: Scalars["String"];
     locationState: Scalars["String"];
@@ -592,7 +593,6 @@ export type UpdateEventTrial = {
     trialId: Scalars["String"];
     eventId: Scalars["String"];
     type: Scalars["String"];
-    akcTrialNumber?: Maybe<Scalars["String"]>;
     trialDate?: Maybe<Scalars["String"]>;
     onlineEntries?: Maybe<Scalars["Int"]>;
     mailEntries?: Maybe<Scalars["Int"]>;
@@ -618,7 +618,6 @@ export type UpdateTrial = {
     trialId: Scalars["String"];
     eventId: Scalars["String"];
     type: Scalars["String"];
-    akcTrialNumber?: Maybe<Scalars["String"]>;
     trialDate?: Maybe<Scalars["String"]>;
 };
 
@@ -805,6 +804,7 @@ export type EventResolvers<ContextType = CustomContext, ParentType extends Resol
     id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     eventId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     type?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+    eventNumber?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     locationCity?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     locationState?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     status?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
@@ -829,7 +829,6 @@ export type EventTrialResolvers<
     trialId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     eventId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     type?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-    akcTrialNumber?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
     trialDate?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
     onlineEntries?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
     mailEntries?: Resolver<Maybe<ResolversTypes["Int"]>, ParentType, ContextType>;
@@ -932,6 +931,7 @@ export type PersonEventResolvers<
 > = ResolversObject<{
     id?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     eventId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+    eventNumber?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     personId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     type?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     hostClub?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
@@ -1092,7 +1092,6 @@ export type TrialResolvers<ContextType = CustomContext, ParentType extends Resol
     trialId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     eventId?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
     type?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-    akcTrialNumber?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
     trialDate?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
     createdAt?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
     __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
