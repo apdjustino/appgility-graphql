@@ -53,7 +53,8 @@ export type AddTrial = {
 };
 
 export enum AgilityAbility {
-    Novice = "NOVICE",
+    NoviceA = "NOVICE_A",
+    NoviceB = "NOVICE_B",
     Open = "OPEN",
     Excellent = "EXCELLENT",
     Masters = "MASTERS",
