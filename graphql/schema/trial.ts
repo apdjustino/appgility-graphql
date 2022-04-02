@@ -30,7 +30,8 @@ const typeDef = gql`
     }
 
     enum AgilityAbility {
-        NOVICE
+        NOVICE_A
+        NOVICE_B
         OPEN
         EXCELLENT
         MASTERS
