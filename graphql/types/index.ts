@@ -104,7 +104,6 @@ export type Dog = {
     variety?: Maybe<Scalars["String"]>;
     placeOfBirth?: Maybe<Scalars["String"]>;
     dob?: Maybe<Scalars["String"]>;
-    jumpHeight?: Maybe<Scalars["String"]>;
     sex?: Maybe<Sex>;
     breeder?: Maybe<Scalars["String"]>;
     sire?: Maybe<Scalars["String"]>;
@@ -123,7 +122,6 @@ export type DogInput = {
     variety?: Maybe<Scalars["String"]>;
     placeOfBirth?: Maybe<Scalars["String"]>;
     dob?: Maybe<Scalars["String"]>;
-    jumpHeight?: Maybe<Scalars["String"]>;
     sex?: Maybe<Sex>;
     breeder?: Maybe<Scalars["String"]>;
     sire?: Maybe<Scalars["String"]>;
@@ -791,7 +789,6 @@ export type DogResolvers<ContextType = CustomContext, ParentType extends Resolve
     variety?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
     placeOfBirth?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
     dob?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-    jumpHeight?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
     sex?: Resolver<Maybe<ResolversTypes["Sex"]>, ParentType, ContextType>;
     breeder?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
     sire?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;

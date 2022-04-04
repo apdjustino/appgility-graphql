@@ -57,7 +57,6 @@ const typeDef = gql`
         variety: String
         placeOfBirth: String
         dob: String
-        jumpHeight: String
         sex: Sex
         breeder: String
         sire: String
@@ -133,7 +132,6 @@ const typeDef = gql`
         variety: String
         placeOfBirth: String
         dob: String
-        jumpHeight: String
         sex: Sex
         breeder: String
         sire: String
