@@ -50,6 +50,7 @@ const typeDef = gql`
     input DogInput {
         callName: String!
         akcNumber: String
+        numberType: String
         akcName: String
         withersHeight: String
         needsMeasured: Boolean
@@ -125,6 +126,7 @@ const typeDef = gql`
         type: String!
         callName: String!
         akcNumber: String
+        numberType: String
         akcName: String
         withersHeight: String
         needsMeasured: Boolean
