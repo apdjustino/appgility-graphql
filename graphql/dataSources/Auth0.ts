@@ -1,5 +1,5 @@
-import { RESTDataSource } from "apollo-datasource-rest";
-import { ApolloError } from "apollo-server-core";
+import { RESTDataSource } from "@apollo/datasource-rest";
+import { GraphQLError } from "graphql";
 import { Auth0User } from "../types";
 
 class Auth0Api extends RESTDataSource {
@@ -14,18 +14,15 @@ class Auth0Api extends RESTDataSource {
     }
 
     async getManagementToken() {
-        const data = await this.post(
-            "oauth/token",
-            {
+        const data = await this.post("oauth/token", {
+            body: {
                 grant_type: this._grant_type,
                 client_id: this._client_id,
                 client_secret: this._client_secret,
                 audience: this._audience,
             },
-            {
-                headers: { "content-type": "application/json" },
-            },
-        );
+            headers: { "content-type": "application/json" },
+        });
 
         return data.access_token;
     }
@@ -36,17 +33,18 @@ class Auth0Api extends RESTDataSource {
         try {
             token = await this.getManagementToken();
         } catch (e) {
-            throw new ApolloError(JSON.stringify(e.response));
+            throw new GraphQLError(JSON.stringify(e.response));
         }
 
         try {
-            const data = await this.post("api/v2/users", user, {
+            const data = await this.post("api/v2/users", {
+                body: { ...user },
                 headers: { Authorization: `Bearer ${token}` },
             });
 
             return data.user_id;
         } catch (e) {
-            throw new ApolloError(JSON.stringify(e.response));
+            throw new GraphQLError(JSON.stringify(e.response));
         }
     }
 }

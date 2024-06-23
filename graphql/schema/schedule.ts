@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server-azure-functions");
+import gql from "graphql-tag";
 
 const typeDef = gql`
     type ScheduleRun {

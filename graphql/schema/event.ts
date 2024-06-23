@@ -13,10 +13,11 @@ import {
 } from "../types";
 import { DataSources } from "../types/dataSources";
 import { v4 as uuidv4 } from "uuid";
-import { AuthenticationError, ForbiddenError } from "apollo-server-core";
+import { GraphQLError } from "graphql";
+
 import { checkIfEventHasRuns } from "../dataSources/rules/event";
 
-const { gql } = require("apollo-server-azure-functions");
+import gql from "graphql-tag";
 
 const typeDef = gql`
     input CreateNewEventInput {
@@ -149,13 +150,13 @@ const typeDef = gql`
         value: String!
     }
 
-    extend type Query {
+    type Query {
         getEvent(eventId: String!): Event
         getEventTrials(eventId: String!): [EventTrial]
         getEventTrial(trialId: String!, eventId: String!): EventTrial
     }
 
-    extend type Mutation {
+    type Mutation {
         addEvent(data: CreateNewEventInput, personId: String): Event
         updateEvent(eventId: String!, updatedEvent: UpdateEventInput!, personId: String!): Event
         addEventTrial(eventTrial: AddEventTrial!): EventTrial
@@ -173,7 +174,7 @@ const resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const createdAt = new Date().toISOString();
@@ -191,7 +192,7 @@ const resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { event, trial, person } = dataSources;
@@ -206,7 +207,7 @@ const resolvers = {
             if (args.updatedEvent.runPrices) {
                 const eventHasRuns = await checkIfEventHasRuns(event, trial, args.eventId);
                 if (eventHasRuns) {
-                    throw new ForbiddenError("Cannot update event pricing after runs have been added to event trials");
+                    throw new GraphQLError("Cannot update event pricing after runs have been added to event trials");
                 }
             }
 
@@ -223,7 +224,7 @@ const resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const createdAt = new Date().toISOString();
@@ -247,7 +248,7 @@ const resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { event, trial } = dataSources;
@@ -274,7 +275,7 @@ const resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { event } = dataSources;
@@ -289,7 +290,7 @@ const resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { event } = dataSources;
@@ -304,7 +305,7 @@ const resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { event } = dataSources;

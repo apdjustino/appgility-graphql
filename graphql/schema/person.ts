@@ -16,8 +16,7 @@ import {
 import { DataSources, ResolverParams } from "../types/dataSources";
 import { v4 as uuid } from "uuid";
 import * as yup from "yup";
-import { AuthenticationError } from "apollo-server-azure-functions";
-const { gql } = require("apollo-server-azure-functions");
+import gql from "graphql-tag";
 
 const typeDef = gql`
     input PersonInput {
@@ -168,7 +167,7 @@ const typeDef = gql`
         akcIdentifier: String
     }
 
-    extend type Query {
+    type Query {
         getPersonById(personId: String!): Person
         getPersonEvents(personId: String!): [PersonEvent]
         getPersonEvent(personId: String!, eventId: String!): PersonEvent
@@ -177,7 +176,7 @@ const typeDef = gql`
         searchPerson(query: String!): [Person]
     }
 
-    extend type Mutation {
+    type Mutation {
         addPerson(data: PersonInput, password: String): Person
         addDog(personId: String!, secretaryId: String!, dog: DogInput!): Dog
         updateDog(personId: String!, dogId: String!, dog: DogInput!): Dog
@@ -195,7 +194,7 @@ const resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { person } = dataSources;
@@ -212,7 +211,7 @@ const resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { person, event } = dataSources;
@@ -236,7 +235,7 @@ const resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { person } = dataSources;
@@ -258,7 +257,7 @@ const resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { person } = dataSources;
@@ -357,7 +356,7 @@ const resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const createdAt = new Date().toISOString();
@@ -374,7 +373,7 @@ const resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { person } = dataSources;
@@ -390,7 +389,7 @@ const resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { person } = dataSources;

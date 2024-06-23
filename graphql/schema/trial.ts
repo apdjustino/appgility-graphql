@@ -2,9 +2,8 @@ import { ValidationRules, verify } from "../dataSources/utils";
 import { QueryGetTrialArgs, MutationAddRunArgs, QueryGetTrialRunsArgs, Run, QueryGetTrialRunsPaginatedArgs, PaginatedRunResponse, Resolvers } from "../types";
 import { DataSources } from "../types/dataSources";
 import { v4 as uuid } from "uuid";
-import { AuthenticationError } from "apollo-server-azure-functions";
 
-const { gql } = require("apollo-server-azure-functions");
+import gql from "graphql-tag";
 
 const typeDef = gql`
     input AddTrial {
@@ -144,7 +143,7 @@ const typeDef = gql`
         continuationToken: String
     }
 
-    extend type Query {
+    type Query {
         getTrial(trialId: String!): Trial
         getTrialRuns(trialId: String!): [Run]
         getTrialRunsPaginated(
@@ -159,7 +158,7 @@ const typeDef = gql`
         ): PaginatedRunResponse
     }
 
-    extend type Mutation {
+    type Mutation {
         addRun(eventId: String!, trialId: String!, personId: String!, dogId: String!, run: RunInput!): Run
         moveUp(eventId: String!, trialId: String!, runId: String!, newLevel: AgilityAbility!): Run
         editRun(eventId: String!, trialId: String!, runId: String!, updatedRun: RunInput!): Run
@@ -177,7 +176,7 @@ const resolvers: Resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { trial } = dataSources;
@@ -192,7 +191,7 @@ const resolvers: Resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { trial } = dataSources;
@@ -212,7 +211,7 @@ const resolvers: Resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { trial } = dataSources;
@@ -246,7 +245,7 @@ const resolvers: Resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { trial, person, schedule } = dataSources;
@@ -273,7 +272,7 @@ const resolvers: Resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { trial } = dataSources;
@@ -293,7 +292,7 @@ const resolvers: Resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { trial } = dataSources;
@@ -312,7 +311,7 @@ const resolvers: Resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new AuthenticationError(e);
+                throw new Error(e);
             }
 
             const { trial } = dataSources;
