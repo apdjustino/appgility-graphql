@@ -6,6 +6,9 @@ import Trial from "./dataSources/Trial";
 import Schedule from "./dataSources/Schedule";
 import Auth0 from "./dataSources/Auth0";
 import { startStandaloneServer } from "@apollo/server/standalone";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 export interface ServerContext {
     dataSources: {
