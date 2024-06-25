@@ -1,0 +1,142 @@
+input CreateNewEventInput {
+    eventNumber: String!
+    locationCity: String!
+    locationState: String!
+    trialSite: String!
+    hostClub: String!
+}
+
+input UpdateEventInput {
+    id: String!
+    eventId: String!
+    eventNumber: String!
+    type: String!
+    locationCity: String!
+    locationState: String!
+    status: String!
+    trialSite: String
+    hostClub: String
+    runPrices: [Int]
+    premiumLink: String
+    openingDate: String
+    closingDate: String
+    trialChairName: String
+    trialChairEmail: String
+    trialChairPhone: String
+}
+
+input AddEventTrial {
+    eventId: String!
+    trialDate: String
+    onlineEntries: Int
+    mailEntries: Int
+    standardClass: Boolean
+    standardAbility: [AbilityInput]
+    standardPreferred: [AbilityInput]
+    jumpersClass: Boolean
+    jumpersAbility: [AbilityInput]
+    jumpersPreferred: [AbilityInput]
+    fastClass: Boolean
+    fastAbility: [AbilityInput]
+    fastPreferred: [AbilityInput]
+    t2bClass: Boolean
+    premierStandard: Boolean
+    premierJumpers: Boolean
+    runLimit: Int
+    dayToDayMoveup: Boolean
+    judges: [JudgeInput]
+}
+
+input UpdateEventTrial {
+    id: String!
+    trialId: String!
+    eventId: String!
+    type: String!
+    trialDate: String
+    onlineEntries: Int
+    mailEntries: Int
+    standardClass: Boolean
+    standardAbility: [AbilityInput]
+    standardPreferred: [AbilityInput]
+    jumpersClass: Boolean
+    jumpersAbility: [AbilityInput]
+    jumpersPreferred: [AbilityInput]
+    fastClass: Boolean
+    fastAbility: [AbilityInput]
+    fastPreferred: [AbilityInput]
+    t2bClass: Boolean
+    premierStandard: Boolean
+    premierJumpers: Boolean
+    runLimit: Int
+    dayToDayMoveup: Boolean
+    judges: [JudgeInput]
+}
+
+input AbilityInput {
+    label: String!
+    value: String!
+}
+
+type Event {
+    id: String!
+    eventId: String!
+    type: String!
+    eventNumber: String!
+    locationCity: String!
+    locationState: String!
+    status: String!
+    trialSite: String
+    hostClub: String
+    runPrices: [Int]
+    premiumLink: String
+    openingDate: String
+    closingDate: String
+    trialChairName: String
+    trialChairEmail: String
+    trialChairPhone: String
+    createdAt: String
+}
+
+type EventTrial {
+    id: String!
+    trialId: String!
+    eventId: String!
+    type: String!
+    trialDate: String
+    onlineEntries: Int
+    mailEntries: Int
+    standardClass: Boolean
+    standardAbility: [Ability]
+    standardPreferred: [Ability]
+    jumpersClass: Boolean
+    jumpersAbility: [Ability]
+    jumpersPreferred: [Ability]
+    fastClass: Boolean
+    fastAbility: [Ability]
+    fastPreferred: [Ability]
+    t2bClass: Boolean
+    premierStandard: Boolean
+    premierJumpers: Boolean
+    runLimit: Int
+    createdAt: String
+    dayToDayMoveup: Boolean
+    judges: [Judge]
+}
+
+type Ability {
+    label: String!
+    value: String!
+}
+
+type Query {
+    getEvent(eventId: String!): Event @auth(roles: ["secretary", "exhibitor"])
+    getEventTrials(eventId: String!): [EventTrial] @auth(roles: ["secretary", "exhibitor"])
+    getEventTrial(trialId: String!, eventId: String!): EventTrial @auth(roles: ["secretary", "exhibitor"])
+}
+
+type Mutation {
+    addEvent(data: CreateNewEventInput, personId: String): Event @auth(roles: ["secretary"])
+    updateEvent(eventId: String!, updatedEvent: UpdateEventInput!, personId: String!): Event @auth(roles: ["secretary"])
+    addEventTrial(eventTrial: AddEventTrial!): EventTrial @auth(roles: ["secretary"])
+    updateEventTrial(trialId: String!, eventId: String!, eventTrial: UpdateEventTrial!): EventTrial @auth(roles: ["secretary"])
+}

@@ -1,0 +1,158 @@
+input AddTrial {
+    eventId: String!
+    trialDate: String
+}
+
+input UpdateTrial {
+    id: String!
+    trialId: String!
+    eventId: String!
+    type: String!
+    trialDate: String
+}
+
+enum AgilityClass {
+    STANDARD
+    JUMPERS
+    FAST
+    T2B
+    PREMIER_STANDARD
+    PREMIER_JUMPERS
+}
+
+enum AgilityAbility {
+    NOVICE_A
+    NOVICE_B
+    OPEN
+    EXCELLENT
+    MASTERS
+}
+
+type Trial {
+    id: String!
+    trialId: String!
+    eventId: String!
+    type: String!
+    trialDate: String
+    createdAt: String
+}
+
+type Run {
+    id: String!
+    type: String!
+    runId: String!
+    trialId: String!
+    personId: String!
+    personName: String!
+    dogId: String!
+    callName: String!
+    agilityClass: AgilityClass!
+    level: AgilityAbility
+    preferred: Boolean!
+    jumpHeight: Int!
+    group: String
+    armband: String
+    courseLength: Int
+    score: Int
+    timeDeduction: Int
+    time: Float
+    qualified: Boolean
+    points: Int
+    sendBonus: Boolean
+    wrongCourse: Int
+    excusal: Int
+    refusal: Int
+    failure: Int
+    table: Int
+    rank: Int
+    obstacles: [Boolean]
+    paid: Boolean
+    deleted: Boolean!
+    createdAt: String
+    price: Int
+}
+
+input RunInput {
+    agilityClass: AgilityClass!
+    level: AgilityAbility
+    preferred: Boolean!
+    jumpHeight: Int!
+    group: String
+    armband: String
+    courseLength: Int
+    score: Int
+    timeDeduction: Float
+    time: Float
+    qualified: Boolean
+    points: Int
+    sendBonus: Boolean
+    wrongCourse: Int
+    excusal: Int
+    refusal: Int
+    failure: Int
+    table: Int
+    rank: Int
+    obstacles: [Boolean]
+    paid: Boolean
+    price: Int
+}
+
+type RunView {
+    id: String!
+    type: String!
+    runId: String!
+    trialId: String!
+    person: Person
+    dog: Dog
+    agilityClass: AgilityClass!
+    level: AgilityAbility
+    preferred: Boolean!
+    jumpHeight: Int!
+    group: String
+    armband: String
+    courseLength: Int
+    score: Int
+    timeDeduction: Int
+    time: Float
+    qualified: Boolean
+    points: Int
+    sendBonus: Boolean
+    wrongCourse: Int
+    excusal: Int
+    refusal: Int
+    failure: Int
+    table: Int
+    rank: Int
+    obstacles: [Boolean]
+    paid: Boolean
+    deleted: Boolean!
+    createdAt: String
+}
+
+type PaginatedRunResponse {
+    runs: [Run]
+    hasMoreResults: Boolean
+    continuationToken: String
+}
+
+type Query {
+    getTrial(trialId: String!): Trial @auth(roles: ["secretary", "exhibitor"])
+    getTrialRuns(trialId: String!): [Run] @auth(roles: ["secretary", "exhibitor"])
+    getTrialRunsPaginated(
+        trialId: String!
+        agilityClass: [AgilityClass]
+        level: [AgilityAbility]
+        jumpHeight: [Int]
+        preferred: Boolean
+        regular: Boolean
+        search: String
+        continuationToken: String
+    ): PaginatedRunResponse @auth(roles: ["secretary", "exhibitor"])
+}
+
+type Mutation {
+    addRun(eventId: String!, trialId: String!, personId: String!, dogId: String!, run: RunInput!): Run @auth(roles: ["secretary"])
+    moveUp(eventId: String!, trialId: String!, runId: String!, newLevel: AgilityAbility!): Run @auth(roles: ["secretary"])
+    editRun(eventId: String!, trialId: String!, runId: String!, updatedRun: RunInput!): Run @auth(roles: ["secretary"])
+    deleteRun(eventId: String!, trialId: String!, runId: String!): Run @auth(roles: ["secretary"])
+}

@@ -1,0 +1,165 @@
+directive @auth(roles: [String!]!) on FIELD_DEFINITION | OBJECT
+
+input PersonInput {
+    id: String
+    personId: String
+    name: String!
+    email: String!
+    role: String!
+    phone: String!
+    address: String
+    city: String
+    state: String
+    zip: String
+    claimed: Boolean
+}
+
+input PersonEventInput {
+    id: String!
+    eventId: String!
+    eventNumber: String!
+    personId: String!
+    type: String!
+    hostClub: String!
+    locationCity: String!
+    locationState: String!
+    status: String!
+    trialSite: String
+}
+
+input DogInput {
+    callName: String!
+    akcNumber: String
+    numberType: String
+    akcName: String
+    withersHeight: String
+    needsMeasured: Boolean
+    breed: String
+    variety: String
+    placeOfBirth: String
+    dob: String
+    sex: Sex
+    breeder: String
+    sire: String
+    dam: String
+}
+
+input AppMetadata {
+    personId: String
+}
+
+input Auth0User {
+    email: String
+    name: String
+    connection: String
+    password: String
+    app_metadata: AppMetadata
+}
+
+input JudgeInput {
+    name: String!
+    email: String
+    phone: String
+    akcIdentifier: String
+}
+
+type Person {
+    id: String
+    type: String
+    personId: String
+    name: String
+    email: String
+    role: String
+    phone: String
+    address: String
+    city: String
+    state: String
+    zip: String
+    claimed: Boolean
+    createdAt: String
+}
+
+type PersonEvent {
+    id: String!
+    eventId: String!
+    eventNumber: String!
+    personId: String!
+    type: String!
+    hostClub: String!
+    locationCity: String!
+    locationState: String!
+    status: String!
+    trialSite: String
+    createdAt: String
+    trialDates: [String]
+}
+
+enum Sex {
+    MALE
+    FEMALE
+}
+
+type Dog {
+    id: String!
+    dogId: String!
+    personId: String!
+    type: String!
+    callName: String!
+    akcNumber: String
+    numberType: String
+    akcName: String
+    withersHeight: String
+    needsMeasured: Boolean
+    breed: String
+    variety: String
+    placeOfBirth: String
+    dob: String
+    sex: Sex
+    breeder: String
+    sire: String
+    dam: String
+    deleted: Boolean
+    createdAt: String
+}
+
+type PersonRun {
+    id: String!
+    type: String!
+    runId: String!
+    personId: String!
+    personName: String!
+    dogId: String!
+    callName: String!
+    trialId: String!
+    agilityClass: AgilityClass!
+    level: AgilityAbility
+    jumpHeight: Int!
+    preferred: Boolean!
+    group: String
+    qualified: Boolean
+    deleted: Boolean!
+    createdAt: String
+}
+
+type Judge {
+    name: String!
+    email: String
+    phone: String
+    akcIdentifier: String
+}
+
+type Query {
+    getPersonById(personId: String!): Person @auth(roles: ["secretary", "exhibitor"])
+    getPersonEvents(personId: String!): [PersonEvent] @auth(roles: ["secretary", "exhibitor"])
+    getPersonEvent(personId: String!, eventId: String!): PersonEvent @auth(roles: ["secretary", "exhibitor"])
+    getPersonByEmail(email: String!): Person
+    getPersonDogs(personId: String!): [Dog] @auth(roles: ["secretary", "exhibitor"])
+    searchPerson(query: String!): [Person]
+}
+
+type Mutation {
+    addPerson(data: PersonInput, password: String): Person
+    addDog(personId: String!, secretaryId: String!, dog: DogInput!): Dog @auth(roles: ["secretary", "exhibitor"])
+    updateDog(personId: String!, dogId: String!, dog: DogInput!): Dog @auth(roles: ["secretary", "exhibitor"])
+    removeDog(personId: String!, dogId: String!): Dog @auth(roles: ["secretary", "exhibitor"])
+}
