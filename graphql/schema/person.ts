@@ -12,13 +12,17 @@ import {
     QueryGetPersonEventArgs,
     QueryGetPersonEventsArgs,
     QuerySearchPersonArgs,
+    Resolvers,
 } from "../types";
 import { DataSources, ResolverParams } from "../types/dataSources";
 import { v4 as uuid } from "uuid";
 import * as yup from "yup";
 import gql from "graphql-tag";
+import { BaseError, HttpErrorCodes } from "../errors/BaseError";
 
 const typeDef = gql`
+    directive @auth(roles: [String!]!) on FIELD_DEFINITION | OBJECT
+
     input PersonInput {
         id: String
         personId: String
@@ -171,7 +175,7 @@ const typeDef = gql`
         getPersonById(personId: String!): Person
         getPersonEvents(personId: String!): [PersonEvent]
         getPersonEvent(personId: String!, eventId: String!): PersonEvent
-        getPersonByEmail(email: String!): Person
+        getPersonByEmail(email: String!): Person @auth(roles: ["secretary", "exhibitor"])
         getPersonDogs(personId: String!): [Dog]
         searchPerson(query: String!): [Person]
     }
@@ -184,9 +188,9 @@ const typeDef = gql`
     }
 `;
 
-const resolvers = {
+const resolvers: Resolvers = {
     Query: {
-        getPersonById: async (_, args: QueryGetPersonByIdArgs, { dataSources, token }: ResolverParams, __) => {
+        getPersonById: async (_, args, { dataSources, token }, __) => {
             const rules: ValidationRules = {
                 allowedRoles: ["secretary, exhibitor"],
             };
@@ -194,14 +198,20 @@ const resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new Error(e);
+                const err: Error = e as Error;
+                throw BaseError(err.message, err, HttpErrorCodes.FORBIDDEN, { stack: err.stack });
             }
 
-            const { person } = dataSources;
-            const { personId } = args;
-            const result = await person.getById(personId);
+            try {
+                const { person } = dataSources;
+                const { personId } = args;
+                const result = await person.getById(personId);
 
-            return result;
+                return result;
+            } catch (error) {
+                const err: Error = error as Error;
+                throw BaseError(err.message, err, HttpErrorCodes.INTERNAL_SERVER_ERROR, { stack: err.stack });
+            }
         },
         getPersonEvents: async (_, args: QueryGetPersonEventsArgs, { dataSources, token }: ResolverParams, __) => {
             const rules: ValidationRules = {
@@ -211,21 +221,27 @@ const resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new Error(e);
+                const err: Error = e as Error;
+                throw BaseError(err.message, err, HttpErrorCodes.FORBIDDEN, { stack: err.stack });
             }
 
-            const { person, event } = dataSources;
-            const { personId } = args;
-            const result = await person.getPersonEvents(personId);
-            const personEvents = await Promise.all(
-                result.map(async (personEvent) => {
-                    const newPersonEvent: PersonEvent = { ...personEvent };
-                    const trials = await event.getEventTrials(personEvent.eventId);
-                    newPersonEvent.trialDates = trials.map((trial) => trial.trialDate);
-                    return newPersonEvent;
-                }),
-            );
-            return personEvents;
+            try {
+                const { person, event } = dataSources;
+                const { personId } = args;
+                const result = await person.getPersonEvents(personId);
+                const personEvents = await Promise.all(
+                    result.map(async (personEvent) => {
+                        const newPersonEvent: PersonEvent = { ...personEvent };
+                        const trials = await event.getEventTrials(personEvent.eventId);
+                        newPersonEvent.trialDates = trials.map((trial) => trial.trialDate);
+                        return newPersonEvent;
+                    }),
+                );
+                return personEvents;
+            } catch (error) {
+                const err: Error = error as Error;
+                throw BaseError(err.message, err, HttpErrorCodes.INTERNAL_SERVER_ERROR, { stack: err.stack });
+            }
         },
         getPersonEvent: async (_, args: QueryGetPersonEventArgs, { dataSources, token }: ResolverParams, __) => {
             const rules: ValidationRules = {
@@ -235,7 +251,8 @@ const resolvers = {
             try {
                 await verify(token, rules);
             } catch (e) {
-                throw new Error(e);
+                const err: Error = e as Error;
+                throw BaseError(err.message, err, HttpErrorCodes.FORBIDDEN, { stack: err.stack });
             }
 
             const { person } = dataSources;

@@ -17,7 +17,7 @@ type PersonValidationResponse = {
 };
 
 const jwksClient = jwks({
-    jwksUri: process.env.JWKS_URI,
+    jwksUri: "https://dev-egx1hh70.us.auth0.com/.well-known/jwks.json",
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
@@ -63,7 +63,7 @@ export const verify = (token: string, rules: ValidationRules) => {
                         resolve(user);
                     } catch (e) {
                         console.error(e);
-                        reject("Error fetching user data");
+                        reject(new Error("Error fetching user data"));
                     }
                 }
             });
