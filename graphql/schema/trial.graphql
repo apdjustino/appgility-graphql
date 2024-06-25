@@ -23,6 +23,7 @@ enum AgilityClass {
 enum AgilityAbility {
     NOVICE_A
     NOVICE_B
+    NOVICE
     OPEN
     EXCELLENT
     MASTERS

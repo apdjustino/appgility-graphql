@@ -9,7 +9,7 @@ input CreateNewEventInput {
 input UpdateEventInput {
     id: String!
     eventId: String!
-    eventNumber: String!
+    eventNumber: String
     type: String!
     locationCity: String!
     locationState: String!
